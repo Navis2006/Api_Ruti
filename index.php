@@ -1,6 +1,6 @@
-<?php puto marquitos maricon puto
+<?php 
 session_start(); // Iniciar sesión para manejar mensajes y futuras redirecciones
-// Asegúrate de que las rutas a las imágenes y al backend sean correctas
+// Asegúrate de que l rutas a las imágenes y al backend sean correctas
 $logo_path = 'frontend/img/logo_empresa.png'; // Ajusta esta ruta si es necesario
 $login_process_path = 'backend/login_process.php'; // Ajusta esta ruta si es necesario
 ?>
