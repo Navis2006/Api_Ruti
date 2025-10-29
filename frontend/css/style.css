@@ -1,0 +1,20 @@
+/*
+  Este archivo es para estilos GLOBALES mínimos
+  que complementan a Tailwind CSS.
+  Los archivos 'admin-styles.css' y 'style.css'
+  antiguos ya no son necesarios.
+*/
+
+body {
+    /* Carga la fuente 'Lato' que importamos en los headers */
+    font-family: 'Lato', sans-serif;
+    
+    /* Mejoras de renderizado de fuente */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+  ¡Eso es todo!
+  Tailwind se encarga del resto.
+*/
