@@ -1,0 +1,2 @@
+Para poder ejecutar el proyecto descarga php(le puedes decir a gemini cli que te de el link directo de descarga para php, en vez de usar la mrd de xampp), en tu directorio (fuera de tu usuario), crear una carpeta "php", y adentro extraes el zip que descargaste.
+para ejecutar el proyecto solo es copiar este comando "C:\php\php.exe -S localhost:8000" dentro del proyecto.
