@@ -56,6 +56,7 @@ $login_process_path = 'backend/login_process.php'; // Ajusta esta ruta si es nec
         <p class="text-sm text-center text-gray-500">
             ¿Necesitas acceso? Contacta a tu administrador de empresa.
         </p>
+        
     </div>
 
 </body>

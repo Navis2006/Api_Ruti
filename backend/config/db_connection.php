@@ -1,10 +1,10 @@
 <?php
-// backend/config/db_connection.php
+// backend/config/db_connection.php 
 
-$host = 'sql303.infinityfree.com';
-$db   = 'if0_40234067_logistica';
-$user = 'if0_40234067';
-$pass = 'qGgtZdWXTgdQxiS';
+$host = 'b3ehoylez0wwlhvuad4s-mysql.services.clever-cloud.com';
+$db   = 'b3ehoylez0wwlhvuad4s';
+$user = 'uxdjsyjzrb9m1cpn';
+$pass = 'aZETS61JtGBZdLz7jrMG';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -19,3 +19,4 @@ try {
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
+
