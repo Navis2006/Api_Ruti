@@ -19,7 +19,7 @@ $vehiculos = $pdo->query("
 
 <!-- Formulario de Creación/Edición -->
 <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
-    <h2 id="form-title" class="text-2xl font-bold mb-4">Crear Nuevo Vehículo</h2>
+    <h2 id="form-title" class="text-2xl font-bold mb-4">Añadir Nuevo Vehículo</h2>
     <form id="vehiculoForm" method="POST" action="../backend/admin_gestionar_vehiculos_process.php" class="space-y-4">
         <input type="hidden" id="vehiculo_id" name="vehiculo_id">
         <input type="hidden" id="action" name="action" value="create">
