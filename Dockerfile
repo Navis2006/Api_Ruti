@@ -1,10 +1,22 @@
-# 1. Usar una imagen oficial que ya tiene PHP y el servidor Apache
 FROM php:8.2-apache
-
-# 2. (Opcional) Instalar las extensiones de PHP que necesitas para la base de datos
-# (Si usas MySQL/MariaDB, necesitas 'mysqli' y 'pdo_mysql')
 RUN docker-php-ext-install mysqli pdo_mysql
 
-# 3. Copiar todo tu código (los archivos .php, .html, etc.)
-# al directorio web público del servidor Apache
+
+RUN mkdir -p /var/www/html/config
+# --- ¡AQUÍ ESTÁ LA MAGIA! ---
+# Este comando se ejecuta DENTRO de Render durante el despliegue.
+# Crea el archivo config.php en el servidor web
+# y lo llena con las Variables de Entorno de Render.
+
+RUN echo "<?php \n \
+    \$host = getenv('DB_HOST'); \n \
+    \$db   = getenv('DB_NAME'); \n \
+    \$user = getenv('DB_USER'); \n \
+    \$pass = getenv('DB_PASS'); \n \
+    \$charset = getenv('DB_CHARSET'); \n \
+?>" > /var/www/html/config.php
+
+# -----------------------------------
+
+# Ahora, copia el RESTO de tu código (que NO incluye config.php)
 COPY . /var/www/html/
