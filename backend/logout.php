@@ -14,10 +14,29 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Finalmente, destruir la sesión.
-session_destroy();
+// Finalmente, destruir la sesión.
+
 
-// Redirigir al usuario a la página de inicio (login)
-header("Location: ../index.php");
+session_destroy();
+
+
+
+
+
+// Invalidar la cookie del JWT estableciendo una fecha de expiración en el pasado
+
+
+setcookie("jwt", "", time() - 3600, "/");
+
+
+
+
+
+// Redirigir al usuario a la página de inicio (login)
+
+
+header("Location: ../index.php");
+
+
 exit();
 ?>

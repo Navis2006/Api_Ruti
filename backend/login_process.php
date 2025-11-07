@@ -22,28 +22,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
-            if (password_verify($contrasena, $user['contrasena_hash'])) {
-                // Autenticación exitosa
-                $_SESSION['usuario_id'] = $user['usuario_id'];
-                $_SESSION['rol_id'] = $user['rol_id'];
-                $_SESSION['empresa_id'] = $user['empresa_id'];
-                
-                // Redirigir según el rol detectado
-                if ($user['rol_id'] == ROL_GERENTE) {
-                    header("Location: ../frontend/menu_admin.php"); // Redirige al menú del administrador (gerente)
-                    exit();
-                } elseif ($user['rol_id'] == ROL_TRAILERO) {
-                    header("Location: ../frontend/menu_trailero.php"); // Redirige al menú del trailero
-                    exit();
-                } else {
-                    // Si el rol no está definido o es desconocido
-                    $_SESSION['error_message'] = "Tu cuenta tiene un rol no reconocido. Contacta al administrador.";
-                    session_unset();
-                    session_destroy();
-                    header("Location: ../index.php");
-                    exit();
-                }
+        if ($user) {
+
+
+                    if (password_verify($contrasena, $user['contrasena_hash'])) {
+
+
+                        // Autenticación exitosa
+
+
+                        require_once 'config/jwt_utils.php';
+
+
+                        $token = generate_jwt($user['usuario_id'], $user['rol_id']);
+
+
+        
+
+
+                        // Guardar el token en una cookie HttpOnly
+
+
+                        setcookie("jwt", $token, [
+
+
+                            'expires' => time() + 3600, // 1 hora
+
+
+                            'path' => '/',
+
+
+                            'domain' => 'localhost', // Ajusta tu dominio
+
+
+                            'secure' => false, // Poner a true en producción con HTTPS
+
+
+                            'httponly' => true,
+
+
+                            'samesite' => 'Lax'
+
+
+                        ]);
+
+
+        
+
+
+                        $_SESSION['usuario_id'] = $user['usuario_id'];
+
+
+                        $_SESSION['rol_id'] = $user['rol_id'];
+
+
+                        $_SESSION['empresa_id'] = $user['empresa_id'];
+
+
+                        
+
+
+                        // Redirigir según el rol detectado
+
+
+                        if ($user['rol_id'] == ROL_GERENTE) {
+
+
+                            header("Location: ../frontend/menu_admin.php"); // Redirige al menú del administrador (gerente)
+
+
+                            exit();
+
+
+                        } elseif ($user['rol_id'] == ROL_TRAILERO) {
+
+
+                            header("Location: ../frontend/menu_trailero.php"); // Redirige al menú del trailero
+
+
+                            exit();
+
+
+                        } else {
+
+
+                            // Si el rol no está definido o es desconocido
+
+
+                            $_SESSION['error_message'] = "Tu cuenta tiene un rol no reconocido. Contacta al administrador.";
+
+
+                            session_unset();
+
+
+                            session_destroy();
+
+
+                            header("Location: ../index.php");
+
+
+                            exit();
+
+
+                        }
             } else {
                 $_SESSION['error_message'] = "Correo o contraseña incorrectos.";
                 header("Location: ../index.php");

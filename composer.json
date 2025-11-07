@@ -1,0 +1,13 @@
+{
+    "name": "mvina/api_ruti",
+    "description": "proyecto rutitrailer",
+    "authors": [
+        {
+            "name": "marijo-vina",
+            "email": "mvinajera@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.11"
+    }
+}
