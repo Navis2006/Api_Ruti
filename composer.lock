@@ -53,7 +53,7 @@
                 },
                 {
                     "name": "Anant Narayanan",
-                    "email": "anant@php.net",
+                    "email": "anant@php.net", 
                     "role": "Developer"
                 }
             ],
