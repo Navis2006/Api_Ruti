@@ -146,7 +146,5 @@ $video_path = 'frontend/videos/background.mp4'; // ¡IMPORTANTE! Ruta a tu video
 
         </div>
     </div>
-
 </body>
 </html>
-

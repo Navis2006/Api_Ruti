@@ -12,7 +12,7 @@ $usuarios = $pdo->query("
     FROM usuarios u
     JOIN empresas e ON u.empresa_id = e.empresa_id
     JOIN roles r ON u.rol_id = r.rol_id
-    ORDER BY u.apellidos
+    ORDER BY u.usuario_id ASC
 ")->fetchAll();
 ?>
 

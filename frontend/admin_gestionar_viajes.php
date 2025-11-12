@@ -115,7 +115,7 @@ try {
                         <td class="p-4"><?= htmlspecialchars($viaje['viaje_id']) ?></td>
                         <td class="p-4"><?= htmlspecialchars($viaje['ruta_nombre']) ?></td>
                         <td class="p-4"><?= htmlspecialchars($viaje['operador_nombre']) ?></td>
-                        <td class="p-4"><?= htmlspecialchars($viaje['vehiculo_nombre']) ?></td>
+                        <td class="p-4"><?= htmlspecialchars($viaje['vehiculo_nombre'] ?? 'N/A') ?></td>
                         <td class="p-4"><?= htmlspecialchars($viaje['estado']) ?></td>
                         <td class="p-4 text-right space-x-2 whitespace-nowrap">
                             <button class="edit-btn text-blue-600 hover:underline" data-viaje='<?= htmlspecialchars(json_encode($viaje), ENT_NOQUOTES, 'UTF-8') ?>'>Editar</button>
