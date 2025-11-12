@@ -20,3 +20,4 @@ RUN echo "<?php \n \
 
 # Ahora, copia el RESTO de tu código (que NO incluye config.php)
 COPY . /var/www/html/
+RUN cd /var/www/html && composer install --no-dev --optimize-autoloader
