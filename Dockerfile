@@ -1,5 +1,6 @@
 FROM php:8.2-apache
 RUN docker-php-ext-install mysqli pdo_mysql
+RUN apt-get update && apt-get install -y git unzip zip
 
 
 RUN mkdir -p /var/www/html/config
