@@ -26,6 +26,7 @@
     <style>
         [x-cloak] { display: none !important; }
     </style>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 
 <body class="bg-gray-100">
