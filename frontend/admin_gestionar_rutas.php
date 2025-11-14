@@ -1,8 +1,9 @@
 <?php
-    define('ROL_REQUERIDO', 1);
-require_once '../backend/auth_guard.php';
-require_once '../backend/config/db_connection.php';
-require_once 'header_admin.php'; // Carga la cabecera y el menú lateral
+    // La conexión a la BD SÍ la puedes necesitar aquí si esta página hace consultas
+    require_once '../backend/config/db_connection.php'; 
+    
+    // header_admin.php ya se encarga del ROL y auth_guard
+    require_once 'header_admin.php'; // Carga la cabecera
 
 try {
     $empresas = $pdo->query("SELECT empresa_id, nombre FROM empresas ORDER BY nombre")->fetchAll();
