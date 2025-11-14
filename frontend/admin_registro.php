@@ -17,8 +17,12 @@
 ?>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
+
+<script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css" />
 
 
 <div x-data="{ formVisible: false }" @open-form.window="formVisible = true">
@@ -64,7 +68,7 @@
             
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <input type="email" id="email" name="email" required autocomplete="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -93,7 +97,7 @@
             
             <div>
                 <label for="contrasena" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Dejar en blanco para no cambiar" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <input type="password" id="contrasena" name="contrasena" placeholder="Dejar en blanco para no cambiar" autocomplete="new-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
 
             <div class="flex justify-end space-x-4 pt-4">
@@ -110,7 +114,7 @@
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <table id="usuariosTable" class="w-full text-left">
+        <table id="usuariosTable" class="w-full text-left dt-responsive" style="width:100%">
             <thead class="bg-gray-50 border-b">
                 <tr>
                     <th class="p-4">ID</th>
@@ -152,7 +156,8 @@
 </div> <script>
 $(document).ready(function() {
     $('#usuariosTable').DataTable({
-        "pageLength": 15, // Muestra 15 usuarios por página
+        "pageLength": 15,
+        "responsive": true, // <-- AÑADIDO PARA HACERLA RESPONSIVA
         "language": {
             "sProcessing":     "Procesando...",
             "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -188,11 +193,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const actionInput = document.getElementById('action');
     const submitButton = document.getElementById('submitButton');
     
-    // El botón Cancelar ahora es manejado por Alpine.js,
-    // así que quitamos 'cancelButton' y 'cancelButton.style.display' de aquí
-    
     const setEditMode = (usuario) => {
-        // --- CAMBIO 4: AVISAMOS A ALPINE.JS QUE ABRA EL FORMULARIO ---
+        // AVISAMOS A ALPINE.JS QUE ABRA EL FORMULARIO
         document.dispatchEvent(new CustomEvent('open-form'));
         
         formTitle.textContent = `Editando Usuario #${usuario.usuario_id}`;
@@ -207,7 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('contrasena').value = '';
         document.getElementById('contrasena').removeAttribute('required');
         submitButton.textContent = 'Actualizar Usuario';
-        // cancelButton.style.display = 'inline-block'; // Esta línea ya no es necesaria
         
         // Retrasamos el scroll un poco para dar tiempo a la animación de Alpine
         setTimeout(() => {
@@ -216,14 +217,12 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Esta función la llama el botón "Crear Nuevo Usuario" y "Cancelar"
-    // Sigue siendo útil para resetear el formulario
     window.setCreateMode = () => {
         formTitle.textContent = 'Crear Nuevo Usuario';
         form.reset();
         actionInput.value = 'create';
         document.getElementById('contrasena').setAttribute('required', 'required');
         submitButton.textContent = 'Crear Usuario';
-        // cancelButton.style.display = 'none'; // Esta línea ya no es necesaria
     };
 
     // Usamos 'delegación de eventos' en la tabla.

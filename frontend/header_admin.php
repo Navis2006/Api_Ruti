@@ -19,12 +19,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración | Dunosusa</title>
 
+    <script>
+      tailwind.config = {
+        darkMode: 'class' 
+      }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script> 
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         [x-cloak] { display: none !important; }
+
+        /* ==================================================== */
+        /* ↓ PARCHE PARA FORZAR MODO CLARO EN DATATABLES ↓    */
+        /* ==================================================== */
+        
+        /* Esto arregla el fondo y texto de los <select> e <input> */
+        div.dt-container div.dt-layout-row select,
+        div.dt-container div.dt-layout-row input[type="search"] {
+          color: #111827 !important;           /* Texto oscuro */
+          background-color: #ffffff !important;   /* Fondo blanco */
+          border: 1px solid #d1d5db !important; /* Borde gris */
+          border-radius: 0.375rem !important; /* Bordes redondeados */
+        }
+
+        /* Esto arregla el color de las flechitas del <select> */
+        div.dt-container div.dt-layout-row select {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E") !important;
+            background-position: right 0.5rem center !important;
+            background-repeat: no-repeat !important;
+            background-size: 1.5em 1.5em !important;
+            padding-right: 2.5rem !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        /* ==================================================== */
+
     </style>
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
@@ -102,9 +134,9 @@
                             Empresas
                         </a>
                     </nav>
-                    </div>
+                </div>
                 <div class="flex-shrink-0 flex border-t border-gray-200 p-4">
-                    <a href="logout.php" class="flex-shrink-0 group block">
+                    <a href="../backend/logout.php" class="flex-shrink-0 group block">
                         <div class="flex items-center">
                             <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-red-100">
                                 <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
@@ -120,8 +152,9 @@
         </div>
 
         <aside 
+            x-cloak 
             :class="desktopSidebarOpen ? 'w-64' : 'w-20'"
-            class="hidden lg:flex flex-col flex-shrink-0 bg-white border-r border-gray-200 shadow-md transition-all duration-300 ease-in-out"
+            class="hidden lg:flex flex-col flex-shrink-0 bg-white border-r border-gray-200 shadow-md transition-all duration-300 ease-in-out w-64"
         >
             <div class="flex flex-col h-full">
                 <div class="h-16 flex items-center justify-center border-b">
@@ -159,8 +192,9 @@
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Empresas</span>
                     </a>
                 </nav>
+
                 <div class="border-t p-4">
-                    <a href="logout.php" class="flex items-center px-4 py-2 text-red-600 bg-red-100 rounded-lg hover:bg-red-200" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="../backend/logout.php" class="flex items-center px-4 py-2 text-red-600 bg-red-100 rounded-lg hover:bg-red-200" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                         <span class="ml-3 font-medium" x-show="desktopSidebarOpen" x-cloak>Cerrar Sesión</span>
                     </a>
@@ -192,8 +226,7 @@
 
                 <div class="ml-4 flex items-center">
                     <span class="text-sm font-medium text-gray-700">Bienvenido, Admin</span>
-                    <img class="ml-3 h-8 w-8 rounded-full" src="https://via.placeholder.com/150/0000FF/808080?text=A" alt="Avatar">
-                </div>
+                    </div>
             </header>
 
             <main class="flex-1 p-4 sm:p-6 lg:p-8">
