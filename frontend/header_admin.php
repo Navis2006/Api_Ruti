@@ -28,36 +28,87 @@
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <style>
-        [x-cloak] { display: none !important; }
+<style>
+    [x-cloak] { display: none !important; }
 
-        /* ==================================================== */
-        /* ↓ PARCHE PARA FORZAR MODO CLARO EN DATATABLES ↓    */
-        /* ==================================================== */
-        
-        /* Esto arregla el fondo y texto de los <select> e <input> */
-        div.dt-container div.dt-layout-row select,
-        div.dt-container div.dt-layout-row input[type="search"] {
-          color: #111827 !important;           /* Texto oscuro */
-          background-color: #ffffff !important;   /* Fondo blanco */
-          border: 1px solid #d1d5db !important; /* Borde gris */
-          border-radius: 0.375rem !important; /* Bordes redondeados */
-        }
+    /* ==================================================== */
+    /* ↓ PARCHE 1: FORZAR MODO CLARO EN INPUTS DE DATATABLES ↓ */
+    /* ==================================================== */
+    
+    /* Arregla el bug de fondo negro y el TAMAÑO de la caja */
+    div.dt-container div.dt-layout-row select,
+    div.dt-container div.dt-layout-row input[type="search"] {
+      color: #111827 !important;           /* Texto oscuro */
+      background-color: #ffffff !important;   /* Fondo blanco */
+      border: 1px solid #d1d5db !important; /* Borde gris */
+      border-radius: 0.375rem !important; /* Bordes redondeados */
+      
+      /* ↓↓↓ ESTA ES LA LÍNEA CORREGIDA (ANCHO FIJO) ↓↓↓ */
+      width: 80px !important; /* <-- Le da un ancho FIJO */
+    }
 
-        /* Esto arregla el color de las flechitas del <select> */
-        div.dt-container div.dt-layout-row select {
-            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E") !important;
-            background-position: right 0.5rem center !important;
-            background-repeat: no-repeat !important;
-            background-size: 1.5em 1.5em !important;
-            padding-right: 2.5rem !important;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-        /* ==================================================== */
+    /* Esto arregla el color de las flechitas del <select> */
+    div.dt-container div.dt-layout-row select {
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E") !important;
+        background-position: right 0.5rem center !important;
+        background-repeat: no-repeat !important;
+        background-size: 1.5em 1.5em !important;
+        padding-right: 2.5rem !important;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
 
-    </style>
+    /* ==================================================== */
+    /* ↓ PARCHE 2: HACER LA TABLA MÁS "ATRACTIVA" ↓       */
+    /* ==================================================== */
+    
+    /* Cabecera de la tabla (th) */
+    table.dataTable thead th {
+        background-color: #f9fafb; /* bg-gray-50 */
+        color: #374151; /* text-gray-700 */
+        font-weight: 600; /* font-semibold */
+        border-bottom: 2px solid #e5e7eb; /* border-b-2 border-gray-200 */
+        background-image: none !important; /* Quita el gradiente feo */
+    }
+
+    /* Quita el borde superior feo de la cabecera */
+    table.dataTable thead th,
+    table.dataTable thead td {
+        border-top: none !important;
+    }
+
+    /* Hover de las filas (tbody) */
+    table.dataTable tbody tr:hover {
+        background-color: #f9fafb !important; /* bg-gray-50 */
+    }
+    
+    /* Estilo de los botones de paginación */
+    div.dt-paging .dt-paging-button {
+        border: 1px solid transparent !important;
+        border-radius: 0.375rem !important; /* rounded-md */
+        margin: 0 2px !important;
+    }
+    div.dt-paging .dt-paging-button:hover {
+        background-color: #f3f4f6 !important; /* bg-gray-100 */
+        border-color: #e5e7eb !important; /* border-gray-200 */
+        background-image: none !important; /* Quita gradiente */
+    }
+
+    /* Botón de página ACTIVA */
+    div.dt-paging .dt-paging-button.current,
+    div.dt-paging .dt-paging-button.current:hover {
+        background-color: #2563eb !important; /* bg-blue-600 */
+        color: white !important;
+        border-color: #2563eb !important;
+        background-image: none !important; /* Quita gradiente */
+    }
+
+    /* Estilo de los botones "Previous", "Next", etc. */
+    div.dt-paging .dt-paging-button.disabled {
+        color: #9ca3af !important; /* text-gray-400 */
+    }
+</style>
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 

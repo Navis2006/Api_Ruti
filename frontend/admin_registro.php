@@ -112,7 +112,7 @@
             </div>
         </form>
     </div>
-
+<div class="overflow-x-auto">
     <div class="bg-white p-6 rounded-lg shadow-md">
         <table id="usuariosTable" class="w-full text-left dt-responsive" style="width:100%">
             <thead class="bg-gray-50 border-b">
@@ -153,7 +153,8 @@
             </tbody>
         </table>
     </div>
-</div> <script>
+</div> 
+<script>
 $(document).ready(function() {
     $('#usuariosTable').DataTable({
         "pageLength": 15,
@@ -195,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const setEditMode = (usuario) => {
         // AVISAMOS A ALPINE.JS QUE ABRA EL FORMULARIO
-        document.dispatchEvent(new CustomEvent('open-form'));
+        window.dispatchEvent(new CustomEvent('open-form'));
         
         formTitle.textContent = `Editando Usuario #${usuario.usuario_id}`;
         actionInput.value = 'update';
