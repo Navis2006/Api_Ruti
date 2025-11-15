@@ -9,7 +9,7 @@
     }
     require_once '../backend/auth_guard.php'; // Protege la página
     
-    // --- NUEVO: Obtenemos el nombre del archivo actual ---
+    // --- Obtenemos el nombre del archivo actual ---
     $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -28,94 +28,134 @@
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-<style>
-    [x-cloak] { display: none !important; }
+    <style>
+        [x-cloak] { display: none !important; }
 
-    /* ==================================================== */
-    /* ↓ PARCHE 1: FORZAR MODO CLARO EN INPUTS DE DATATABLES ↓ */
-    /* ==================================================== */
-    
-    /* Arregla el bug de fondo negro y el TAMAÑO de la caja */
-    div.dt-container div.dt-layout-row select,
-    div.dt-container div.dt-layout-row input[type="search"] {
-      color: #111827 !important;           /* Texto oscuro */
-      background-color: #ffffff !important;   /* Fondo blanco */
-      border: 1px solid #d1d5db !important; /* Borde gris */
-      border-radius: 0.375rem !important; /* Bordes redondeados */
-      
-      /* ↓↓↓ ESTA ES LA LÍNEA CORREGIDA (ANCHO FIJO) ↓↓↓ */
-      width: 80px !important; /* <-- Le da un ancho FIJO */
-    }
+        /* ==================================================== */
+        /* ↓ PARCHE 1: FORZAR MODO CLARO EN INPUTS DE DATATABLES ↓ */
+        /* ==================================================== */
+        
+        /* Arregla el bug de fondo negro y el TAMAÑO de la caja */
+        div.dt-container div.dt-layout-row select,
+        div.dt-container div.dt-layout-row input[type="search"] {
+          color: #111827 !important;           /* Texto oscuro */
+          background-color: #ffffff !important;   /* Fondo blanco */
+          border: 1px solid #d1d5db !important; /* Borde gris */
+          border-radius: 0.375rem !important; /* Bordes redondeados */
+          width: 80px !important; /* Ancho FIJO */
+        }
+        div.dt-container div.dt-layout-row select {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E") !important;
+            background-position: right 0.5rem center !important;
+            background-repeat: no-repeat !important;
+            background-size: 1.5em 1.5em !important;
+            padding-right: 2.5rem !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
 
-    /* Esto arregla el color de las flechitas del <select> */
-    div.dt-container div.dt-layout-row select {
-        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E") !important;
-        background-position: right 0.5rem center !important;
-        background-repeat: no-repeat !important;
-        background-size: 1.5em 1.5em !important;
-        padding-right: 2.5rem !important;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-    }
-
-    /* ==================================================== */
-    /* ↓ PARCHE 2: HACER LA TABLA MÁS "ATRACTIVA" ↓       */
-    /* ==================================================== */
-    
-    /* Cabecera de la tabla (th) */
-    table.dataTable thead th {
-        background-color: #f9fafb; /* bg-gray-50 */
-        color: #374151; /* text-gray-700 */
-        font-weight: 600; /* font-semibold */
-        border-bottom: 2px solid #e5e7eb; /* border-b-2 border-gray-200 */
-        background-image: none !important; /* Quita el gradiente feo */
-    }
-
-    /* Quita el borde superior feo de la cabecera */
-    table.dataTable thead th,
-    table.dataTable thead td {
-        border-top: none !important;
-    }
-
-    /* Hover de las filas (tbody) */
-    table.dataTable tbody tr:hover {
-        background-color: #f9fafb !important; /* bg-gray-50 */
-    }
-    
-    /* Estilo de los botones de paginación */
-    div.dt-paging .dt-paging-button {
-        border: 1px solid transparent !important;
-        border-radius: 0.375rem !important; /* rounded-md */
-        margin: 0 2px !important;
-    }
-    div.dt-paging .dt-paging-button:hover {
-        background-color: #f3f4f6 !important; /* bg-gray-100 */
-        border-color: #e5e7eb !important; /* border-gray-200 */
-        background-image: none !important; /* Quita gradiente */
-    }
-
-    /* Botón de página ACTIVA */
-    div.dt-paging .dt-paging-button.current,
-    div.dt-paging .dt-paging-button.current:hover {
-        background-color: #2563eb !important; /* bg-blue-600 */
-        color: white !important;
-        border-color: #2563eb !important;
-        background-image: none !important; /* Quita gradiente */
-    }
-
-    /* Estilo de los botones "Previous", "Next", etc. */
-    div.dt-paging .dt-paging-button.disabled {
-        color: #9ca3af !important; /* text-gray-400 */
-    }
-</style>
+        /* ==================================================== */
+        /* ↓ PARCHE 2: HACER LA TABLA MÁS "ATRACTIVA" ↓       */
+        /* ==================================================== */
+        
+        table.dataTable thead th {
+            background-color: #f9fafb; /* bg-gray-50 */
+            color: #374151; /* text-gray-700 */
+            font-weight: 600; /* font-semibold */
+            border-bottom: 2px solid #e5e7eb; /* border-b-2 border-gray-200 */
+            background-image: none !important; /* Quita el gradiente feo */
+        }
+        table.dataTable thead th,
+        table.dataTable thead td {
+            border-top: none !important;
+        }
+        table.dataTable tbody tr:hover {
+            background-color: #f9fafb !important; /* bg-gray-50 */
+        }
+        div.dt-paging .dt-paging-button {
+            border: 1px solid transparent !important;
+            border-radius: 0.375rem !important; /* rounded-md */
+            margin: 0 2px !important;
+        }
+        div.dt-paging .dt-paging-button:hover {
+            background-color: #f3f4f6 !important; /* bg-gray-100 */
+            border-color: #e5e7eb !important; /* border-gray-200 */
+            background-image: none !important; /* Quita gradiente */
+        }
+        div.dt-paging .dt-paging-button.current,
+        div.dt-paging .dt-paging-button.current:hover {
+            background-color: #2563eb !important; /* bg-blue-600 */
+            color: white !important;
+            border-color: #2563eb !important;
+            background-image: none !important; /* Quita gradiente */
+        }
+        div.dt-paging .dt-paging-button.disabled {
+            color: #9ca3af !important; /* text-gray-400 */
+        }
+    </style>
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 
 <body class="bg-gray-100">
 
-    <div x-data="{ desktopSidebarOpen: true, mobileMenuOpen: false }" class="flex h-screen">
+    <div 
+        x-data="{ 
+            desktopSidebarOpen: true, 
+            mobileMenuOpen: false,
+            showNotification: false,
+            notificationMessage: '',
+            notificationType: 'success'
+        }" 
+        x-init="() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const message = urlParams.get('message');
 
+            if (status === 'success') {
+                notificationType = 'success';
+                notificationMessage = '¡Operación completada con éxito!';
+                showNotification = true;
+                setTimeout(() => { showNotification = false }, 5000); // Ocultar después de 5 seg
+            } else if (status === 'error') {
+                notificationType = 'error';
+                notificationMessage = message ? decodeURIComponent(message) : 'Ocurrió un error inesperado.';
+                showNotification = true;
+                setTimeout(() => { showNotification = false }, 7000); // Más tiempo para errores
+            }
+        }"
+        class="flex h-screen"
+    >
+
+        <div 
+            x-show="showNotification"
+            x-transition:enter="transition ease-out duration-300 transform"
+            x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+            x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+            x-transition:leave="transition ease-in duration-300 transform"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed top-0 right-0 z-50 p-4 m-6 max-w-sm w-full rounded-lg shadow-lg"
+            :class="notificationType === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'"
+            x-cloak
+        >
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg x-show="notificationType === 'success'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <svg x-show="notificationType === 'error'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="font-bold" x-text="notificationType === 'success' ? 'Éxito' : 'Error'"></p>
+                    <p class="text-sm" x-text="notificationMessage"></p>
+                </div>
+                <div class="ml-4 flex-shrink-0">
+                    <button @click="showNotification = false" class="text-white/70 hover:text-white">
+                        <span class="sr-only">Cerrar</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
         <div 
             x-show="mobileMenuOpen" 
             class="fixed inset-0 z-40 flex lg:hidden" 
@@ -230,10 +270,12 @@
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Usuarios</span>
                     </a>
+                    
                     <a href="admin_gestionar_viajes.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_viajes.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Viajes</span>
                     </a>
+                    
                     <a href="admin_gestionar_alertas.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_alertas.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341A6.002 6.002 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Alertas</span>
@@ -277,7 +319,7 @@
 
                 <div class="ml-4 flex items-center">
                     <span class="text-sm font-medium text-gray-700">Bienvenido, Admin</span>
-                    </div>
+                </div>
             </header>
 
             <main class="flex-1 p-4 sm:p-6 lg:p-8">

@@ -179,7 +179,7 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
 </div> <script>
 $(document).ready(function() {
     $('#viajesTable').DataTable({ 
-        "pageLength": 15,
+        "pageLength": 10,
         "responsive": true, 
         "language": {
             // (Tu traducción al español)

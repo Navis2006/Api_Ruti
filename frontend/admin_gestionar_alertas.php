@@ -182,7 +182,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
 </div> <script>
 $(document).ready(function() {
     $('#alertasTable').DataTable({ // <-- ID de tabla actualizado
-        "pageLength": 15,
+        "pageLength": 10,
         "responsive": true, 
         "language": {
             // (Tu traducción al español)

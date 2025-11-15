@@ -157,7 +157,7 @@
 <script>
 $(document).ready(function() {
     $('#usuariosTable').DataTable({
-        "pageLength": 15,
+        "pageLength": 10,
         "responsive": true, // <-- AÑADIDO PARA HACERLA RESPONSIVA
         "language": {
             "sProcessing":     "Procesando...",

@@ -163,7 +163,7 @@
 </div> <script>
 $(document).ready(function() {
     $('#vehiculosTable').DataTable({ // <-- ID de tabla actualizado
-        "pageLength": 15,
+        "pageLength": 10,
         "responsive": true, // <-- Añadido para hacerla responsiva
         "language": {
             // (Tu traducción al español)
