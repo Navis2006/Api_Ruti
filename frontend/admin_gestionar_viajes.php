@@ -159,7 +159,7 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
                             <td class="p-4"><?= htmlspecialchars($viaje['ruta_nombre'] ?? '') ?></td>
                             <td class="p-4"><?= htmlspecialchars($viaje['operador_nombre'] ?? '') ?></td>
                             <td class="p-4"><?= htmlspecialchars($viaje['vehiculo_nombre'] ?? 'N/A') ?></td>
-                            <td class="p-4"><?= htmlspecialchars($viaje['fecha_hora_programada'] ?? '') ?></td>
+                            <td class="p-4"><?= htmlspecialchars($viaje['fecha_inicio'] ?? '') ?></td>
                             <td class="p-4"><?= htmlspecialchars($viaje['asignador_nombre'] ?? '') ?></td>
                             <td class="p-4 text-right space-x-2 whitespace-nowrap">
                                 <button class="edit-btn text-blue-600 hover:underline"

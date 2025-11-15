@@ -20,12 +20,12 @@ try {
     // --- ACCIÓN: CREAR O ACTUALIZAR (Desde el formulario) ---
     if ($action === 'create' || $action === 'update') {
         
-        // CORREGIDO: Leer 'estado' en lugar de 'estatus_viaje'
+        // CORREGIDO: Leer 'estado' y 'fecha_hora_programada' (del form)
         $ruta_id = filter_input(INPUT_POST, 'ruta_id', FILTER_VALIDATE_INT);
         $operador_usuario_id = filter_input(INPUT_POST, 'operador_usuario_id', FILTER_VALIDATE_INT);
         $vehiculo_id = filter_input(INPUT_POST, 'vehiculo_id', FILTER_VALIDATE_INT);
-        $estado = trim((string) filter_input(INPUT_POST, 'estado', FILTER_SANITIZE_SPECIAL_CHARS));
-        $fecha_hora_programada = trim((string) filter_input(INPUT_POST, 'fecha_hora_programada', FILTER_SANITIZE_SPECIAL_CHARS));
+        $estado = trim((string) filter_input(INPUT_POST, 'estado', FILTER_SANITIZE_SPECIAL_CHARS)); // Nombre del form
+        $fecha_hora_programada = trim((string) filter_input(INPUT_POST, 'fecha_hora_programada', FILTER_SANITIZE_SPECIAL_CHARS)); // Nombre del form
 
         // Validación
         if (!$ruta_id || !$operador_usuario_id || !$vehiculo_id || $estado === '' || $fecha_hora_programada === '') {
@@ -44,9 +44,9 @@ try {
 
     switch ($action) {
         case 'create':
-            // CORREGIDO: Usar 'estado' y 'fecha_hora_programada'
+            // CORREGIDO: Usar 'estado' y 'fecha_inicio' (nombres de tu BD)
             $stmt = $pdo->prepare(
-                "INSERT INTO viajes (ruta_id, operador_usuario_id, vehiculo_id, asignado_por_usuario_id, estado, fecha_asignacion, fecha_hora_programada) 
+                "INSERT INTO viajes (ruta_id, operador_usuario_id, vehiculo_id, asignado_por_usuario_id, estado, fecha_asignacion, fecha_inicio) 
                  VALUES (?, ?, ?, ?, ?, NOW(), ?)"
             );
             $stmt->execute([
@@ -55,17 +55,17 @@ try {
                 $vehiculo_id, 
                 $asignado_por_usuario_id, // ID del admin logueado
                 $estado, 
-                $fecha_hora_programada
+                $fecha_hora_programada // El valor del form va a la columna 'fecha_inicio'
             ]);
             break;
 
         case 'update':
             if (!$viaje_id) throw new Exception("ID de viaje no válido.");
             
-            // CORREGIDO: Usar 'estado' y 'fecha_hora_programada'
+            // CORREGIDO: Usar 'estado' y 'fecha_inicio' (nombres de tu BD)
             $stmt = $pdo->prepare(
                 "UPDATE viajes 
-                 SET ruta_id = ?, operador_usuario_id = ?, vehiculo_id = ?, estado = ?, fecha_hora_programada = ?
+                 SET ruta_id = ?, operador_usuario_id = ?, vehiculo_id = ?, estado = ?, fecha_inicio = ?
                  WHERE viaje_id = ?"
             );
             $stmt->execute([
@@ -73,7 +73,7 @@ try {
                 $operador_usuario_id, 
                 $vehiculo_id, 
                 $estado, 
-                $fecha_hora_programada, 
+                $fecha_hora_programada, // El valor del form va a la columna 'fecha_inicio'
                 $viaje_id
             ]);
             break;
