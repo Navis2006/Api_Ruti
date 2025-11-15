@@ -108,6 +108,9 @@
                     <div class="hidden md:flex items-center space-x-4">
                         <span class="text-sm font-medium text-gray-700">Bienvenido, <?= htmlspecialchars($nombre_operador) ?></span>
                         <a href="menu_trailero.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'menu_trailero.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Inicio (Mis Viajes)</a>
+                        
+                        <a href="operador_historial.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'operador_historial.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Historial</a>
+                        
                         <a href="trailer_asignado.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'trailer_asignado.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Vehículo</a>
                         <a href="alertas.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'alertas.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Alertas</a>
                         <a href="perfil.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'perfil.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Perfil</a>
@@ -127,6 +130,9 @@
 
                 <div x-show="mobileMenuOpen" class="md:hidden mt-4 space-y-2" x-cloak>
                     <a href="menu_trailero.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'menu_trailero.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Inicio (Mis Viajes)</a>
+                    
+                    <a href="operador_historial.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'operador_historial.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Historial</a>
+
                     <a href="trailer_asignado.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'trailer_asignado.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Vehículo</a>
                     <a href="alertas.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'alertas.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Alertas</a>
                     <a href="perfil.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'perfil.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Perfil</a>
@@ -137,4 +143,3 @@
         </header>
 
         <main class="container mx-auto p-6 md:p-10">
-          

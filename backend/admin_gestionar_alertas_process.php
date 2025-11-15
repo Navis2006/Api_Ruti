@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 require_once 'config/db_connection.php';
 require_once 'auth_guard.php'; // Protege el script
 
