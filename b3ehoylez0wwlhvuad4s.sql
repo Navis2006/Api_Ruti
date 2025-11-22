@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: b3ehoylez0wwlhvuad4s-mysql.services.clever-cloud.com:3306
--- Tiempo de generación: 22-11-2025 a las 05:16:09
+-- Tiempo de generación: 22-11-2025 a las 15:59:32
 -- Versión del servidor: 8.0.22-13
 -- Versión de PHP: 8.2.29
 
@@ -108,7 +108,7 @@ CREATE TABLE `empresas` (
 --
 
 INSERT INTO `empresas` (`empresa_id`, `nombre`, `estado_suscripcion`, `fecha_creacion`) VALUES
-(1, 'Transportes Rápidos del Sureste', 'Activa', '2025-10-10 00:14:26'),
+(1, 'Transportes Rápidos del Sureste', 'Inactiva', '2025-10-10 00:14:26'),
 (2, 'Logística Peninsular S.A. de C.V.', 'Activa', '2025-10-10 00:14:26'),
 (3, 'Fletes y Mudanzas El Mayab', 'Activa', '2025-10-10 00:14:26'),
 (4, 'Distribuidora de Abarrotes del Golfo', 'Activa', '2025-10-10 00:14:26'),
@@ -158,6 +158,23 @@ INSERT INTO `empresas` (`empresa_id`, `nombre`, `estado_suscripcion`, `fecha_cre
 (48, 'Transporte Especializado de Vidrio y Cristal', 'Activa', '2025-10-10 00:14:26'),
 (49, 'Logística para la Industria Maquiladora', 'Activa', '2025-10-10 00:14:26'),
 (50, 'Transportes de Cemento y Concreto \"Holbox\"', 'Activa', '2025-10-10 00:14:26');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos_log`
+--
+
+CREATE TABLE `pagos_log` (
+  `log_id` int NOT NULL,
+  `empresa_id` int NOT NULL,
+  `usuario_id` int DEFAULT NULL,
+  `stripe_session_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `estado` enum('iniciado','completado','cancelado','fallido') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mensaje` text COLLATE utf8mb4_unicode_ci,
+  `fecha_creacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -250,6 +267,82 @@ INSERT INTO `rutas` (`ruta_id`, `empresa_id`, `nombre`, `descripcion`, `trazado_
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `suscripciones`
+--
+
+CREATE TABLE `suscripciones` (
+  `suscripcion_id` int NOT NULL,
+  `empresa_id` int NOT NULL,
+  `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha_vencimiento` timestamp NOT NULL,
+  `monto_pagado` decimal(10,2) NOT NULL DEFAULT '10.00',
+  `estado` enum('activa','vencida','cancelada') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'activa',
+  `stripe_payment_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ID de pago de Stripe',
+  `stripe_session_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ID de sesión de Stripe Checkout',
+  `fecha_pago` timestamp NULL DEFAULT NULL,
+  `notas` text COLLATE utf8mb4_unicode_ci,
+  `creado_en` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `suscripciones`
+--
+
+INSERT INTO `suscripciones` (`suscripcion_id`, `empresa_id`, `fecha_inicio`, `fecha_vencimiento`, `monto_pagado`, `estado`, `stripe_payment_id`, `stripe_session_id`, `fecha_pago`, `notas`, `creado_en`) VALUES
+(1, 1, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(2, 2, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(3, 3, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(4, 4, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(5, 5, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(6, 6, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(7, 7, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(8, 8, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(9, 9, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(10, 10, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(11, 11, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(12, 12, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(13, 13, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(14, 14, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(15, 15, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(16, 16, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(17, 17, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(18, 18, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(19, 19, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(20, 20, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(21, 21, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(22, 22, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(23, 23, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(24, 24, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(25, 25, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(26, 26, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(27, 27, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(28, 28, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(29, 29, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(30, 30, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(31, 31, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(32, 32, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(33, 33, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(34, 34, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(35, 35, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(36, 36, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(37, 37, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(38, 38, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(39, 39, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(40, 40, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(41, 41, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(42, 42, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(43, 43, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(44, 44, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(45, 45, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(46, 46, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(47, 47, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(48, 48, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(49, 49, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
+(50, 50, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -324,7 +417,7 @@ INSERT INTO `usuarios` (`usuario_id`, `empresa_id`, `rol_id`, `estatus`, `nombre
 (52, 37, 1, 'activo', 'martin', 'cabrera3', 'martin@gmail.com', '$2y$10$.F1pfsf5YkLOKWeMGEAxR.X4GRdzz9.YNrzIpC05WwLYMsqIDCOya', '2025-10-10 00:23:17'),
 (54, 28, 2, 'activo', 'borrar1', 'mar', 'borrar1@gmail.com', '$2y$10$fI.qr4YnLFnsu.5aKe9AZOcJ8QPy05.yXF4zmXo.64KQenYs8G4PW', '2025-10-10 07:05:47'),
 (55, 46, 1, 'activo', 'borraradmin1', 'a', 'borraradmin1@gmail.com', '$2y$10$Q.j/lmosku1HWpCgRaBDmeyr86o/gF0YwuyB0eyTRYo.xgAovE4WK', '2025-10-10 07:26:24'),
-(56, 21, 1, 'activo', 'adminn', 'adminn', 'adminn@gmail.com', '$2y$10$luxFLnsQleWB1l3E4vXup.TUqByquuTOg4UungA/Va4N6T1FIFjlK', '2025-11-02 18:41:20'),
+(56, 1, 1, 'activo', 'adminn', 'adminn', 'adminn@gmail.com', '$2y$10$luxFLnsQleWB1l3E4vXup.TUqByquuTOg4UungA/Va4N6T1FIFjlK', '2025-11-02 18:41:20'),
 (57, 33, 2, 'activo', 'operador', 'operador', 'operador@gmail.com\r\n', '$2y$10$2.qb.tk5bZXF59acMmVge.lgcIBEw6nAMFpwVnhXCET51G4Jd9EmO', '2025-11-02 18:46:41'),
 (58, 43, 2, 'activo', 'Martin', 'Cachondo', 'nose@gmail.com', '$2y$10$.27kvTt1D1K5TzUxmkb6geH6eojE23VSYu2PvHXgJouxqYuhIHyiS', '2025-11-02 21:57:10'),
 (59, 14, 2, 'activo', 'Angel Ernesto', 'Nava Sánchez', 'angel.er.nava.sa@gmail.com', '$2y$12$0K0N54wXtSom9uf/qcUEq.6zs2aiBkOKPJ8W1/L0oCS/K36iY8V5S', '2025-11-02 22:03:17'),
@@ -508,6 +601,14 @@ ALTER TABLE `empresas`
   ADD PRIMARY KEY (`empresa_id`);
 
 --
+-- Indices de la tabla `pagos_log`
+--
+ALTER TABLE `pagos_log`
+  ADD PRIMARY KEY (`log_id`),
+  ADD KEY `idx_empresa_pago` (`empresa_id`),
+  ADD KEY `idx_stripe_session` (`stripe_session_id`);
+
+--
 -- Indices de la tabla `roles`
 --
 ALTER TABLE `roles`
@@ -521,6 +622,15 @@ ALTER TABLE `rutas`
   ADD PRIMARY KEY (`ruta_id`),
   ADD KEY `empresa_id` (`empresa_id`),
   ADD KEY `creado_por_usuario_id` (`creado_por_usuario_id`);
+
+--
+-- Indices de la tabla `suscripciones`
+--
+ALTER TABLE `suscripciones`
+  ADD PRIMARY KEY (`suscripcion_id`),
+  ADD KEY `idx_empresa_id` (`empresa_id`),
+  ADD KEY `idx_estado` (`estado`),
+  ADD KEY `idx_fecha_vencimiento` (`fecha_vencimiento`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -566,6 +676,12 @@ ALTER TABLE `empresas`
   MODIFY `empresa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
+-- AUTO_INCREMENT de la tabla `pagos_log`
+--
+ALTER TABLE `pagos_log`
+  MODIFY `log_id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
@@ -576,6 +692,12 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `rutas`
   MODIFY `ruta_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+
+--
+-- AUTO_INCREMENT de la tabla `suscripciones`
+--
+ALTER TABLE `suscripciones`
+  MODIFY `suscripcion_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -612,6 +734,12 @@ ALTER TABLE `alertas`
 ALTER TABLE `rutas`
   ADD CONSTRAINT `rutas_ibfk_1` FOREIGN KEY (`empresa_id`) REFERENCES `empresas` (`empresa_id`),
   ADD CONSTRAINT `rutas_ibfk_2` FOREIGN KEY (`creado_por_usuario_id`) REFERENCES `usuarios` (`usuario_id`);
+
+--
+-- Filtros para la tabla `suscripciones`
+--
+ALTER TABLE `suscripciones`
+  ADD CONSTRAINT `fk_suscripcion_empresa` FOREIGN KEY (`empresa_id`) REFERENCES `empresas` (`empresa_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `usuarios`

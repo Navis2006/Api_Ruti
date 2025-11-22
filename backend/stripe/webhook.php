@@ -1,9 +1,9 @@
 <?php
 /**
- * Webhook de Stripe
+ * Webhook de Stripe (GLOBAL)
  * 
  * Este archivo recibe notificaciones de Stripe cuando ocurren eventos importantes
- * como pagos completados
+ * Ahora maneja la suscripción GLOBAL del sistema, no por empresa
  */
 
 require_once __DIR__ . '/../config/stripe_config.php';
@@ -36,65 +36,54 @@ try {
             error_log("Pago completado - Session ID: " . $session->id);
             
             // Obtener metadata
-            $empresa_id = (int)($session->metadata->empresa_id ?? $session->client_reference_id);
             $usuario_id = (int)($session->metadata->usuario_id ?? 0);
             $monto = $session->amount_total / 100; // Convertir de centavos a pesos
             
-            if ($empresa_id > 0) {
-                // Crear nueva suscripción
-                $nueva_suscripcion_id = crearNuevaSuscripcion(
-                    $empresa_id,
+            // Crear nueva suscripción GLOBAL
+            $nueva_suscripcion_id = crearNuevaSuscripcionGlobal(
+                $monto,
+                $usuario_id,
+                $session->payment_intent,
+                $session->id
+            );
+            
+            if ($nueva_suscripcion_id) {
+                error_log("Nueva suscripción GLOBAL creada: ID " . $nueva_suscripcion_id);
+                
+                // Registrar en log
+                registrarLogPagoGlobal(
+                    $usuario_id,
+                    $session->id,
                     $monto,
-                    $session->payment_intent,
-                    $session->id
+                    'completado',
+                    'Pago procesado exitosamente - Suscripción global renovada'
                 );
                 
-                if ($nueva_suscripcion_id) {
-                    error_log("Nueva suscripción creada: ID " . $nueva_suscripcion_id);
-                    
-                    // Registrar en log
-                    registrarLogPago(
-                        $empresa_id,
-                        $usuario_id,
-                        $session->id,
-                        $monto,
-                        'completado',
-                        'Pago procesado exitosamente'
-                    );
-                    
-                    http_response_code(200);
-                } else {
-                    error_log("Error al crear nueva suscripción");
-                    registrarLogPago(
-                        $empresa_id,
-                        $usuario_id,
-                        $session->id,
-                        $monto,
-                        'fallido',
-                        'Error al crear suscripción en base de datos'
-                    );
-                }
+                http_response_code(200);
             } else {
-                error_log("empresa_id no válido en metadata");
+                error_log("Error al crear nueva suscripción global");
+                registrarLogPagoGlobal(
+                    $usuario_id,
+                    $session->id,
+                    $monto,
+                    'fallido',
+                    'Error al crear suscripción global en base de datos'
+                );
             }
             break;
             
         case 'checkout.session.expired':
             // Sesión de pago expiró sin completarse
             $session = $event->data->object;
-            $empresa_id = (int)($session->metadata->empresa_id ?? 0);
             $usuario_id = (int)($session->metadata->usuario_id ?? 0);
             
-            if ($empresa_id > 0) {
-                registrarLogPago(
-                    $empresa_id,
-                    $usuario_id,
-                    $session->id,
-                    0,
-                    'cancelado',
-                    'Sesión de pago expirada'
-                );
-            }
+            registrarLogPagoGlobal(
+                $usuario_id,
+                $session->id,
+                0,
+                'cancelado',
+                'Sesión de pago expirada'
+            );
             break;
             
         default:

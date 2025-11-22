@@ -1,6 +1,6 @@
 <?php
 /**
- * Verificar Estado de Pago
+ * Verificar Estado de Pago (GLOBAL)
  * 
  * Endpoint para verificar si un pago (session) fue completado exitosamente
  */
@@ -8,7 +8,7 @@
 session_start();
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['empresa_id'])) {
+if (!isset($_SESSION['usuario_id'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'No autenticado']);
     exit();
@@ -33,8 +33,8 @@ try {
     $payment_status = $session->payment_status; // 'paid', 'unpaid', 'no_payment_required'
     
     if ($payment_status === 'paid') {
-        // Verificar que la suscripción se haya actualizado en la base de datos
-        $estado_suscripcion = checkSubscription($_SESSION['empresa_id']);
+        // Verificar que la suscripción GLOBAL se haya actualizado en la base de datos
+        $estado_suscripcion = checkSubscriptionGlobal();
         
         echo json_encode([
             'success' => true,

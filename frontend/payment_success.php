@@ -17,11 +17,11 @@ if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['empresa_id']) || empty(
 
 require_once __DIR__ . '/../backend/config/db_connection.php';
 
-// Obtener información de la empresa
-$stmt = $pdo->prepare("SELECT nombre FROM empresas WHERE empresa_id = :empresa_id");
-$stmt->bindParam(':empresa_id', $_SESSION['empresa_id'], PDO::PARAM_INT);
+// Obtener nombre del sistema
+$stmt = $pdo->prepare("SELECT valor FROM sistema_config WHERE clave = 'empresa_nombre'");
 $stmt->execute();
-$empresa = $stmt->fetch(PDO::FETCH_ASSOC);
+$config = $stmt->fetch(PDO::FETCH_ASSOC);
+$nombre_sistema = $config['valor'] ?? 'Dunosusa Logística';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -82,8 +82,8 @@ $empresa = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 <div class="space-y-2">
                     <p class="text-sm text-gray-600">
-                        <span class="font-medium">Empresa:</span> 
-                        <?= htmlspecialchars($empresa['nombre'] ?? 'Su empresa') ?>
+                        <span class="font-medium">Sistema:</span> 
+                        <?= htmlspecialchars($nombre_sistema) ?>
                     </p>
                     
                     <p class="text-sm text-gray-600">

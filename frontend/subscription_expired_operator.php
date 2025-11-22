@@ -13,21 +13,20 @@ if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['empresa_id'])) {
     exit();
 }
 
-// Obtener información de suscripción
+// Obtener información de suscripción GLOBAL
 require_once __DIR__ . '/../backend/check_subscription.php';
 require_once __DIR__ . '/../backend/config/db_connection.php';
 
-$empresa_id = $_SESSION['empresa_id'];
-$estado_suscripcion = $_SESSION['suscripcion_info'] ?? checkSubscription($empresa_id);
+$estado_suscripcion = $_SESSION['suscripcion_info'] ?? checkSubscriptionGlobal();
 
-// Obtener información del administrador
-$admin = getAdministradorEmpresa($empresa_id);
+// Obtener un administrador para contacto
+$admin = getAdministradorSistema();
 
-// Obtener información de la empresa
-$stmt = $pdo->prepare("SELECT nombre FROM empresas WHERE empresa_id = :empresa_id");
-$stmt->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+// Obtener nombre de la empresa desde configuración
+$stmt = $pdo->prepare("SELECT valor FROM sistema_config WHERE clave = 'empresa_nombre'");
 $stmt->execute();
-$empresa = $stmt->fetch(PDO::FETCH_ASSOC);
+$config = $stmt->fetch(PDO::FETCH_ASSOC);
+$nombre_sistema = $config['valor'] ?? 'Dunosusa Logística';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -68,7 +67,7 @@ $empresa = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <div class="ml-3">
                     <p class="text-sm text-yellow-700">
-                        <strong><?= htmlspecialchars($empresa['nombre'] ?? 'Su empresa') ?></strong> no ha renovado la licencia mensual del software.
+                        La <strong>licencia mensual del sistema</strong> ha vencido. El acceso estará suspendido hasta que se renueve la suscripción.
                     </p>
                 </div>
             </div>

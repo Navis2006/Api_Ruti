@@ -1,15 +1,16 @@
 <?php
 /**
- * Crear Sesión de Pago en Stripe
+ * Crear Sesión de Pago en Stripe (GLOBAL)
  * 
- * Este endpoint crea una sesión de Stripe Checkout para renovar la suscripción
+ * Este endpoint crea una sesión de Stripe Checkout para renovar LA SUSCRIPCIÓN DEL SISTEMA
+ * No por empresa, sino para todo Dunosusa
  */
 
 session_start();
 header('Content-Type: application/json');
 
 // Verificar que el usuario esté autenticado
-if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['empresa_id'])) {
+if (!isset($_SESSION['usuario_id'])) {
     http_response_code(401);
     echo json_encode([
         'success' => false,
@@ -33,15 +34,11 @@ require_once __DIR__ . '/../config/db_connection.php';
 require_once __DIR__ . '/../check_subscription.php';
 
 try {
-    // Obtener información de la empresa
-    $stmt = $pdo->prepare("SELECT nombre FROM empresas WHERE empresa_id = :empresa_id");
-    $stmt->bindParam(':empresa_id', $_SESSION['empresa_id'], PDO::PARAM_INT);
+    // Obtener nombre de la empresa desde configuración (Dunosusa)
+    $stmt = $pdo->prepare("SELECT valor FROM sistema_config WHERE clave = 'empresa_nombre'");
     $stmt->execute();
-    $empresa = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$empresa) {
-        throw new Exception('Empresa no encontrada');
-    }
+    $config = $stmt->fetch(PDO::FETCH_ASSOC);
+    $nombre_empresa = $config['valor'] ?? 'Dunosusa Logística';
     
     // Crear sesión de Stripe Checkout
     $checkout_session = \Stripe\Checkout\Session::create([
@@ -51,7 +48,7 @@ try {
                 'currency' => SUBSCRIPTION_CURRENCY,
                 'product_data' => [
                     'name' => 'Renovación Mensual - Software CEDIS',
-                    'description' => 'Suscripción mensual para ' . $empresa['nombre'],
+                    'description' => 'Suscripción mensual del sistema para ' . $nombre_empresa,
                 ],
                 'unit_amount' => (int)(SUBSCRIPTION_PRICE * 100), // Stripe usa centavos
             ],
@@ -60,22 +57,19 @@ try {
         'mode' => 'payment',
         'success_url' => PAYMENT_SUCCESS_URL . '?session_id={CHECKOUT_SESSION_ID}',
         'cancel_url' => PAYMENT_CANCEL_URL,
-        'client_reference_id' => (string)$_SESSION['empresa_id'],
         'metadata' => [
-            'empresa_id' => $_SESSION['empresa_id'],
             'usuario_id' => $_SESSION['usuario_id'],
-            'tipo' => 'renovacion_suscripcion'
+            'tipo' => 'renovacion_suscripcion_global'
         ],
     ]);
     
     // Registrar en log el intento de pago
-    registrarLogPago(
-        $_SESSION['empresa_id'],
+    registrarLogPagoGlobal(
         $_SESSION['usuario_id'],
         $checkout_session->id,
         SUBSCRIPTION_PRICE,
         'iniciado',
-        'Sesión de pago creada'
+        'Sesión de pago creada para suscripción global'
     );
     
     // Devolver URL de checkout
