@@ -22,6 +22,7 @@
 </div>
 
 <div class="flex justify-end mb-4">
+    <h1 class="text-3xl font-bold mb-4 md:mb-0">Administración de Vehículos</h1>
     <button id="mostrarFormBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-sm">
         + Nuevo Vehículo
     </button>
