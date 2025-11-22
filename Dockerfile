@@ -22,4 +22,4 @@ RUN echo "<?php \n \
 # Ahora, copia el RESTO de tu código (que NO incluye config.php)
 COPY . /var/www/html/
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN cd /var/www/html && composer install --no-dev --optimize-autoloader
+RUN cd /var/www/html && rm -f composer.lock && composer install --no-dev --optimize-autoloader
