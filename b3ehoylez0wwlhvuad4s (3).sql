@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: b3ehoylez0wwlhvuad4s-mysql.services.clever-cloud.com:3306
--- Tiempo de generación: 22-11-2025 a las 15:59:32
+-- Tiempo de generación: 22-11-2025 a las 20:31:08
 -- Versión del servidor: 8.0.22-13
 -- Versión de PHP: 8.2.29
 
@@ -162,19 +162,26 @@ INSERT INTO `empresas` (`empresa_id`, `nombre`, `estado_suscripcion`, `fecha_cre
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pagos_log`
+-- Estructura de tabla para la tabla `pagos_sistema_log`
 --
 
-CREATE TABLE `pagos_log` (
+CREATE TABLE `pagos_sistema_log` (
   `log_id` int NOT NULL,
-  `empresa_id` int NOT NULL,
-  `usuario_id` int DEFAULT NULL,
+  `usuario_id` int DEFAULT NULL COMMENT 'Usuario que inició el pago',
   `stripe_session_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `monto` decimal(10,2) NOT NULL,
   `estado` enum('iniciado','completado','cancelado','fallido') COLLATE utf8mb4_unicode_ci NOT NULL,
   `mensaje` text COLLATE utf8mb4_unicode_ci,
   `fecha_creacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `pagos_sistema_log`
+--
+
+INSERT INTO `pagos_sistema_log` (`log_id`, `usuario_id`, `stripe_session_id`, `monto`, `estado`, `mensaje`, `fecha_creacion`) VALUES
+(1, 56, 'cs_test_a1MS7ilieUVSus82PVG2MMVDWe5WCYuV953WvWM1aG7Q8zAvyMdoTipi1C', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 20:14:42'),
+(2, 56, 'cs_test_a1C4DKMn6212UmAZnf92BULolAMZnLAhjuWXQN9ykPwJbtIHDxdsVrDkGZ', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 20:15:13');
 
 -- --------------------------------------------------------
 
@@ -267,12 +274,34 @@ INSERT INTO `rutas` (`ruta_id`, `empresa_id`, `nombre`, `descripcion`, `trazado_
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `suscripciones`
+-- Estructura de tabla para la tabla `sistema_config`
 --
 
-CREATE TABLE `suscripciones` (
+CREATE TABLE `sistema_config` (
+  `config_id` int NOT NULL,
+  `clave` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `valor` text COLLATE utf8mb4_unicode_ci,
+  `descripcion` text COLLATE utf8mb4_unicode_ci,
+  `actualizado_en` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `sistema_config`
+--
+
+INSERT INTO `sistema_config` (`config_id`, `clave`, `valor`, `descripcion`, `actualizado_en`) VALUES
+(1, 'empresa_nombre', 'Dunosusa Logística', 'Nombre de la empresa dueña del sistema', '2025-11-22 16:07:29'),
+(2, 'suscripcion_precio', '10.00', 'Precio mensual de la suscripción en MXN', '2025-11-22 16:07:29'),
+(3, 'suscripcion_duracion_dias', '30', 'Duración de cada suscripción en días', '2025-11-22 16:07:29');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `suscripcion_sistema`
+--
+
+CREATE TABLE `suscripcion_sistema` (
   `suscripcion_id` int NOT NULL,
-  `empresa_id` int NOT NULL,
   `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `fecha_vencimiento` timestamp NOT NULL,
   `monto_pagado` decimal(10,2) NOT NULL DEFAULT '10.00',
@@ -280,65 +309,18 @@ CREATE TABLE `suscripciones` (
   `stripe_payment_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ID de pago de Stripe',
   `stripe_session_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ID de sesión de Stripe Checkout',
   `fecha_pago` timestamp NULL DEFAULT NULL,
+  `pagado_por_usuario_id` int DEFAULT NULL COMMENT 'Administrador que realizó el pago',
   `notas` text COLLATE utf8mb4_unicode_ci,
   `creado_en` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `suscripciones`
+-- Volcado de datos para la tabla `suscripcion_sistema`
 --
 
-INSERT INTO `suscripciones` (`suscripcion_id`, `empresa_id`, `fecha_inicio`, `fecha_vencimiento`, `monto_pagado`, `estado`, `stripe_payment_id`, `stripe_session_id`, `fecha_pago`, `notas`, `creado_en`) VALUES
-(1, 1, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(2, 2, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(3, 3, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(4, 4, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(5, 5, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(6, 6, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(7, 7, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(8, 8, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(9, 9, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(10, 10, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(11, 11, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(12, 12, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(13, 13, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(14, 14, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(15, 15, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(16, 16, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(17, 17, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(18, 18, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(19, 19, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(20, 20, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(21, 21, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(22, 22, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(23, 23, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(24, 24, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(25, 25, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(26, 26, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(27, 27, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(28, 28, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(29, 29, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(30, 30, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(31, 31, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(32, 32, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(33, 33, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(34, 34, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(35, 35, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(36, 36, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(37, 37, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(38, 38, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(39, 39, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(40, 40, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(41, 41, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(42, 42, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(43, 43, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(44, 44, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(45, 45, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(46, 46, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(47, 47, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(48, 48, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(49, 49, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17'),
-(50, 50, '2025-11-22 06:05:17', '2025-12-22 06:05:17', 0.00, 'activa', NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días', '2025-11-22 06:05:17');
+INSERT INTO `suscripcion_sistema` (`suscripcion_id`, `fecha_inicio`, `fecha_vencimiento`, `monto_pagado`, `estado`, `stripe_payment_id`, `stripe_session_id`, `fecha_pago`, `pagado_por_usuario_id`, `notas`, `creado_en`) VALUES
+(1, '2025-11-22 16:07:29', '2025-11-22 16:13:50', 0.00, 'vencida', NULL, NULL, NULL, NULL, '', '2025-11-22 16:07:29'),
+(2, '2025-11-22 20:30:39', '2025-12-22 20:30:39', 0.00, 'activa', NULL, NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días para Dunosusa', '2025-11-22 20:30:39');
 
 -- --------------------------------------------------------
 
@@ -601,11 +583,10 @@ ALTER TABLE `empresas`
   ADD PRIMARY KEY (`empresa_id`);
 
 --
--- Indices de la tabla `pagos_log`
+-- Indices de la tabla `pagos_sistema_log`
 --
-ALTER TABLE `pagos_log`
+ALTER TABLE `pagos_sistema_log`
   ADD PRIMARY KEY (`log_id`),
-  ADD KEY `idx_empresa_pago` (`empresa_id`),
   ADD KEY `idx_stripe_session` (`stripe_session_id`);
 
 --
@@ -624,11 +605,18 @@ ALTER TABLE `rutas`
   ADD KEY `creado_por_usuario_id` (`creado_por_usuario_id`);
 
 --
--- Indices de la tabla `suscripciones`
+-- Indices de la tabla `sistema_config`
 --
-ALTER TABLE `suscripciones`
+ALTER TABLE `sistema_config`
+  ADD PRIMARY KEY (`config_id`),
+  ADD UNIQUE KEY `clave` (`clave`),
+  ADD KEY `idx_clave` (`clave`);
+
+--
+-- Indices de la tabla `suscripcion_sistema`
+--
+ALTER TABLE `suscripcion_sistema`
   ADD PRIMARY KEY (`suscripcion_id`),
-  ADD KEY `idx_empresa_id` (`empresa_id`),
   ADD KEY `idx_estado` (`estado`),
   ADD KEY `idx_fecha_vencimiento` (`fecha_vencimiento`);
 
@@ -676,10 +664,10 @@ ALTER TABLE `empresas`
   MODIFY `empresa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
--- AUTO_INCREMENT de la tabla `pagos_log`
+-- AUTO_INCREMENT de la tabla `pagos_sistema_log`
 --
-ALTER TABLE `pagos_log`
-  MODIFY `log_id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pagos_sistema_log`
+  MODIFY `log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -694,10 +682,16 @@ ALTER TABLE `rutas`
   MODIFY `ruta_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
--- AUTO_INCREMENT de la tabla `suscripciones`
+-- AUTO_INCREMENT de la tabla `sistema_config`
 --
-ALTER TABLE `suscripciones`
-  MODIFY `suscripcion_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+ALTER TABLE `sistema_config`
+  MODIFY `config_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `suscripcion_sistema`
+--
+ALTER TABLE `suscripcion_sistema`
+  MODIFY `suscripcion_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -734,12 +728,6 @@ ALTER TABLE `alertas`
 ALTER TABLE `rutas`
   ADD CONSTRAINT `rutas_ibfk_1` FOREIGN KEY (`empresa_id`) REFERENCES `empresas` (`empresa_id`),
   ADD CONSTRAINT `rutas_ibfk_2` FOREIGN KEY (`creado_por_usuario_id`) REFERENCES `usuarios` (`usuario_id`);
-
---
--- Filtros para la tabla `suscripciones`
---
-ALTER TABLE `suscripciones`
-  ADD CONSTRAINT `fk_suscripcion_empresa` FOREIGN KEY (`empresa_id`) REFERENCES `empresas` (`empresa_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `usuarios`

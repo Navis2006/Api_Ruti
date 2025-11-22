@@ -16,7 +16,6 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<<<<<<< HEAD
 <div id="mensajeExito" style="display:none;" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
     <strong class="font-bold">¡Éxito!</strong>
     <span class="block sm:inline">El vehículo se agregó/actualizó correctamente.</span>
@@ -133,27 +132,6 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-=======
-<script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
-
-<script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css" />
-
-
-<div x-data="{ formVisible: false }" @open-form.window="formVisible = true">
-
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 class="text-3xl font-bold mb-4 md:mb-0">Administración de Vehículos</h1>
-        
-        <button 
-            @click="formVisible = true; setCreateMode();" 
-            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
-        >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            Añadir Nuevo Vehículo
-        </button>
->>>>>>> 4e34544ad54866b12986c4c2b85cc58fd3b9edae
     </div>
 
     <div 
