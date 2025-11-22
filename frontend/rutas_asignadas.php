@@ -90,3 +90,5 @@ if (function_exists('getTravelsForTrailero')) {
 <?php
 require_once 'footer_operador.php'; // Cierra la página
 ?>
+
+<!-- Se borrara -->

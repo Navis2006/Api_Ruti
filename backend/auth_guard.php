@@ -1,15 +1,32 @@
 <?php
 // backend/auth_guard.php
 session_start();
+require_once __DIR__ . '/config/jwt_utils.php';
 
 // Definimos los roles aquí para que estén disponibles globalmente
 define('ROL_GERENTE', 1);
 define('ROL_TRAILERO', 2);
 
-// 1. ¿Está logueado? (Revisamos ID y Rol)
-if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol_id'])) {
-    $_SESSION['error_message'] = "Por favor, inicia sesión para continuar.";
-    // Corregido: Redirige a index.php, no a login.php
+$token_valid = false;
+
+if (isset($_COOKIE['jwt'])) {
+    $user_data = validate_jwt($_COOKIE['jwt']);
+    if ($user_data) {
+        // El token es válido, reconstruimos la sesión para compatibilidad
+        $_SESSION['usuario_id'] = $user_data['id'];
+        $_SESSION['rol_id'] = $user_data['rol'];
+        $token_valid = true;
+    }
+}
+
+// 1. ¿El token no fue válido?
+if (!$token_valid) {
+    // Limpiamos cualquier sesión antigua y la cookie
+    session_unset();
+    session_destroy();
+    setcookie("jwt", "", time() - 3600, "/"); // Expira la cookie
+
+    $_SESSION['error_message'] = "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.";
     header('Location: ../index.php'); 
     exit();
 }

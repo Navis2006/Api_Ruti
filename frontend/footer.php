@@ -1,4 +1,5 @@
-        </main> <!-- Cierre de <main> -->
-    </div> <!-- Cierre de <div class="flex h-screen"> -->
-</body>
+<?php
+// footer.php
+?>
+            </main> </div> </div> </body>
 </html>

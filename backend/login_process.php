@@ -24,7 +24,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user) {
             if (password_verify($contrasena, $user['contrasena_hash'])) {
-                // Autenticación exitosa
+                // Autenticación exitosa - Generar JWT
+                require_once 'config/jwt_utils.php';
+                $token = generate_jwt($user['usuario_id'], $user['rol_id']);
+                
+                // Guardar el token en una cookie HttpOnly
+                setcookie("jwt", $token, [
+                    'expires' => time() + 3600, // 1 hora
+                    'path' => '/',
+                    'secure' => false, // Poner a true en producción con HTTPS
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+                
                 $_SESSION['usuario_id'] = $user['usuario_id'];
                 $_SESSION['rol_id'] = $user['rol_id'];
                 $_SESSION['empresa_id'] = $user['empresa_id'];

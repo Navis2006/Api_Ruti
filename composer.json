@@ -1,9 +1,16 @@
 {
-    "name": "api-ruti/cedis-management",
+    "name": "mvina/api_ruti",
     "description": "Sistema de gestión de CEDIS de trailers con suscripción mensual",
     "type": "project",
+    "authors": [
+        {
+            "name": "marijo-vina",
+            "email": "mvinajera@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=7.4",
+        "firebase/php-jwt": "^6.11",
         "stripe/stripe-php": "^10.0"
     },
     "config": {
