@@ -30,12 +30,13 @@ try {
             if ($action === 'create') {
                 $stmt = $pdo->prepare("INSERT INTO vehiculos (empresa_id, nombre, placa, tipo, estatus, altura_metros, ancho_metros, largo_metros, peso_toneladas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$empresa_id, $nombre, $placa, $tipo, $estatus, $altura_metros, $ancho_metros, $largo_metros, $peso_toneladas]);
+
             } else { // update
                 if (!$vehiculo_id) throw new Exception("ID de vehículo no válido.");
                 $stmt = $pdo->prepare("UPDATE vehiculos SET empresa_id=?, nombre=?, placa=?, tipo=?, estatus=?, altura_metros=?, ancho_metros=?, largo_metros=?, peso_toneladas=? WHERE vehiculo_id = ?");
                 $stmt->execute([$empresa_id, $nombre, $placa, $tipo, $estatus, $altura_metros, $ancho_metros, $largo_metros, $peso_toneladas, $vehiculo_id]);
             }
-            header('Location: ' . $redirect_url . '?status=success');
+            header('Location: ' . $redirect_url . '?success=true');
             exit();
 
         case 'update_status':

@@ -1,1 +1,27 @@
-config/db_connection.php
+# No subir archivos sensibles al repositorio
+/vendor/
+.env
+.env.local
+.env.*.local
+
+# Archivos de configuración locales
+backend/config/local_stripe_config.php
+
+# Logs
+*.log
+error.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp

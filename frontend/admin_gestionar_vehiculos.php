@@ -17,9 +17,20 @@ $vehiculos = $pdo->query("
     <h1 class="text-3xl font-bold">Administración de Vehículos</h1>
 </header>
 
-<!-- Formulario de Creación/Edición -->
-<div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+<div id="mensajeExito" style="display:none;" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+    <strong class="font-bold">¡Éxito!</strong>
+    <span class="block sm:inline">El vehículo se agregó/actualizó correctamente.</span>
+</div>
+
+<div class="flex justify-end mb-4">
+    <button id="mostrarFormBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-sm">
+        + Nuevo Vehículo
+    </button>
+</div>
+
+<div id="formularioVehiculo" class="bg-white p-6 rounded-lg shadow-sm mb-8" style="display:none;">
     <h2 id="form-title" class="text-2xl font-bold mb-4">Añadir Nuevo Vehículo</h2>
+    
     <form id="vehiculoForm" method="POST" action="../backend/admin_gestionar_vehiculos_process.php" class="space-y-4">
         <input type="hidden" id="vehiculo_id" name="vehiculo_id">
         <input type="hidden" id="action" name="action" value="create">
@@ -83,7 +94,6 @@ $vehiculos = $pdo->query("
     </form>
 </div>
 
-<!-- Listado de Vehículos -->
 <div class="bg-white p-6 rounded-lg shadow-sm">
      <h2 class="text-2xl font-bold mb-4">Listado de Vehículos</h2>
     <div class="overflow-x-auto">
@@ -128,7 +138,13 @@ $vehiculos = $pdo->query("
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Tu script de JS para Editar/Cancelar y Cambiar Estatus (sin cambios)
+    // --- INICIO DE NUEVAS VARIABLES ---
+    const formularioVehiculo = document.getElementById('formularioVehiculo');
+    const mostrarFormBtn = document.getElementById('mostrarFormBtn');
+    const mensajeExito = document.getElementById('mensajeExito');
+    // --- FIN DE NUEVAS VARIABLES ---
+
+    // Tu script de JS para Editar/Cancelar y Cambiar Estatus
     const form = document.getElementById('vehiculoForm');
     const formTitle = document.getElementById('form-title');
     const actionInput = document.getElementById('action');
@@ -150,6 +166,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('peso_toneladas').value = vehiculo.peso_toneladas;
         submitButton.textContent = 'Actualizar Vehículo';
         cancelButton.style.display = 'inline-block';
+        
+        // --- NUEVO: Mostrar formulario y ocultar botón 'Nuevo' ---
+        formularioVehiculo.style.display = 'block';
+        mostrarFormBtn.style.display = 'none';
+        // --- FIN NUEVO ---
+
         form.scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -159,8 +181,39 @@ document.addEventListener('DOMContentLoaded', function() {
         actionInput.value = 'create';
         submitButton.textContent = 'Crear Vehículo';
         cancelButton.style.display = 'none';
+
+        // --- NUEVO: Ocultar formulario y mostrar botón 'Nuevo' ---
+        formularioVehiculo.style.display = 'none';
+        mostrarFormBtn.style.display = 'block';
+        // --- FIN NUEVO ---
     };
 
+    // --- INICIO DE NUEVOS EVENT LISTENERS ---
+
+    // 1. Mostrar el formulario al hacer clic en '+ Nuevo Vehículo'
+    mostrarFormBtn.addEventListener('click', () => {
+        setCreateMode(); // Resetea el form por si acaso
+        formularioVehiculo.style.display = 'block'; // Muestra el form
+        mostrarFormBtn.style.display = 'none'; // Oculta el botón '+ Nuevo'
+        formularioVehiculo.scrollIntoView({ behavior: 'smooth' }); // Baja al form
+    });
+
+    // 2. Revisar si la URL tiene "?success=true" al cargar la página
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+        mensajeExito.style.display = 'block';
+        // Ocultar el mensaje después de 3 segundos
+        setTimeout(() => {
+            mensajeExito.style.display = 'none';
+        }, 3000);
+        
+        // Limpia la URL para que el mensaje no reaparezca si el usuario recarga
+        window.history.replaceState(null, null, window.location.pathname);
+    }
+    // --- FIN DE NUEVOS EVENT LISTENERS ---
+
+
+    // (Tu código existente para 'Editar' y 'Cancelar' no cambia)
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', function() {
             const vehiculoData = JSON.parse(this.dataset.vehiculo);
@@ -168,8 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    cancelButton.addEventListener('click', setCreateMode);
+    // El botón 'Cancelar' ahora también oculta el form gracias a 'setCreateMode'
+    cancelButton.addEventListener('click', setCreateMode); 
 
+    // (Tu código existente para 'Dar de Baja' no cambia)
     document.querySelectorAll('.btn-status').forEach(button => {
         button.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -190,7 +245,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    window.location.reload();
+                    // NUEVO: Redirigir con parámetro de éxito para mostrar el mensaje
+                    window.location.href = window.location.pathname + '?success=true';
                 } else {
                     alert('Error: ' + data.message);
                 }

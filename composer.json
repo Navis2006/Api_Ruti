@@ -1,0 +1,16 @@
+{
+    "name": "api-ruti/cedis-management",
+    "description": "Sistema de gestión de CEDIS de trailers con suscripción mensual",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "stripe/stripe-php": "^10.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
