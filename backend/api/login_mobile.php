@@ -49,7 +49,7 @@ try {
     if ($user && password_verify($password, $user['contrasena_hash'])) {
 
         // Verificar estatus
-        if (isset($user['estatus']) && $user['estatus'] !== 'Activo') {
+        if (isset($user['estatus']) && $user['estatus'] !== 'activo') {
             http_response_code(403);
             echo json_encode(["success" => false, "message" => "Usuario inactivo o suspendido."]);
             exit();
