@@ -11,17 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 require_once '../config/db_connection.php';
-require_once '../config/jwt_utils.php';
+// INCLUIR LA NUEVA GUARDIA MÓVIL
+require_once '../auth_mobile_guard.php'; 
+// $operador_id ya está definido por auth_mobile_guard.php
 $viaje_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 try {
-    // 2. Validar Token (Igual que arriba)
-    // $operador_id = ...;
-    
-    if (!isset($operador_id)) {
-        // http_response_code(401); ...
-        // exit();
-        $operador_id = 12; // HARDCODE TEST
-    }
     if ($viaje_id <= 0) {
         http_response_code(400); 
         echo json_encode(["success" => false, "message" => "ID de viaje inválido."]);

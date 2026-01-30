@@ -1,36 +1,21 @@
 <?php
 // backend/api/get_my_trips.php
-// 1. Headers CORS y JSON (Igual que en login_mobile.php)
+// 1. Headers CORS y JSON
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-// Manejar OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 require_once '../config/db_connection.php';
-require_once '../config/jwt_utils.php'; // Necesario para validar el token
+// INCLUIR LA NUEVA GUARDIA MÓVIL
+require_once '../auth_mobile_guard.php'; 
+// $operador_id ya está definido por auth_mobile_guard.php
 try {
-    // 2. Validar Token JWT
-    // (Asumimos que tienes una función validate_jwt() o similar en jwt_utils.php)
-    // $payload = validate_jwt_from_headers(); // Implementar según tu jwt_utils
-    // $operador_id = $payload['usuario_id'];
-    
-    // OJO: Si auth_mobile_guard.php ya hace esto, inclúyelo:
-    // require_once '../auth_mobile_guard.php'; 
-    // $operador_id = $user_id_from_token;
-    
-    // HARDCODE TEMPORAL para probar si aún no tienes el validador:
-    // $operador_id = 12; // Descomentar para probar sin token
-    
-    if (!isset($operador_id)) {
-        http_response_code(401);
-        echo json_encode(["success" => false, "message" => "Token no válido o expirado."]);
-        exit();
-    }
+    // ... resto del código igual ...
     // 3. Consultas SQL (Lógica original de menu_trailero.php)
     
     // A. Viaje Actual
