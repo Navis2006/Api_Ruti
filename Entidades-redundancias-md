@@ -1,0 +1,165 @@
+Análisis de la Base de Datos
+Este documento detalla las entidades, atributos y relaciones identificadas a partir del archivo de respaldo de la base de datos b3ehoylez0wwlhvuad4s.
+
+Entidades y Atributos
+1. empresas
+Representa las compañías de transporte que utilizan el sistema.
+
+empresa_id (PK): Identificador único de la empresa.
+nombre: Nombre de la empresa.
+estado_suscripcion: Estado actual de la suscripción (ej. 'Activa', 'Inactiva').
+fecha_creacion: Fecha de registro de la empresa.
+2. roles
+Define los roles de usuario disponibles en el sistema (ej. Gerente, Operador).
+
+rol_id (PK): Identificador único del rol.
+nombre_rol: Nombre descriptivo del rol.
+3. usuarios
+Usuarios del sistema con acceso a la plataforma.
+
+usuario_id (PK): Identificador único del usuario.
+empresa_id (FK): Referencia a la empresa a la que pertenece.
+rol_id (FK): Referencia al rol que desempeña.
+estatus: Estado del usuario (ej. 'activo', 'inactivo').
+nombre: Nombre(s) del usuario.
+apellidos: Apellidos del usuario.
+email: Correo electrónico (único).
+contrasena_hash: Hash de la contraseña para autenticación.
+fecha_creacion: Fecha de registro del usuario.
+4. vehiculos
+Flota de vehículos pertenecientes a las empresas.
+
+vehiculo_id (PK): Identificador único del vehículo.
+empresa_id (FK): Referencia a la empresa propietaria.
+nombre: Nombre interno o alias del vehículo.
+placa: Matrícula del vehículo (única).
+tipo: Tipo de vehículo (ej. Torton, Full).
+estatus: Estado actual (ej. 'en_servicio', 'en_mantenimiento').
+altura_metros: Dimensiones del vehículo.
+ancho_metros: Dimensiones del vehículo.
+largo_metros: Dimensiones del vehículo.
+peso_toneladas: Capacidad o peso.
+5. rutas
+Rutas definidas por las empresas para sus operaciones.
+
+ruta_id (PK): Identificador único de la ruta.
+empresa_id (FK): Referencia a la empresa dueña de la ruta.
+nombre: Nombre descriptivo de la ruta.
+descripcion: Detalles adicionales.
+trazado_geom: Geometría espacial del trazado de la ruta.
+creado_por_usuario_id (FK): Referencia al usuario que creó la ruta.
+6. alertas
+Incidencias o puntos de interés reportados sobre una ruta.
+
+alerta_id (PK): Identificador único de la alerta.
+ruta_id (FK): Referencia a la ruta asociada.
+descripcion: Detalle de la alerta.
+tipo_alerta: Categoría (ej. 'Baches', 'Calle angosta').
+nivel: Nivel de severidad.
+estatus_alerta: Estado (ej. 'Abierta').
+ubicacion_geom: Coordenadas geográficas de la alerta.
+creado_por_usuario_id (FK): Referencia al usuario que reportó.
+7. viajes
+Asignaciones de rutas a operadores y vehículos.
+
+viaje_id (PK): Identificador único del viaje.
+ruta_id (FK): Ruta a recorrer.
+operador_usuario_id (FK): Conductor asignado.
+vehiculo_id (FK): Vehículo utilizado.
+asignado_por_usuario_id (FK): Usuario que programó el viaje.
+estado: Estado del viaje (ej. 'Asignado', 'Finalizado').
+fecha_asignacion: Cuándo se programó.
+fecha_inicio: Inicio real.
+fecha_finalizacion: Fin real.
+8. suscripcion_sistema
+Registro de periodos de suscripción y pagos generales del sistema (parece ser global o administrativo).
+
+suscripcion_id (PK): Identificador único.
+fecha_inicio: Inicio del periodo.
+fecha_vencimiento: Fin del periodo.
+monto_pagado: Importe.
+estado: Estado del pago/suscripción.
+stripe_payment_id: ID de transacción externa.
+stripe_session_id: ID de sesión externa.
+fecha_pago: Momento del pago.
+pagado_por_usuario_id: Referencia al usuario pagador (implícito).
+notas: Comentarios.
+creado_en: Registro.
+9. pagos_sistema_log
+Bitácora de intentos y transacciones de pago.
+
+log_id (PK): Identificador del log.
+usuario_id: Usuario asociado al intento.
+stripe_session_id: Identificador externo.
+monto: Cantidad.
+estado: Resultado (ej. 'completado', 'fallido').
+mensaje: Respuesta del sistema de pagos.
+fecha_creacion: Fecha del evento.
+10. sistema_config
+Configuraciones globales del sistema.
+
+config_id (PK): Identificador.
+clave: Clave de configuración (única).
+valor: Valor de configuración.
+descripcion: Para qué sirve.
+actualizado_en: Última modificación.
+Relaciones Entre Entidades
+Estas relaciones definen cómo interactúan los datos y deben reflejarse en sus diagramas ER.
+
+Usuarios y Organización
+usuarios > empresas: Relación Muchos a Uno. Un usuario pertenece a una sola empresa.
+usuarios.empresa_id -> empresas.empresa_id
+usuarios > roles: Relación Muchos a Uno. Un usuario tiene un rol específico.
+usuarios.rol_id -> roles.rol_id
+Gestión de Flota y Rutas
+vehiculos > empresas: Relación Muchos a Uno. Un vehículo pertenece a una empresa.
+vehiculos.empresa_id -> empresas.empresa_id
+rutas > empresas: Relación Muchos a Uno. Una ruta pertenece a la biblioteca de rutas de una empresa.
+rutas.empresa_id -> empresas.empresa_id
+rutas > usuarios (Creador): Relación Muchos a Uno. Una ruta es registrada por un usuario específico.
+rutas.creado_por_usuario_id -> usuarios.usuario_id
+Operatividad (Viajes y Alertas)
+alertas > rutas: Relación Muchos a Uno. Una alerta ocurre sobre una ruta específica.
+alertas.ruta_id -> rutas.ruta_id
+alertas > usuarios: Relación Muchos a Uno. Una alerta es reportada por un usuario.
+alertas.creado_por_usuario_id -> usuarios.usuario_id
+viajes > rutas: Relación Muchos a Uno. Un viaje ejecuta una ruta definida.
+viajes.ruta_id -> rutas.ruta_id
+viajes > usuarios (Operador): Relación Muchos a Uno. Un viaje es conducido por un operador.
+viajes.operador_usuario_id -> usuarios.usuario_id
+viajes > vehiculos: Relación Muchos a Uno. Un viaje utiliza un vehículo específico.
+viajes.vehiculo_id -> vehiculos.vehiculo_id
+viajes > usuarios (Asignador): Relación Muchos a Uno. Un viaje es programado/asignado por un usuario administrativo.
+viajes.asignado_por_usuario_id -> usuarios.usuario_id
+
+Análisis de Redundancia y Oportunidades de Mejora
+Se realizó un análisis profundo para identificar duplicidad de datos y riesgos de integridad.
+
+1. Duplicación de Estado Crítico (Riesgo Alto)
+Existe una redundancia peligrosa en el manejo del estado de las suscripciones:
+
+Problema: El estado se almacena en dos lugares:
+empresas.estado_suscripcion ('Activa', 'Inactiva')
+suscripcion_sistema.estado ('activa', 'vencida', 'cancelada')
+Riesgo: Desincronización. Una empresa podría tener estatus 'Activa' en su perfil mientras su suscripción real está 'vencida' en la tabla de sistema.
+Solución: Eliminar empresas.estado_suscripcion y calcular el estado en tiempo real consultando la tabla suscripcion_sistema (o usar una VISTA).
+2. Violación de Integridad en Relaciones (Riesgo Medio)
+La tabla viajes presenta dependencias cruzadas no controladas:
+
+Problema: Un viaje relaciona ruta_id, vehiculo_id y operador_usuario_id.
+Ruta pertenece a Empresa A.
+Vehículo pertenece a Empresa A.
+Operador pertenece a Empresa A.
+Riesgo: Nada en la base de datos impide crear un viaje donde la Ruta sea de la Empresa A pero el Vehículo de la Empresa B.
+Solución: Agregar empresa_id a la tabla viajes y crear Constraint Check o llaves foráneas compuestas (empresa_id, ruta_id), (empresa_id, vehiculo_id) para asegurar que todos los activos pertenezcan a la misma organización.
+3. Falta de Normalización en Catálogos (Riesgo Bajo)
+Uso de cadenas de texto repetitivas ("Hardcoded references"):
+
+Campos Afectados:
+vehiculos.tipo: ('Torton', 'Rabón', 'Full'...)
+alertas.tipo_alerta: ('Baches', 'Calle angosta'...)
+vehiculos.estatus: ('en_servicio', 'en_mantenimiento'...)
+Solución: Normalizar creando tablas vehiculos_tipos, alertas_tipos, etc. Esto evita errores de dedo ("Rabon" vs "Rabón") y facilita reportes.
+4. Datos Históricos vs Transaccionales (Aceptable)
+Observación: suscripcion_sistema mantiene el estado actual y pagos_sistema_log el historial de intentos.
+Veredicto: Esta redundancia es aceptable y necesaria para fines de auditoría financiera. No se recomienda cambios aquí.

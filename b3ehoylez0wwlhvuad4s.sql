@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: b3ehoylez0wwlhvuad4s-mysql.services.clever-cloud.com:3306
--- Tiempo de generación: 22-11-2025 a las 20:31:08
+-- Tiempo de generación: 30-01-2026 a las 15:33:16
 -- Versión del servidor: 8.0.22-13
--- Versión de PHP: 8.2.29
+-- Versión de PHP: 8.2.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -157,7 +157,8 @@ INSERT INTO `empresas` (`empresa_id`, `nombre`, `estado_suscripcion`, `fecha_cre
 (47, 'Distribuciones Comerciales de la Península', 'Activa', '2025-10-10 00:14:26'),
 (48, 'Transporte Especializado de Vidrio y Cristal', 'Activa', '2025-10-10 00:14:26'),
 (49, 'Logística para la Industria Maquiladora', 'Activa', '2025-10-10 00:14:26'),
-(50, 'Transportes de Cemento y Concreto \"Holbox\"', 'Activa', '2025-10-10 00:14:26');
+(50, 'Transportes de Cemento y Concreto \"Holbox\"', 'Activa', '2025-10-10 00:14:26'),
+(52, 'dunosusa', 'Activa', '2025-11-30 22:34:34');
 
 -- --------------------------------------------------------
 
@@ -181,7 +182,26 @@ CREATE TABLE `pagos_sistema_log` (
 
 INSERT INTO `pagos_sistema_log` (`log_id`, `usuario_id`, `stripe_session_id`, `monto`, `estado`, `mensaje`, `fecha_creacion`) VALUES
 (1, 56, 'cs_test_a1MS7ilieUVSus82PVG2MMVDWe5WCYuV953WvWM1aG7Q8zAvyMdoTipi1C', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 20:14:42'),
-(2, 56, 'cs_test_a1C4DKMn6212UmAZnf92BULolAMZnLAhjuWXQN9ykPwJbtIHDxdsVrDkGZ', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 20:15:13');
+(2, 56, 'cs_test_a1C4DKMn6212UmAZnf92BULolAMZnLAhjuWXQN9ykPwJbtIHDxdsVrDkGZ', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 20:15:13'),
+(3, 56, 'cs_test_a1aQKoUcAnv4OfEETsCLuIQwy7UN8QtCAMlwq4l1ui16JrhJnKKYdJ7nzV', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 20:57:03'),
+(4, 56, 'cs_test_a1fpdRjjNeSQEAAQE10Pd3J0VkdzbCv4tJT1XOJRQheFUlfpvzuuBVCDG6', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 20:59:59'),
+(5, 56, 'cs_test_a1gB6UhqvUV1Rq2Ef7JkYmzqFUWUm2GpcTHZvCTrYxoY2hUEFs1hgTjFEh', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 21:04:58'),
+(6, 56, 'cs_test_a1gB6UhqvUV1Rq2Ef7JkYmzqFUWUm2GpcTHZvCTrYxoY2hUEFs1hgTjFEh', 10.00, 'completado', 'Pago procesado exitosamente - Suscripción global renovada', '2025-11-22 21:05:05'),
+(7, 56, 'cs_test_a1EJ0YYE28D9mkVChPq1zOF8daPShD2uyPXcos3FxOjlwoGs2C2CAWdf7N', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-11-22 21:07:28'),
+(8, 56, 'cs_test_a1EJ0YYE28D9mkVChPq1zOF8daPShD2uyPXcos3FxOjlwoGs2C2CAWdf7N', 10.00, 'completado', 'Pago procesado exitosamente - Suscripción global renovada', '2025-11-22 21:07:42'),
+(9, 56, 'cs_test_a1MS7ilieUVSus82PVG2MMVDWe5WCYuV953WvWM1aG7Q8zAvyMdoTipi1C', 0.00, 'cancelado', 'Sesión de pago expirada', '2025-11-23 20:14:55'),
+(10, 56, 'cs_live_a1lYYnlBEWRLreDzL3QYexC15oMlNccf7IaJHzHlssILP3Q95aW3wHCReX', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-12-01 18:12:44'),
+(11, 56, 'cs_live_a1lYYnlBEWRLreDzL3QYexC15oMlNccf7IaJHzHlssILP3Q95aW3wHCReX', 10.00, 'completado', 'Pago procesado exitosamente - Suscripción global renovada', '2025-12-01 18:19:40'),
+(12, 56, 'cs_live_a1rCerNSTFh2fXnRhOvt8IjWTxa7bRdx85TBUi7DqVwrVZFcwVygWZiUvl', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-12-01 18:25:18'),
+(13, 56, 'cs_live_a1J3mZLXgjUv2XmTU5G6T8TBd9MXD64D3EFw3q9vS7D1csk7s2zRREX6vj', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-12-01 18:26:30'),
+(14, 56, 'cs_live_a1yusBJu2EOtnRwEk6lED2vPuFhgGOhWg9CIt10X2lkZNJTapZ6RBEMeyX', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2025-12-02 17:27:01'),
+(15, 56, 'cs_live_a1yusBJu2EOtnRwEk6lED2vPuFhgGOhWg9CIt10X2lkZNJTapZ6RBEMeyX', 10.00, 'completado', 'Pago procesado exitosamente - Suscripción global renovada', '2025-12-02 17:27:38'),
+(16, 56, 'cs_live_a1zv4bW04fZ894RPKs1nvqdYlSKziaQQMSMu6XQGiAefro0ny7lsCWeq5P', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2026-01-08 15:56:52'),
+(17, 56, 'cs_live_a1dlJcgoLWEWMPlFZ90cp2RI4fei3JAM0L4b3EK4Kh5U2dBgLhwCRvJm8M', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2026-01-08 16:02:04'),
+(18, 56, 'cs_test_a1zcDZiqWML6cMMkIeTmvdbd1yYCztk4PMEJIV40DtOpx1Ifd5sSRufDb1', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2026-01-12 17:24:29'),
+(19, 56, 'cs_test_a1plBu47lU0QA1KxMnb1RLUDIzEbZOd2QY3JlBxEfxHkidznZOIaOeAjEd', 10.00, 'iniciado', 'Sesión de pago creada para suscripción global', '2026-01-12 17:39:24'),
+(20, 56, 'cs_test_a1plBu47lU0QA1KxMnb1RLUDIzEbZOd2QY3JlBxEfxHkidznZOIaOeAjEd', 10.00, 'completado', 'Pago procesado exitosamente - Suscripción global renovada', '2026-01-12 17:39:59'),
+(21, 56, 'cs_test_a1zcDZiqWML6cMMkIeTmvdbd1yYCztk4PMEJIV40DtOpx1Ifd5sSRufDb1', 0.00, 'cancelado', 'Sesión de pago expirada', '2026-01-13 17:25:07');
 
 -- --------------------------------------------------------
 
@@ -319,8 +339,13 @@ CREATE TABLE `suscripcion_sistema` (
 --
 
 INSERT INTO `suscripcion_sistema` (`suscripcion_id`, `fecha_inicio`, `fecha_vencimiento`, `monto_pagado`, `estado`, `stripe_payment_id`, `stripe_session_id`, `fecha_pago`, `pagado_por_usuario_id`, `notas`, `creado_en`) VALUES
-(1, '2025-11-22 16:07:29', '2025-11-22 16:13:50', 0.00, 'vencida', NULL, NULL, NULL, NULL, '', '2025-11-22 16:07:29'),
-(2, '2025-11-22 20:30:39', '2025-12-22 20:30:39', 0.00, 'activa', NULL, NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días para Dunosusa', '2025-11-22 20:30:39');
+(1, '2025-11-22 16:07:29', '2026-01-09 15:23:07', 0.00, 'cancelada', NULL, NULL, NULL, NULL, '', '2025-11-22 16:07:29'),
+(2, '2025-11-22 20:30:39', '2026-01-09 15:23:15', 0.00, 'cancelada', NULL, NULL, NULL, NULL, 'Suscripción inicial gratuita - 30 días para Dunosusa', '2025-11-22 20:30:39'),
+(3, '2025-11-22 21:05:05', '2026-01-09 15:23:22', 10.00, 'cancelada', 'pi_3SWNzP6Eb8PxRESj1WbmH115', 'cs_test_a1gB6UhqvUV1Rq2Ef7JkYmzqFUWUm2GpcTHZvCTrYxoY2hUEFs1hgTjFEh', '2025-11-22 21:05:05', 56, NULL, '2025-11-22 21:05:05'),
+(4, '2025-11-22 21:07:41', '2026-01-09 15:22:52', 10.00, 'cancelada', 'pi_3SWO1v6Eb8PxRESj1ywWQOQa', 'cs_test_a1EJ0YYE28D9mkVChPq1zOF8daPShD2uyPXcos3FxOjlwoGs2C2CAWdf7N', '2025-11-22 21:07:42', 56, NULL, '2025-11-22 21:07:42'),
+(5, '2025-12-01 18:19:39', '2026-01-09 15:23:00', 10.00, 'cancelada', 'pi_3SZbhDJGi991u51B0NLyhpNx', 'cs_live_a1lYYnlBEWRLreDzL3QYexC15oMlNccf7IaJHzHlssILP3Q95aW3wHCReX', '2025-12-01 18:19:39', 56, NULL, '2025-12-01 18:19:39'),
+(6, '2026-01-11 17:27:37', '2026-01-12 17:36:10', 10.00, 'vencida', 'pi_3SZxMQJGi991u51B196CJZac', 'cs_test_a1yusBJu2EOtnRwEk6lED2vPuFhgGOhWg9CIt10X2lkZNJTapZ6RBEMeyX', '2026-01-11 17:27:38', 56, NULL, '2025-12-02 17:27:38'),
+(7, '2026-01-12 17:39:58', '2026-02-11 17:39:58', 10.00, 'activa', 'pi_3Sop5s6Eb8PxRESj0se5GSlH', 'cs_test_a1plBu47lU0QA1KxMnb1RLUDIzEbZOd2QY3JlBxEfxHkidznZOIaOeAjEd', '2026-01-12 17:39:59', 56, NULL, '2026-01-12 17:39:59');
 
 -- --------------------------------------------------------
 
@@ -345,9 +370,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`usuario_id`, `empresa_id`, `rol_id`, `estatus`, `nombre`, `apellidos`, `email`, `contrasena_hash`, `fecha_creacion`) VALUES
-(1, 1, 1, 'inactivo', 'Carlos1', 'Gutiérrez Pérez', 'carlos.gutierrez@transportesrapidos.com', '1', '2025-10-10 00:14:26'),
+(1, 1, 1, 'activo', 'Carlos1', 'Gutiérrez Pérez', 'carlos.gutierrez@transportesrapidos.com', '1', '2025-10-10 00:14:26'),
 (2, 2, 1, 'inactivo', 'Ana', 'Martínez López', 'ana.martinez@logisticapeninsular.net', '$2a$12$4rY.gPS9jPz3.L0V2ZfaPuzf1e9.E7mJd.2y3i.gK3.O4h.2L9.p6', '2025-10-10 00:14:26'),
-(3, 3, 1, 'activo', 'Javier', 'Sánchez Castillo', 'javier.sanchez@fletesmayab.com', '$2a$12$4rY.gPS9jPz3.L0V2ZfaPuzf1e9.E7mJd.2y3i.gK3.O4h.2L9.p6', '2025-10-10 00:14:26'),
+(3, 3, 1, 'inactivo', 'Javier', 'Sánchez Castillo', 'javier.sanchez@fletesmayab.com', '$2a$12$4rY.gPS9jPz3.L0V2ZfaPuzf1e9.E7mJd.2y3i.gK3.O4h.2L9.p6', '2025-10-10 00:14:26'),
 (4, 4, 1, 'activo', 'Sofía', 'Ramírez Herrera', 'sofia.ramirez@abarrotesgolfo.com.mx', '$2a$12$4rY.gPS9jPz3.L0V2ZfaPuzf1e9.E7mJd.2y3i.gK3.O4h.2L9.p6', '2025-10-10 00:14:26'),
 (5, 5, 1, 'activo', 'Ricardo', 'Flores Morales', 'ricardo.flores@kukulcancarga.com', '$2a$12$4rY.gPS9jPz3.L0V2ZfaPuzf1e9.E7mJd.2y3i.gK3.O4h.2L9.p6', '2025-10-10 00:14:26'),
 (6, 6, 1, 'activo', 'Mariana', 'Gómez Vázquez', 'mariana.gomez@materialescaribe.com', '$2a$12$4rY.gPS9jPz3.L0V2ZfaPuzf1e9.E7mJd.2y3i.gK3.O4h.2L9.p6', '2025-10-10 00:14:26'),
@@ -406,7 +431,8 @@ INSERT INTO `usuarios` (`usuario_id`, `empresa_id`, `rol_id`, `estatus`, `nombre
 (60, 13, 1, 'activo', 'operadoreliminar', 'adas', 'a@gmail.com', '$2y$12$eaJ4TEIyDGKPvwwC2556GOaeI.MxjoYkDmyMwbH9IM50VVPpazF/6', '2025-11-04 01:26:53'),
 (61, 28, 2, 'activo', 'asd', 'asd', 'ab@gmail.com', '$2y$12$1XiKBCMXuaRGJRVT5wJ6Bu4XF9QF1W5kZeEqPZFOqaRJ6MB6z.ceW', '2025-11-04 01:28:11'),
 (62, 28, 2, 'activo', 'borrar1', 'ads', 'borrar2@gmail.com', '$2y$10$y6e8rIG81zfQIF8o0hZ52eituiqEKTt/CfDhM2Pc37hVWK847z8oG', '2025-11-04 01:33:57'),
-(63, 13, 2, 'inactivo', 'borrar3', 'Alonzo', 'borrar3@gmail.com', '$2y$12$SpEmRzxYwpnAjjWJTxU/P.6dBZnweJXsrjFp8hDrDzjnkGRxf5ZJy', '2025-11-14 21:19:36');
+(63, 13, 2, 'inactivo', 'borrar3', 'Alonzo', 'borrar3@gmail.com', '$2y$12$SpEmRzxYwpnAjjWJTxU/P.6dBZnweJXsrjFp8hDrDzjnkGRxf5ZJy', '2025-11-14 21:19:36'),
+(64, 14, 2, 'activo', 'operador', 'operador', 'operador@gmail.com', '$2y$10$x0nmufKvSPIc44QNVytWBu2jbJvq8wqrKO1Rimjm0pzOrhO5.7suC', '2025-11-22 20:50:10');
 
 -- --------------------------------------------------------
 
@@ -562,7 +588,8 @@ INSERT INTO `viajes` (`viaje_id`, `ruta_id`, `operador_usuario_id`, `vehiculo_id
 (52, 2, 62, 28, 22, 'Planeado', '2025-10-10 16:24:19', '2025-11-20 21:52:00', '2025-10-23 17:24:00'),
 (53, 17, 62, 34, 56, 'Cancelado', '2025-11-15 08:03:10', '2025-11-03 02:03:00', NULL),
 (54, 17, 62, 34, 56, 'En Curso', '2025-11-15 08:04:41', '2025-11-16 02:07:00', NULL),
-(55, 3, 40, 34, 56, 'En Curso', '2025-11-16 02:22:22', '2025-11-19 20:22:00', NULL);
+(55, 3, 40, 34, 56, 'Cancelado', '2025-11-16 02:22:22', '2025-11-19 20:22:00', NULL),
+(56, 2, 64, 4, 56, 'En Curso', '2026-01-30 15:28:09', '2026-01-30 15:29:06', NULL);
 
 --
 -- Índices para tablas volcadas
@@ -661,13 +688,13 @@ ALTER TABLE `alertas`
 -- AUTO_INCREMENT de la tabla `empresas`
 --
 ALTER TABLE `empresas`
-  MODIFY `empresa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `empresa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos_sistema_log`
 --
 ALTER TABLE `pagos_sistema_log`
-  MODIFY `log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -685,19 +712,19 @@ ALTER TABLE `rutas`
 -- AUTO_INCREMENT de la tabla `sistema_config`
 --
 ALTER TABLE `sistema_config`
-  MODIFY `config_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `config_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `suscripcion_sistema`
 --
 ALTER TABLE `suscripcion_sistema`
-  MODIFY `suscripcion_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `suscripcion_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `usuario_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `usuario_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT de la tabla `vehiculos`
@@ -709,7 +736,7 @@ ALTER TABLE `vehiculos`
 -- AUTO_INCREMENT de la tabla `viajes`
 --
 ALTER TABLE `viajes`
-  MODIFY `viaje_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `viaje_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- Restricciones para tablas volcadas
