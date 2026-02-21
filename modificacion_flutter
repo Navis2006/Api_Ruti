@@ -1,0 +1,55 @@
+
+Rol: Eres un Desarrollador Móvil Senior experto en Flutter, Dart, consumo de APIs REST y mapeo geoespacial usando flutter_map y latlong2.
+
+Contexto del Proyecto ("Rutitruck"):
+
+Objetivo: Terminar la vista de navegación de una aplicación móvil para operadores de tráileres. La app debe mostrar una ruta segura y legal sobre un mapa de OpenStreetMap.
+
+Estado Actual: El backend (Express.js) ya expone un endpoint que consume la API de TomTom y devuelve un arreglo limpio de coordenadas de la ruta segura.
+
+Misión Inmediata: Crear la interfaz del mapa en Flutter, consumir la API de nuestro backend, decodificar el JSON de respuesta, y trazar una línea azul (Polyline) en el mapa que guíe al operador desde su Origen hasta su Destino.
+
+Especificaciones Técnicas y Tareas de Ejecución:
+
+Fase 1: Dependencias e Inicialización (pubspec.yaml)
+Paquetes Requeridos: Indica exactamente cómo agregar flutter_map (para el mapa de OpenStreetMap), latlong2 (para el manejo de coordenadas), y http (para la petición a la API) en el archivo pubspec.yaml.
+
+Fase 2: Servicio de Conexión (API Provider)
+Clase RouteService: Crea un archivo en Dart que maneje la petición HTTP hacia el backend en Node.js.
+
+Método fetchTruckRoute: Este método debe hacer un POST a la URL de nuestra API (ej. https://mi-api-rutitruck.onrender.com/api/rutas/generar).
+
+Autenticación: La petición DEBE incluir el header Authorization: Bearer <token> con el JWT del operador logueado. Sin este header, el backend responderá 401.
+
+Payload: Debe enviar un JSON con el ID del viaje y las coordenadas de origen y destino (viaje_id, latOrigen, lngOrigen, latDestino, lngDestino). Nota: los campos de longitud usan el prefijo "lng", no "lon".
+
+Decodificación Estricta: El backend responderá con un JSON con esta estructura exacta:
+
+JSON
+{
+  "success": true,
+  "data": [
+    {"latitude": 20.90098, "longitude": -89.64128},
+    {"latitude": 20.90134, "longitude": -89.64144}
+  ]
+}
+Debes mapear ese arreglo data y convertirlo en una lista tipada: List<LatLng>.
+
+Fase 3: Interfaz de Usuario y Mapa (MapScreen)
+State Management Básico: Crea un StatefulWidget para la pantalla del mapa. Debe manejar tres estados: Cargando (esperando la ruta), Error (si falla la petición), y Éxito (ruta dibujada).
+
+Widget FlutterMap: Implementa el mapa base usando OpenStreetMap a través de un TileLayer.
+
+Botón de Acción: Agrega un FloatingActionButton o un botón en la interfaz que diga "Calcular Ruta Segura". Al presionarlo, debe llamar al RouteService, mostrar un CircularProgressIndicator sobre el mapa, y esperar la respuesta.
+
+Dibujo de la Ruta (PolylineLayer): Una vez que el servicio devuelva la List<LatLng>, pásala a un widget PolylineLayer. La línea debe ser de color azul brillante, con un grosor (strokeWidth) de 5.0 para que sea muy visible para el operador.
+
+Ajuste de Cámara (Opcional pero recomendado): Si es posible, incluye la lógica con MapController para que, una vez dibujada la ruta, la cámara del mapa haga un zoom/fit automático que permita ver toda la línea de origen a destino en la pantalla.
+
+Entregables esperados por tu parte:
+
+Las líneas a agregar en pubspec.yaml.
+
+El código completo y comentado del archivo route_service.dart.
+
+El código completo y comentado del archivo map_screen.dart integrando el mapa, los marcadores de origen/destino y la polilínea.
