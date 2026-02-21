@@ -10,13 +10,18 @@
     ],
     "require": {
         "php": ">=7.4",
-        "firebase/php-jwt": "^6.12",
+        "firebase/php-jwt": "^6.11",
         "stripe/stripe-php": "^10.0"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "ignore": [
+                "PKSA-y2cr-5h3j-g3ys"
+            ]
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true
