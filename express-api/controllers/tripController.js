@@ -11,7 +11,8 @@ const getMyTrips = async (req, res) => {
     try {
         // A. Viaje Actual (En Curso)
         const [currentRows] = await pool.execute(
-            `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre
+            `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
+              r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino
        FROM viajes v
        LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
        LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
@@ -23,7 +24,8 @@ const getMyTrips = async (req, res) => {
 
         // B. Próximos Viajes
         const [upcomingRows] = await pool.execute(
-            `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre
+            `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
+              r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino
        FROM viajes v
        LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
        LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
@@ -70,6 +72,7 @@ const getTripDetails = async (req, res) => {
             `SELECT 
           v.viaje_id, v.estado, v.fecha_inicio, 
           r.ruta_id, r.nombre as ruta_nombre, r.descripcion as ruta_descripcion,
+          r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
           ST_AsText(r.trazado_geom) as trazado_wkt, 
           ve.nombre as vehiculo_nombre, ve.placa as vehiculo_placa
        FROM viajes v

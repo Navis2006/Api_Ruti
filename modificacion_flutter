@@ -5,33 +5,145 @@ Contexto del Proyecto ("Rutitruck"):
 
 Objetivo: Mejorar la vista de navegación de una aplicación móvil para operadores de tráileres. La app muestra una ruta segura y legal sobre un mapa de OpenStreetMap. La pantalla del mapa YA EXISTE con una polilínea azul funcional.
 
-Estado Actual del Backend (Express.js en Render):
-El backend expone los siguientes endpoints de rutas (todos requieren header Authorization: Bearer <token>):
+===========================================================
+CAMBIO CRÍTICO: COORDENADAS REALES DESDE EL BACKEND
+===========================================================
 
-1. POST /api/rutas/generar → Calcula ruta nueva con TomTom y la guarda en DB
-2. GET  /api/rutas/:viaje_id → Obtiene ruta ya guardada en DB (sin llamar a TomTom)
-3. POST /api/rutas/recalcular → Recalcula ruta desde posición actual (para desvíos)
+El backend fue actualizado. TODOS los endpoints de viajes ahora devuelven
+coordenadas REALES del origen y destino de la ruta asignada al viaje.
 
-ESTRUCTURA DE RESPUESTA (igual para los 3 endpoints):
-{
-  "success": true,
-  "data": [
-    {"latitude": 20.90098, "longitude": -89.64128},
-    ...
-  ],
-  "resumen": {
-    "distanciaMetros": 10548,
-    "tiempoSegundos": 881,
-    "traficoSegundos": 0,
-    "horaSalida": "2026-02-20T16:56:11-06:00",
-    "horaLlegada": "2026-02-20T17:10:52-06:00"
-  }
-}
+Los campos nuevos son:
+- lat_origen  (double, ej: 20.9674000)
+- lng_origen  (double, ej: -89.6237000)
+- lat_destino (double, ej: 21.2833000)
+- lng_destino (double, ej: -89.6667000)
 
-CAMPOS DEL PAYLOAD:
-- generar:     { viaje_id, latOrigen, lngOrigen, latDestino, lngDestino }
-- recalcular:  { viaje_id, latActual, lngActual, latDestino, lngDestino }
-Nota: la longitud usa prefijo "lng", NO "lon".
+IMPORTANTE: Estos campos pueden ser NULL si el admin no ha definido
+coordenadas para esa ruta. Si son null, NO se debe intentar generar
+la ruta TomTom automáticamente — simplemente no mostrar ruta.
+
+Flutter debe DEJAR DE USAR coordenadas simuladas/hardcodeadas y
+obtenerlas directamente de la respuesta del backend.
+
+===========================================================
+ENDPOINTS DISPONIBLES
+===========================================================
+PHP API (Mis Viajes, Perfil, Detalle): https://api-ruti.onrender.com
+Express API (TomTom, Generar Ruta): https://rutitruck-express-api.onrender.com
+Todos requieren header: Authorization: Bearer <token>
+
+--- VIAJES ---
+
+1. GET /api/trips/my-trips
+   Devuelve viaje actual y próximos viajes con coordenadas.
+   RESPUESTA:
+   {
+     "success": true,
+     "data": {
+       "current_trip": {
+         "viaje_id": 123,
+         "estado": "En Curso",
+         "fecha_inicio": "2026-02-21 10:00:00",
+         "ruta_nombre": "Mérida - Cancún",
+         "vehiculo_nombre": "Trailer 01",
+         "lat_origen": 20.9674000,
+         "lng_origen": -89.6237000,
+         "lat_destino": 21.2833000,
+         "lng_destino": -89.6667000
+       },
+       "upcoming_trips": [
+         {
+           "viaje_id": 124,
+           "estado": "Asignado",
+           "fecha_inicio": "2026-02-22 08:00:00",
+           "ruta_nombre": "Cancún - Playa del Carmen",
+           "vehiculo_nombre": "Trailer 02",
+           "lat_origen": 21.2833000,
+           "lng_origen": -89.6667000,
+           "lat_destino": 20.6296000,
+           "lng_destino": -87.0739000
+         }
+       ]
+     }
+   }
+
+2. GET /api/trips/details/:id
+   Detalle completo de un viaje con coordenadas y alertas.
+   RESPUESTA:
+   {
+     "success": true,
+     "data": {
+       "viaje_id": 123,
+       "estado": "En Curso",
+       "fecha_inicio": "2026-02-21 10:00:00",
+       "ruta_id": 5,
+       "ruta_nombre": "Mérida - Cancún",
+       "ruta_descripcion": "Ruta principal por autopista",
+       "lat_origen": 20.9674000,
+       "lng_origen": -89.6237000,
+       "lat_destino": 21.2833000,
+       "lng_destino": -89.6667000,
+       "trazado_wkt": "LINESTRING(-89.6237 20.9674, -89.6667 21.2833)",
+       "vehiculo_nombre": "Trailer 01",
+       "vehiculo_placa": "ABC-1234",
+       "alertas_activas": []
+     }
+   }
+
+3. POST /api/trips/update-status
+   Body: { "viaje_id": 123, "action": "iniciar_viaje" }
+   Acciones válidas: "iniciar_viaje" | "finalizar_viaje"
+
+--- RUTAS TOMTOM ---
+
+4. POST /api/rutas/generar
+   Calcula ruta TomTom y la guarda en DB.
+   BODY:
+   {
+     "viaje_id": 123,
+     "latOrigen": 20.9674,
+     "lngOrigen": -89.6237,
+     "latDestino": 21.2833,
+     "lngDestino": -89.6667
+   }
+   RESPUESTA:
+   {
+     "success": true,
+     "data": [
+       {"latitude": 20.96740, "longitude": -89.62370},
+       {"latitude": 20.97100, "longitude": -89.62500},
+       ...
+     ],
+     "resumen": {
+       "distanciaMetros": 310000,
+       "tiempoSegundos": 14400,
+       "traficoSegundos": 600,
+       "horaSalida": "2026-02-21T10:00:00-06:00",
+       "horaLlegada": "2026-02-21T14:00:00-06:00"
+     }
+   }
+
+5. GET /api/rutas/:viaje_id
+   Obtiene ruta ya guardada en DB (sin llamar a TomTom).
+   Si no hay ruta guardada: responde 404.
+   Si hay ruta: misma estructura de respuesta que /generar.
+
+6. POST /api/rutas/recalcular
+   Recalcula ruta desde posición actual del GPS por desvío.
+   BODY:
+   {
+     "viaje_id": 123,
+     "latActual": 21.0500,
+     "lngActual": -89.5800,
+     "latDestino": 21.2833,
+     "lngDestino": -89.6667
+   }
+   RESPUESTA: misma estructura que /generar.
+
+NOTA IMPORTANTE SOBRE NOMENCLATURA:
+- La longitud usa prefijo "lng", NO "lon".
+- Los endpoints de generar/recalcular usan camelCase: latOrigen, lngOrigen, latDestino, lngDestino, latActual, lngActual.
+- Los campos del trip response usan snake_case: lat_origen, lng_origen, lat_destino, lng_destino.
 
 ===========================================================
 REGLA CRÍTICA DE UX: TODO DEBE SER INVISIBLE
@@ -48,24 +160,56 @@ Una vez dibujada la polilínea, no se debe mostrar ningún indicador de carga
 posterior ni mensajes de recálculo.
 
 ===========================================================
-MEJORA 1: Carga automática de ruta al abrir el mapa
+MEJORA 1: Modelo Trip actualizado con coordenadas
+===========================================================
+
+El modelo Trip de Dart DEBE ser actualizado para incluir los campos
+de coordenadas. Ya NO usar strings de ciudades como coordenadas.
+
+Campos a agregar al modelo Trip:
+- double? latOrigen
+- double? lngOrigen
+- double? latDestino
+- double? lngDestino
+
+En fromJson:
+  latOrigen:  (json['lat_origen'] as num?)?.toDouble()
+  lngOrigen:  (json['lng_origen'] as num?)?.toDouble()
+  latDestino: (json['lat_destino'] as num?)?.toDouble()
+  lngDestino: (json['lng_destino'] as num?)?.toDouble()
+
+NOTA: Estos campos pueden ser null. Antes de generar una ruta, verificar
+que las 4 coordenadas no sean null. Si alguna es null, no intentar
+generar ruta TomTom.
+
+===========================================================
+MEJORA 2: Carga automática de ruta al abrir el mapa
 ===========================================================
 
 Al abrirse la pantalla del mapa (en initState), Flutter debe automáticamente:
 
-1. Llamar al endpoint GET /api/rutas/:viaje_id con el viaje_id del viaje actual.
-2. Si responde 200: dibujar la polilínea inmediatamente. La ruta ya existe en DB.
-3. Si responde 404 (no hay ruta guardada): llamar automáticamente POST /api/rutas/generar
-   en segundo plano, generar la ruta y dibujarla. Sin mostrar ningún botón ni mensaje.
+1. Leer lat_origen, lng_origen, lat_destino, lng_destino del Trip recibido.
+2. Llamar al endpoint GET /api/rutas/:viaje_id con el viaje_id del viaje actual.
+3. Si responde 200: dibujar la polilínea inmediatamente. La ruta ya existe en DB.
+4. Si responde 404 (no hay ruta guardada): llamar automáticamente POST /api/rutas/generar
+   usando las coordenadas del Trip:
+   {
+     viaje_id: trip.viajeId,
+     latOrigen: trip.latOrigen,
+     lngOrigen: trip.lngOrigen,
+     latDestino: trip.latDestino,
+     lngDestino: trip.lngDestino
+   }
+   Generar la ruta y dibujarla. Sin mostrar ningún botón ni mensaje.
 
 Todo este proceso debe ser silencioso. El operador abre el mapa y ve la ruta dibujada
 sin presionar nada.
 
 RouteService: agregar método getRouteFromDB(viajeId, token) que haga el GET.
-Si retorna 404, llamar automáticamente a fetchTruckRoute().
+Si retorna 404, llamar automáticamente a fetchTruckRoute() usando las coordenadas del Trip.
 
 ===========================================================
-MEJORA 2: Mostrar resumen de TomTom con tiempo en TIEMPO REAL
+MEJORA 3: Mostrar resumen de TomTom con tiempo en TIEMPO REAL
 ===========================================================
 
 El backend devuelve el campo "resumen" en todos los endpoints. Mostrar en el panel
@@ -90,7 +234,7 @@ tiempoSegundos. TomTom ya devuelve tiempos actualizados porque el backend usa
 departAt=now.
 
 ===========================================================
-MEJORA 3: Detección de desvío y recálculo SILENCIOSO
+MEJORA 4: Detección de desvío y recálculo SILENCIOSO
 ===========================================================
 
 Implementar recálculo automático cuando el camión se desvía de la ruta:
@@ -104,7 +248,13 @@ Paso 1 - Detectar desvío:
 Paso 2 - Recalcular en silencio:
 - NO mostrar ningún SnackBar, banner ni indicador visual de "Recalculando".
 - Llamar al endpoint POST /api/rutas/recalcular con:
-  { viaje_id, latActual, lngActual, latDestino, lngDestino }
+  {
+    viaje_id: trip.viajeId,
+    latActual: posicionGPSActual.latitude,
+    lngActual: posicionGPSActual.longitude,
+    latDestino: trip.latDestino,
+    lngDestino: trip.lngDestino
+  }
 - Reemplazar la polilínea del mapa con la nueva ruta recibida.
 - Actualizar los datos del resumen (tiempo, distancia, hora llegada) con los nuevos valores.
 - Reiniciar el Timer del countdown con el nuevo tiempoSegundos.
@@ -118,10 +268,21 @@ Paso 3 - Evitar recálculos múltiples:
 ENTREGABLES ESPERADOS:
 ===========================================================
 
-1. Modelo Dart: route_resumen.dart (campos: distanciaMetros, tiempoSegundos,
+1. Actualización del modelo Trip (trip.dart):
+   - Agregar campos: latOrigen, lngOrigen, latDestino, lngDestino (double?)
+   - Actualizar fromJson para leer lat_origen, lng_origen, lat_destino, lng_destino
+
+2. Modelo Dart: route_resumen.dart (campos: distanciaMetros, tiempoSegundos,
    traficoSegundos, horaSalida, horaLlegada, con método fromJson)
-2. Actualización de route_service.dart: agregar getRouteFromDB() y recalcularRuta()
-3. Actualización de map_screen.dart con las 3 mejoras integradas:
+
+3. Actualización de route_service.dart:
+   - getRouteFromDB(viajeId, token) → GET /api/rutas/:viaje_id
+   - fetchTruckRoute(viajeId, latOrigen, lngOrigen, latDestino, lngDestino, token) → POST /api/rutas/generar
+   - recalcularRuta(viajeId, latActual, lngActual, latDestino, lngDestino, token) → POST /api/rutas/recalcular
+   - ELIMINAR cualquier coordenada hardcodeada o simulada
+
+4. Actualización de map_screen.dart con las 4 mejoras integradas:
+   - Leer coordenadas del Trip (no hardcodeadas)
    - Carga automática silenciosa
    - Panel de resumen con countdown en tiempo real
    - Detección de desvío y recálculo invisible

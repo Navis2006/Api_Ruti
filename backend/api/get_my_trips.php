@@ -12,15 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 require_once '../config/db_connection.php';
 // INCLUIR LA NUEVA GUARDIA MÓVIL
-require_once '../auth_mobile_guard.php'; 
+require_once '../auth_mobile_guard.php';
 // $operador_id ya está definido por auth_mobile_guard.php
 try {
     // ... resto del código igual ...
     // 3. Consultas SQL (Lógica original de menu_trailero.php)
-    
+
     // A. Viaje Actual
     $stmt_actual = $pdo->prepare("
-        SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre
+        SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
+               r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino
         FROM viajes v
         LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
         LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
@@ -32,7 +33,8 @@ try {
     $viaje_actual = $stmt_actual->fetch(PDO::FETCH_ASSOC);
     // B. Próximos Viajes
     $stmt_proximos = $pdo->prepare("
-        SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre
+        SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
+               r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino
         FROM viajes v
         LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
         LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id

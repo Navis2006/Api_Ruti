@@ -12,12 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 require_once '../config/db_connection.php';
 // INCLUIR LA NUEVA GUARDIA MÓVIL
-require_once '../auth_mobile_guard.php'; 
+require_once '../auth_mobile_guard.php';
 // $operador_id ya está definido por auth_mobile_guard.php
-$viaje_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$viaje_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 try {
     if ($viaje_id <= 0) {
-        http_response_code(400); 
+        http_response_code(400);
         echo json_encode(["success" => false, "message" => "ID de viaje inválido."]);
         exit;
     }
@@ -26,6 +26,7 @@ try {
         SELECT 
             v.viaje_id, v.estado, v.fecha_inicio, 
             r.ruta_id, r.nombre as ruta_nombre, r.descripcion as ruta_descripcion,
+            r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
             ST_AsText(r.trazado_geom) as trazado_wkt, 
             ve.nombre as vehiculo_nombre, ve.placa as vehiculo_placa
         FROM viajes v
