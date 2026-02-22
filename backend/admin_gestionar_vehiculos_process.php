@@ -8,7 +8,7 @@ $redirect_url = '../frontend/admin_gestionar_vehiculos.php';
 
 try {
     $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-    
+
     switch ($action) {
         case 'create':
         case 'update':
@@ -22,19 +22,22 @@ try {
             $ancho_metros = filter_input(INPUT_POST, 'ancho_metros', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
             $largo_metros = filter_input(INPUT_POST, 'largo_metros', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
             $peso_toneladas = filter_input(INPUT_POST, 'peso_toneladas', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $peso_eje_kg = filter_input(INPUT_POST, 'peso_eje_kg', FILTER_VALIDATE_INT);
+            $velocidad_max_kmh = filter_input(INPUT_POST, 'velocidad_max_kmh', FILTER_VALIDATE_INT);
 
             if (!$empresa_id || empty($nombre) || empty($placa)) {
                 throw new Exception("Empresa, nombre y placa son obligatorios.");
             }
-            
+
             if ($action === 'create') {
-                $stmt = $pdo->prepare("INSERT INTO vehiculos (empresa_id, nombre, placa, tipo, estatus, altura_metros, ancho_metros, largo_metros, peso_toneladas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$empresa_id, $nombre, $placa, $tipo, $estatus, $altura_metros, $ancho_metros, $largo_metros, $peso_toneladas]);
+                $stmt = $pdo->prepare("INSERT INTO vehiculos (empresa_id, nombre, placa, tipo, estatus, altura_metros, ancho_metros, largo_metros, peso_toneladas, peso_eje_kg, velocidad_max_kmh) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$empresa_id, $nombre, $placa, $tipo, $estatus, $altura_metros, $ancho_metros, $largo_metros, $peso_toneladas, $peso_eje_kg, $velocidad_max_kmh]);
 
             } else { // update
-                if (!$vehiculo_id) throw new Exception("ID de vehículo no válido.");
-                $stmt = $pdo->prepare("UPDATE vehiculos SET empresa_id=?, nombre=?, placa=?, tipo=?, estatus=?, altura_metros=?, ancho_metros=?, largo_metros=?, peso_toneladas=? WHERE vehiculo_id = ?");
-                $stmt->execute([$empresa_id, $nombre, $placa, $tipo, $estatus, $altura_metros, $ancho_metros, $largo_metros, $peso_toneladas, $vehiculo_id]);
+                if (!$vehiculo_id)
+                    throw new Exception("ID de vehículo no válido.");
+                $stmt = $pdo->prepare("UPDATE vehiculos SET empresa_id=?, nombre=?, placa=?, tipo=?, estatus=?, altura_metros=?, ancho_metros=?, largo_metros=?, peso_toneladas=?, peso_eje_kg=?, velocidad_max_kmh=? WHERE vehiculo_id = ?");
+                $stmt->execute([$empresa_id, $nombre, $placa, $tipo, $estatus, $altura_metros, $ancho_metros, $largo_metros, $peso_toneladas, $peso_eje_kg, $velocidad_max_kmh, $vehiculo_id]);
             }
             header('Location: ' . $redirect_url . '?success=true');
             exit();
@@ -49,7 +52,7 @@ try {
 
             $stmt = $pdo->prepare("UPDATE vehiculos SET estatus = ? WHERE vehiculo_id = ?");
             $stmt->execute([$estatus, $vehiculo_id]);
-            
+
             if ($stmt->rowCount() > 0) {
                 $response = ['status' => 'success', 'message' => 'Estatus del vehículo actualizado.'];
             } else {

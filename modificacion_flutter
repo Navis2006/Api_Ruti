@@ -3,7 +3,7 @@ Rol: Eres un Desarrollador Móvil Senior experto en Flutter, Dart, consumo de AP
 
 Contexto del Proyecto ("Rutitruck"):
 
-Objetivo: Mejorar la vista de navegación de una aplicación móvil para operadores de tráileres. La app muestra una ruta segura y legal sobre un mapa de OpenStreetMap. La pantalla del mapa YA EXISTE con una polilínea azul funcional. Ahora hay que añadir 3 mejoras importantes.
+Objetivo: Mejorar la vista de navegación de una aplicación móvil para operadores de tráileres. La app muestra una ruta segura y legal sobre un mapa de OpenStreetMap. La pantalla del mapa YA EXISTE con una polilínea azul funcional.
 
 Estado Actual del Backend (Express.js en Render):
 El backend expone los siguientes endpoints de rutas (todos requieren header Authorization: Bearer <token>):
@@ -34,61 +34,94 @@ CAMPOS DEL PAYLOAD:
 Nota: la longitud usa prefijo "lng", NO "lon".
 
 ===========================================================
-MEJORA 1: Cargar ruta guardada automáticamente al abrir el mapa
+REGLA CRÍTICA DE UX: TODO DEBE SER INVISIBLE
 ===========================================================
 
-Al abrirse la pantalla del mapa (en initState), antes de mostrar el botón "Calcular Ruta Segura", Flutter debe:
+NO debe existir ningún botón visible de "Calcular Ruta Segura" ni ningún
+mensaje visible al usuario que diga "Calculando ruta", "Recalculando", etc.
+Todo el proceso de obtención y recálculo de ruta debe ser COMPLETAMENTE
+AUTOMÁTICO E INVISIBLE para el operador.
+
+El único indicador visual permitido es un pequeño CircularProgressIndicator
+discreto en alguna esquina del mapa mientras se carga la ruta por primera vez.
+Una vez dibujada la polilínea, no se debe mostrar ningún indicador de carga
+posterior ni mensajes de recálculo.
+
+===========================================================
+MEJORA 1: Carga automática de ruta al abrir el mapa
+===========================================================
+
+Al abrirse la pantalla del mapa (en initState), Flutter debe automáticamente:
 
 1. Llamar al endpoint GET /api/rutas/:viaje_id con el viaje_id del viaje actual.
-2. Si responde 200: dibujar la polilínea directamente SIN mostrar el botón. La ruta ya existe.
-3. Si responde 404: mostrar el botón "Calcular Ruta Segura" para que el operador la genere por primera vez.
+2. Si responde 200: dibujar la polilínea inmediatamente. La ruta ya existe en DB.
+3. Si responde 404 (no hay ruta guardada): llamar automáticamente POST /api/rutas/generar
+   en segundo plano, generar la ruta y dibujarla. Sin mostrar ningún botón ni mensaje.
 
-Lógica del RouteService: agregar método getRouteFromDB(viajeId, token) que haga el GET y retorne un objeto con List<LatLng> y el objeto resumen. Si 404, retornar null.
+Todo este proceso debe ser silencioso. El operador abre el mapa y ve la ruta dibujada
+sin presionar nada.
 
-===========================================================
-MEJORA 2: Mostrar datos del resumen de TomTom en la UI
-===========================================================
-
-El backend ahora devuelve el campo "resumen" en todos los endpoints. Crear un modelo Dart llamado RouteResumen con los campos:
-- int distanciaMetros
-- int tiempoSegundos
-- int traficoSegundos
-- String horaSalida
-- String horaLlegada
-
-Mostrar en la parte inferior del mapa (en el panel oscuro que ya existe) los siguientes datos calculados:
-- Tiempo estimado: tiempoSegundos convertido a formato "X h YY min" (ej: "0 h 14 min")
-- Distancia: distanciaMetros convertido a km con 1 decimal (ej: "10.5 km")
-- Hora de llegada estimada: parsear horaLlegada y mostrar solo la hora en formato local (ej: "5:10 PM")
-- Demora por tráfico: si traficoSegundos > 0, mostrar en rojo "+X min por tráfico"
+RouteService: agregar método getRouteFromDB(viajeId, token) que haga el GET.
+Si retorna 404, llamar automáticamente a fetchTruckRoute().
 
 ===========================================================
-MEJORA 3: Detección de desvío y recálculo automático
+MEJORA 2: Mostrar resumen de TomTom con tiempo en TIEMPO REAL
 ===========================================================
 
-Implementar en la pantalla del mapa la lógica de recálculo automático cuando el camión se sale de la ruta:
+El backend devuelve el campo "resumen" en todos los endpoints. Mostrar en el panel
+inferior del mapa (ya existente) la siguiente información:
+
+- Tiempo estimado de llegada: contador regresivo en TIEMPO REAL.
+  Tomar tiempoSegundos del resumen y decrementarlo cada segundo con un Timer.periodic.
+  Formato: "X h YY min" (ej: "0 h 14 min"). Cuando baje de 60 seg: "< 1 min".
+  Este contador debe decrementarse visualmente cada minuto (no cada segundo, para no ser
+  molesto — actualizar el texto cada 60 segundos).
+
+- Distancia: distanciaMetros convertido a km con 1 decimal (ej: "10.5 km").
+
+- Hora de llegada estimada: parsear horaLlegada y mostrar solo hora local (ej: "5:10 PM").
+
+- Demora por tráfico: si traficoSegundos > 0, mostrar texto rojo "+X min por tráfico".
+  Si es 0, no mostrar nada.
+
+IMPORTANTE: Cuando se recalcula la ruta (por desvío), los valores del resumen
+se actualizan con los nuevos datos de TomTom y el Timer se reinicia con el nuevo
+tiempoSegundos. TomTom ya devuelve tiempos actualizados porque el backend usa
+departAt=now.
+
+===========================================================
+MEJORA 3: Detección de desvío y recálculo SILENCIOSO
+===========================================================
+
+Implementar recálculo automático cuando el camión se desvía de la ruta:
 
 Paso 1 - Detectar desvío:
 - Usar el stream de posición GPS del geolocator (ya en uso en la app).
-- En cada actualización de posición, calcular la distancia mínima entre la posición actual y todos los puntos de la polilínea actual.
-- Si esa distancia mínima supera los 300 metros, se considera que el operador se desvió.
+- En cada actualización de posición, calcular la distancia mínima entre la posición
+  actual y los puntos de la polilínea actual.
+- Si esa distancia supera los 300 metros → el operador se desvió.
 
-Paso 2 - Llamar al recálculo:
-- Mostrar un SnackBar o banner que diga "Recalculando ruta...".
+Paso 2 - Recalcular en silencio:
+- NO mostrar ningún SnackBar, banner ni indicador visual de "Recalculando".
 - Llamar al endpoint POST /api/rutas/recalcular con:
   { viaje_id, latActual, lngActual, latDestino, lngDestino }
-  donde latActual/lngActual es la posición GPS actual y latDestino/lngDestino es el destino original del viaje.
-- Reemplazar la polilínea actual en el mapa con la nueva ruta recibida.
-- Actualizar el panel de resumen con los nuevos datos de tiempo y distancia.
+- Reemplazar la polilínea del mapa con la nueva ruta recibida.
+- Actualizar los datos del resumen (tiempo, distancia, hora llegada) con los nuevos valores.
+- Reiniciar el Timer del countdown con el nuevo tiempoSegundos.
 
 Paso 3 - Evitar recálculos múltiples:
-- Usar un booleano _recalculando para no lanzar múltiples llamadas simultáneas.
-- Una vez recibida la nueva ruta, restablecer _recalculando = false.
+- Usar un booleano _recalculando = true mientras se espera respuesta.
+- No lanzar otro recálculo hasta que el anterior termine.
+- Cooldown de 30 segundos entre recálculos para no abusar de la API.
 
 ===========================================================
 ENTREGABLES ESPERADOS:
 ===========================================================
 
-1. Modelo Dart: route_resumen.dart (con los 5 campos y método fromJson)
+1. Modelo Dart: route_resumen.dart (campos: distanciaMetros, tiempoSegundos,
+   traficoSegundos, horaSalida, horaLlegada, con método fromJson)
 2. Actualización de route_service.dart: agregar getRouteFromDB() y recalcularRuta()
-3. Actualización de map_screen.dart con las 3 mejoras integradas
+3. Actualización de map_screen.dart con las 3 mejoras integradas:
+   - Carga automática silenciosa
+   - Panel de resumen con countdown en tiempo real
+   - Detección de desvío y recálculo invisible

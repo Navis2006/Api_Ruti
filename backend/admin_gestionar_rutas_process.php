@@ -12,11 +12,18 @@ try {
         $empresa_id = filter_input(INPUT_POST, 'empresa_id', FILTER_VALIDATE_INT);
         $nombre = trim((string) filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_SPECIAL_CHARS));
         $descripcion = trim((string) filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_SPECIAL_CHARS));
-        $trazado_geom = trim((string) filter_input(INPUT_POST, 'trazado_geom', FILTER_SANITIZE_SPECIAL_CHARS));
         $creado_por_usuario_id = filter_input(INPUT_POST, 'creado_por_usuario_id', FILTER_VALIDATE_INT);
 
-        if ($trazado_geom === '') {
-            $trazado_geom = null;
+        // Coordenadas de origen y destino
+        $lat_origen = filter_input(INPUT_POST, 'lat_origen', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $lng_origen = filter_input(INPUT_POST, 'lng_origen', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $lat_destino = filter_input(INPUT_POST, 'lat_destino', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $lng_destino = filter_input(INPUT_POST, 'lng_destino', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+        // Generar trazado_geom automáticamente si tenemos las 4 coordenadas
+        $trazado_geom = null;
+        if ($lat_origen && $lng_origen && $lat_destino && $lng_destino) {
+            $trazado_geom = "LINESTRING($lng_origen $lat_origen, $lng_destino $lat_destino)";
         }
 
         if ($nombre === '' || !$empresa_id || !$creado_por_usuario_id) {
@@ -26,31 +33,35 @@ try {
 
     switch ($action) {
         case 'create':
-            // ✅ CAMBIO: Usar ST_GeomFromText() para guardar
             $stmt = $pdo->prepare(
-                "INSERT INTO rutas (empresa_id, nombre, descripcion, trazado_geom, creado_por_usuario_id) 
-                 VALUES (?, ?, ?, ST_GeomFromText(?), ?)"
+                "INSERT INTO rutas (empresa_id, nombre, descripcion, trazado_geom, creado_por_usuario_id, lat_origen, lng_origen, lat_destino, lng_destino) 
+                 VALUES (?, ?, ?, ST_GeomFromText(?), ?, ?, ?, ?, ?)"
             );
-            $stmt->execute([$empresa_id, $nombre, $descripcion, $trazado_geom, $creado_por_usuario_id]);
+            $stmt->execute([$empresa_id, $nombre, $descripcion, $trazado_geom, $creado_por_usuario_id, $lat_origen, $lng_origen, $lat_destino, $lng_destino]);
             break;
 
         case 'update':
-            if (!$ruta_id) throw new Exception("ID de ruta no válido.");
-            // ✅ CAMBIO: Usar ST_GeomFromText() para actualizar
+            if (!$ruta_id)
+                throw new Exception("ID de ruta no válido.");
             $stmt = $pdo->prepare(
                 "UPDATE rutas SET 
                     empresa_id = ?, 
                     nombre = ?, 
                     descripcion = ?, 
                     trazado_geom = ST_GeomFromText(?), 
-                    creado_por_usuario_id = ? 
+                    creado_por_usuario_id = ?,
+                    lat_origen = ?,
+                    lng_origen = ?,
+                    lat_destino = ?,
+                    lng_destino = ?
                  WHERE ruta_id = ?"
             );
-            $stmt->execute([$empresa_id, $nombre, $descripcion, $trazado_geom, $creado_por_usuario_id, $ruta_id]);
+            $stmt->execute([$empresa_id, $nombre, $descripcion, $trazado_geom, $creado_por_usuario_id, $lat_origen, $lng_origen, $lat_destino, $lng_destino, $ruta_id]);
             break;
 
         case 'delete':
-            if (!$ruta_id) throw new Exception("ID de ruta no válido.");
+            if (!$ruta_id)
+                throw new Exception("ID de ruta no válido.");
             $stmt = $pdo->prepare("DELETE FROM rutas WHERE ruta_id = ?");
             $stmt->execute([$ruta_id]);
             break;
