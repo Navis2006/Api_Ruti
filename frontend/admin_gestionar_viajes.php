@@ -18,7 +18,6 @@ try {
         SELECT 
             v.viaje_id, v.ruta_id, v.operador_usuario_id, v.vehiculo_id,
             v.asignado_por_usuario_id, v.estado, v.fecha_inicio,
-            v.fecha_hora_programada,
             r.nombre as ruta_nombre,
             CONCAT(op.nombre, ' ', op.apellidos) as operador_nombre,
             ve.nombre as vehiculo_nombre,
