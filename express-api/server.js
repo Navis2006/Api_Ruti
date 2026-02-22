@@ -46,7 +46,9 @@ app.get('/', (req, res) => {
             myTrips: 'GET /api/trips/my-trips',
             tripDetails: 'GET /api/trips/details/:id',
             updateStatus: 'POST /api/trips/update-status',
-            generarRuta: 'POST /api/rutas/generar'
+            generarRuta: 'POST /api/rutas/generar',
+            obtenerRuta: 'GET /api/rutas/:viaje_id',
+            recalcularRuta: 'POST /api/rutas/recalcular'
         }
     });
 });

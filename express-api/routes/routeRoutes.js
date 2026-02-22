@@ -2,9 +2,18 @@
 const express = require('express');
 const router = express.Router();
 const authGuard = require('../middleware/authGuard');
-const { generarRuta } = require('../controllers/routeController');
+const { generarRuta, obtenerRutaGuardada, recalcularRuta } = require('../controllers/routeController');
 
-// POST /api/rutas/generar (requiere autenticación)
-router.post('/generar', authGuard, generarRuta);
+// Todas las rutas requieren autenticación
+router.use(authGuard);
+
+// POST /api/rutas/generar        → Calcular ruta nueva con TomTom y guardarla
+router.post('/generar', generarRuta);
+
+// GET  /api/rutas/:viaje_id      → Obtener ruta ya guardada (sin llamar a TomTom)
+router.get('/:viaje_id', obtenerRutaGuardada);
+
+// POST /api/rutas/recalcular     → Recalcular desde posición actual (desvío detectado)
+router.post('/recalcular', recalcularRuta);
 
 module.exports = router;

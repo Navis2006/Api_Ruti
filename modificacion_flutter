@@ -3,53 +3,92 @@ Rol: Eres un Desarrollador Móvil Senior experto en Flutter, Dart, consumo de AP
 
 Contexto del Proyecto ("Rutitruck"):
 
-Objetivo: Terminar la vista de navegación de una aplicación móvil para operadores de tráileres. La app debe mostrar una ruta segura y legal sobre un mapa de OpenStreetMap.
+Objetivo: Mejorar la vista de navegación de una aplicación móvil para operadores de tráileres. La app muestra una ruta segura y legal sobre un mapa de OpenStreetMap. La pantalla del mapa YA EXISTE con una polilínea azul funcional. Ahora hay que añadir 3 mejoras importantes.
 
-Estado Actual: El backend (Express.js) ya expone un endpoint que consume la API de TomTom y devuelve un arreglo limpio de coordenadas de la ruta segura.
+Estado Actual del Backend (Express.js en Render):
+El backend expone los siguientes endpoints de rutas (todos requieren header Authorization: Bearer <token>):
 
-Misión Inmediata: Crear la interfaz del mapa en Flutter, consumir la API de nuestro backend, decodificar el JSON de respuesta, y trazar una línea azul (Polyline) en el mapa que guíe al operador desde su Origen hasta su Destino.
+1. POST /api/rutas/generar → Calcula ruta nueva con TomTom y la guarda en DB
+2. GET  /api/rutas/:viaje_id → Obtiene ruta ya guardada en DB (sin llamar a TomTom)
+3. POST /api/rutas/recalcular → Recalcula ruta desde posición actual (para desvíos)
 
-Especificaciones Técnicas y Tareas de Ejecución:
-
-Fase 1: Dependencias e Inicialización (pubspec.yaml)
-Paquetes Requeridos: Indica exactamente cómo agregar flutter_map (para el mapa de OpenStreetMap), latlong2 (para el manejo de coordenadas), y http (para la petición a la API) en el archivo pubspec.yaml.
-
-Fase 2: Servicio de Conexión (API Provider)
-Clase RouteService: Crea un archivo en Dart que maneje la petición HTTP hacia el backend en Node.js.
-
-Método fetchTruckRoute: Este método debe hacer un POST a la URL de nuestra API (ej. https://mi-api-rutitruck.onrender.com/api/rutas/generar).
-
-Autenticación: La petición DEBE incluir el header Authorization: Bearer <token> con el JWT del operador logueado. Sin este header, el backend responderá 401.
-
-Payload: Debe enviar un JSON con el ID del viaje y las coordenadas de origen y destino (viaje_id, latOrigen, lngOrigen, latDestino, lngDestino). Nota: los campos de longitud usan el prefijo "lng", no "lon".
-
-Decodificación Estricta: El backend responderá con un JSON con esta estructura exacta:
-
-JSON
+ESTRUCTURA DE RESPUESTA (igual para los 3 endpoints):
 {
   "success": true,
   "data": [
     {"latitude": 20.90098, "longitude": -89.64128},
-    {"latitude": 20.90134, "longitude": -89.64144}
-  ]
+    ...
+  ],
+  "resumen": {
+    "distanciaMetros": 10548,
+    "tiempoSegundos": 881,
+    "traficoSegundos": 0,
+    "horaSalida": "2026-02-20T16:56:11-06:00",
+    "horaLlegada": "2026-02-20T17:10:52-06:00"
+  }
 }
-Debes mapear ese arreglo data y convertirlo en una lista tipada: List<LatLng>.
 
-Fase 3: Interfaz de Usuario y Mapa (MapScreen)
-State Management Básico: Crea un StatefulWidget para la pantalla del mapa. Debe manejar tres estados: Cargando (esperando la ruta), Error (si falla la petición), y Éxito (ruta dibujada).
+CAMPOS DEL PAYLOAD:
+- generar:     { viaje_id, latOrigen, lngOrigen, latDestino, lngDestino }
+- recalcular:  { viaje_id, latActual, lngActual, latDestino, lngDestino }
+Nota: la longitud usa prefijo "lng", NO "lon".
 
-Widget FlutterMap: Implementa el mapa base usando OpenStreetMap a través de un TileLayer.
+===========================================================
+MEJORA 1: Cargar ruta guardada automáticamente al abrir el mapa
+===========================================================
 
-Botón de Acción: Agrega un FloatingActionButton o un botón en la interfaz que diga "Calcular Ruta Segura". Al presionarlo, debe llamar al RouteService, mostrar un CircularProgressIndicator sobre el mapa, y esperar la respuesta.
+Al abrirse la pantalla del mapa (en initState), antes de mostrar el botón "Calcular Ruta Segura", Flutter debe:
 
-Dibujo de la Ruta (PolylineLayer): Una vez que el servicio devuelva la List<LatLng>, pásala a un widget PolylineLayer. La línea debe ser de color azul brillante, con un grosor (strokeWidth) de 5.0 para que sea muy visible para el operador.
+1. Llamar al endpoint GET /api/rutas/:viaje_id con el viaje_id del viaje actual.
+2. Si responde 200: dibujar la polilínea directamente SIN mostrar el botón. La ruta ya existe.
+3. Si responde 404: mostrar el botón "Calcular Ruta Segura" para que el operador la genere por primera vez.
 
-Ajuste de Cámara (Opcional pero recomendado): Si es posible, incluye la lógica con MapController para que, una vez dibujada la ruta, la cámara del mapa haga un zoom/fit automático que permita ver toda la línea de origen a destino en la pantalla.
+Lógica del RouteService: agregar método getRouteFromDB(viajeId, token) que haga el GET y retorne un objeto con List<LatLng> y el objeto resumen. Si 404, retornar null.
 
-Entregables esperados por tu parte:
+===========================================================
+MEJORA 2: Mostrar datos del resumen de TomTom en la UI
+===========================================================
 
-Las líneas a agregar en pubspec.yaml.
+El backend ahora devuelve el campo "resumen" en todos los endpoints. Crear un modelo Dart llamado RouteResumen con los campos:
+- int distanciaMetros
+- int tiempoSegundos
+- int traficoSegundos
+- String horaSalida
+- String horaLlegada
 
-El código completo y comentado del archivo route_service.dart.
+Mostrar en la parte inferior del mapa (en el panel oscuro que ya existe) los siguientes datos calculados:
+- Tiempo estimado: tiempoSegundos convertido a formato "X h YY min" (ej: "0 h 14 min")
+- Distancia: distanciaMetros convertido a km con 1 decimal (ej: "10.5 km")
+- Hora de llegada estimada: parsear horaLlegada y mostrar solo la hora en formato local (ej: "5:10 PM")
+- Demora por tráfico: si traficoSegundos > 0, mostrar en rojo "+X min por tráfico"
 
-El código completo y comentado del archivo map_screen.dart integrando el mapa, los marcadores de origen/destino y la polilínea.
+===========================================================
+MEJORA 3: Detección de desvío y recálculo automático
+===========================================================
+
+Implementar en la pantalla del mapa la lógica de recálculo automático cuando el camión se sale de la ruta:
+
+Paso 1 - Detectar desvío:
+- Usar el stream de posición GPS del geolocator (ya en uso en la app).
+- En cada actualización de posición, calcular la distancia mínima entre la posición actual y todos los puntos de la polilínea actual.
+- Si esa distancia mínima supera los 300 metros, se considera que el operador se desvió.
+
+Paso 2 - Llamar al recálculo:
+- Mostrar un SnackBar o banner que diga "Recalculando ruta...".
+- Llamar al endpoint POST /api/rutas/recalcular con:
+  { viaje_id, latActual, lngActual, latDestino, lngDestino }
+  donde latActual/lngActual es la posición GPS actual y latDestino/lngDestino es el destino original del viaje.
+- Reemplazar la polilínea actual en el mapa con la nueva ruta recibida.
+- Actualizar el panel de resumen con los nuevos datos de tiempo y distancia.
+
+Paso 3 - Evitar recálculos múltiples:
+- Usar un booleano _recalculando para no lanzar múltiples llamadas simultáneas.
+- Una vez recibida la nueva ruta, restablecer _recalculando = false.
+
+===========================================================
+ENTREGABLES ESPERADOS:
+===========================================================
+
+1. Modelo Dart: route_resumen.dart (con los 5 campos y método fromJson)
+2. Actualización de route_service.dart: agregar getRouteFromDB() y recalcularRuta()
+3. Actualización de map_screen.dart con las 3 mejoras integradas
