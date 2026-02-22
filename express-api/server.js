@@ -1,5 +1,6 @@
 // server.js - Punto de entrada del microservicio Express.js (Rutitruck API)
 require('dotenv').config();
+const { startKeepAlive } = require('./keepAlive');
 
 const express = require('express');
 const cors = require('cors');
@@ -77,4 +78,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`🚛 Rutitruck API corriendo en puerto ${PORT}`);
     console.log(`📍 Health check: http://localhost:${PORT}/`);
+
+    // Iniciar el keep-alive para mantener activos los servicios de Render
+    startKeepAlive();
 });
