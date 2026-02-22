@@ -474,7 +474,8 @@ try {
             formTitle.textContent = 'Crear Nueva Ruta';
             form.reset();
             actionInput.value = 'create';
-            document.getElementById('creado_por_usuario_id').value = "";
+            // Restaurar el ID del admin logueado (form.reset lo borra)
+            document.getElementById('creado_por_usuario_id').value = "<?= $_SESSION['usuario_id'] ?>";
             submitButton.textContent = 'Crear Ruta';
         };
 
