@@ -181,12 +181,9 @@ try {
                     </select>
                 </div>
                 <div>
-                    <label for="creado_por_usuario_id" class="block text-sm font-medium text-gray-700">Creado por
-                        (Automático)</label>
-                    <select id="creado_por_usuario_id" name="creado_por_usuario_id" disabled
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Asignado por Admin Logueado --</option>
-                    </select>
+                    <label for="creado_por_display" class="block text-sm font-medium text-gray-700">Creado por (Automático)</label>
+                    <input type="hidden" id="creado_por_usuario_id" name="creado_por_usuario_id" value="<?= $_SESSION['usuario_id'] ?>">
+                    <input type="text" id="creado_por_display" value="Admin Logueado (ID: <?= $_SESSION['usuario_id'] ?>)" disabled class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-100">
                 </div>
             </div>
 

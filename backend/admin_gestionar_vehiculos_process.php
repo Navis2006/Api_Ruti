@@ -25,6 +25,14 @@ try {
             $peso_eje_kg = filter_input(INPUT_POST, 'peso_eje_kg', FILTER_VALIDATE_INT);
             $velocidad_max_kmh = filter_input(INPUT_POST, 'velocidad_max_kmh', FILTER_VALIDATE_INT);
 
+            // Convertir campos vacíos a null para evitar errores de SQL
+            $altura_metros = $altura_metros !== false && $altura_metros !== null ? $altura_metros : null;
+            $ancho_metros = $ancho_metros !== false && $ancho_metros !== null ? $ancho_metros : null;
+            $largo_metros = $largo_metros !== false && $largo_metros !== null ? $largo_metros : null;
+            $peso_toneladas = $peso_toneladas !== false && $peso_toneladas !== null ? $peso_toneladas : null;
+            $peso_eje_kg = $peso_eje_kg !== false && $peso_eje_kg !== null ? $peso_eje_kg : null;
+            $velocidad_max_kmh = $velocidad_max_kmh !== false && $velocidad_max_kmh !== null ? $velocidad_max_kmh : null;
+
             if (!$empresa_id || empty($nombre) || empty($placa)) {
                 throw new Exception("Empresa, nombre y placa son obligatorios.");
             }
@@ -64,6 +72,13 @@ try {
             throw new Exception("Acción no reconocida.");
     }
 
+} catch (PDOException $e) {
+    $userMessage = 'Error de base de datos. Verifica que los campos numéricos tengan valores válidos.';
+    if (isset($_POST['action']) && ($_POST['action'] === 'create' || $_POST['action'] === 'update')) {
+        header('Location: ' . $redirect_url . '?status=error&message=' . urlencode($userMessage));
+        exit();
+    }
+    $response = ['status' => 'error', 'message' => $userMessage];
 } catch (Exception $e) {
     if (isset($_POST['action']) && ($_POST['action'] === 'create' || $_POST['action'] === 'update')) {
         header('Location: ' . $redirect_url . '?status=error&message=' . urlencode($e->getMessage()));
