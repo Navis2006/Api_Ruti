@@ -12,10 +12,13 @@ const getMyTrips = async (req, res) => {
         // A. Viaje Actual (En Curso)
         const [currentRows] = await pool.execute(
             `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
-              r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino
+              r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
+              eo.nombre as origen_nombre, ed.nombre as destino_nombre
        FROM viajes v
        LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
        LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
+       LEFT JOIN empresas eo ON r.origen_empresa_id = eo.empresa_id
+       LEFT JOIN empresas ed ON r.destino_empresa_id = ed.empresa_id
        WHERE v.operador_usuario_id = ? AND v.estado = 'En Curso'
        ORDER BY v.fecha_inicio ASC
        LIMIT 1`,
@@ -25,10 +28,13 @@ const getMyTrips = async (req, res) => {
         // B. Próximos Viajes
         const [upcomingRows] = await pool.execute(
             `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
-              r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino
+              r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
+              eo.nombre as origen_nombre, ed.nombre as destino_nombre
        FROM viajes v
        LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
        LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
+       LEFT JOIN empresas eo ON r.origen_empresa_id = eo.empresa_id
+       LEFT JOIN empresas ed ON r.destino_empresa_id = ed.empresa_id
        WHERE v.operador_usuario_id = ? AND v.estado IN ('Planeado', 'Asignado')
        ORDER BY v.fecha_inicio ASC`,
             [operadorId]
