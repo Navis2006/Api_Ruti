@@ -30,9 +30,10 @@ const getVehicleDimensions = async (viajeId) => {
 
 // ─────────────────────────────────────────────────────────
 // Función auxiliar: llama a TomTom con dimensiones del vehículo
+// waypointsString = "lat1,lng1:lat2,lng2:lat3,lng3"
 // ─────────────────────────────────────────────────────────
-const callTomTom = async (latOrigen, lngOrigen, latDestino, lngDestino, vehicleDims = {}) => {
-    const url = `https://api.tomtom.com/routing/1/calculateRoute/${latOrigen},${lngOrigen}:${latDestino},${lngDestino}/json`;
+const callTomTom = async (waypointsString, vehicleDims = {}) => {
+    const url = `https://api.tomtom.com/routing/1/calculateRoute/${waypointsString}/json`;
 
     // Construir parámetros dinámicamente (solo envía los que tienen valor)
     const params = {
@@ -61,24 +62,33 @@ const callTomTom = async (latOrigen, lngOrigen, latDestino, lngDestino, vehicleD
 
 // ─────────────────────────────────────────────────────────
 // POST /api/rutas/generar
-// Body: { viaje_id, latOrigen, lngOrigen, latDestino, lngDestino }
+// Body: { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso }
 //
-// Flujo: Busca dimensiones del vehículo → Llama a TomTom → guarda en DB → retorna
+// Flujo: 
+// 1. Ruta de 3 puntos: GPS Actual -> Destino -> Regreso (Origen)
+// 2. Busca dimensiones del vehículo → Llama a TomTom → guarda en DB → retorna
 // ─────────────────────────────────────────────────────────
 const generarRuta = async (req, res) => {
     try {
-        const { viaje_id, latOrigen, lngOrigen, latDestino, lngDestino } = req.body;
+        const { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso } = req.body;
 
-        if (!viaje_id || !latOrigen || !lngOrigen || !latDestino || !lngDestino) {
+        if (!viaje_id || !latActual || !lngActual || !latDestino || !lngDestino) {
             return res.status(400).json({
                 success: false,
-                message: 'Datos incompletos. Se requiere: viaje_id, latOrigen, lngOrigen, latDestino, lngDestino.'
+                message: 'Datos incompletos. Se requiere: viaje_id, latActual, lngActual, latDestino, lngDestino.'
             });
         }
 
         // Obtener dimensiones reales del vehículo asignado al viaje
         const vehicleDims = await getVehicleDimensions(viaje_id);
-        const { points, summary } = await callTomTom(latOrigen, lngOrigen, latDestino, lngDestino, vehicleDims || {});
+
+        // Construir string de puntos: GPS -> Destino -> Regreso (Opcional)
+        let waypoints = `${latActual},${lngActual}:${latDestino},${lngDestino}`;
+        if (latRegreso && lngRegreso) {
+            waypoints += `:${latRegreso},${lngRegreso}`;
+        }
+
+        const { points, summary } = await callTomTom(waypoints, vehicleDims || {});
 
         if (!points || points.length === 0) {
             return res.status(404).json({
@@ -190,15 +200,15 @@ const obtenerRutaGuardada = async (req, res) => {
 
 // ─────────────────────────────────────────────────────────
 // POST /api/rutas/recalcular
-// Body: { viaje_id, latActual, lngActual, latDestino, lngDestino }
+// Body: { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso }
 //
 // Se llama cuando Flutter detecta que el camión se desvió.
-// Usa la posición actual como nuevo origen y recalcula.
+// Usa la posición actual como nuevo origen -> Destino -> Regreso.
 // Sobreescribe la ruta guardada en DB.
 // ─────────────────────────────────────────────────────────
 const recalcularRuta = async (req, res) => {
     try {
-        const { viaje_id, latActual, lngActual, latDestino, lngDestino } = req.body;
+        const { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso } = req.body;
 
         if (!viaje_id || !latActual || !lngActual || !latDestino || !lngDestino) {
             return res.status(400).json({
@@ -209,7 +219,13 @@ const recalcularRuta = async (req, res) => {
 
         // Obtener dimensiones reales del vehículo
         const vehicleDims = await getVehicleDimensions(viaje_id);
-        const { points, summary } = await callTomTom(latActual, lngActual, latDestino, lngDestino, vehicleDims || {});
+
+        let waypoints = `${latActual},${lngActual}:${latDestino},${lngDestino}`;
+        if (latRegreso && lngRegreso) {
+            waypoints += `:${latRegreso},${lngRegreso}`;
+        }
+
+        const { points, summary } = await callTomTom(waypoints, vehicleDims || {});
 
         if (!points || points.length === 0) {
             return res.status(404).json({
