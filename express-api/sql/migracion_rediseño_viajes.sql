@@ -22,6 +22,9 @@ UPDATE viajes SET origen_empresa_id = 1 WHERE origen_empresa_id IS NULL;
 -- Ahora hacemos la columna NOT NULL
 ALTER TABLE viajes MODIFY COLUMN origen_empresa_id INT NOT NULL;
 
+-- 2.5. Hacer que ruta_id sea opcional (NULL) ya que los viajes nuevos no lo usarán en la tabla principal
+ALTER TABLE viajes MODIFY COLUMN ruta_id INT NULL;
+
 -- 3. Crear tabla para los destinos multi-parada
 CREATE TABLE viaje_destinos (
   destino_id INT AUTO_INCREMENT PRIMARY KEY,

@@ -97,16 +97,12 @@ Todos requieren header: Authorization: Bearer <token>
 --- RUTAS TOMTOM ---
 
 4. POST /api/rutas/generar
-   Calcula ruta TomTom (Origen GPS -> Destino -> Regreso) y la guarda.
+   Calcula ruta TomTom (GPS Actual -> Todos los Destinos -> Regreso a Sede Origen) de forma dinámica leyendo las paradas de la BD.
    BODY:
    {
      "viaje_id": 123,
      "latActual": 20.9600,
-     "lngActual": -89.6200,
-     "latDestino": 21.2833,
-     "lngDestino": -89.6667,
-     "latRegreso": 20.9674,
-     "lngRegreso": -89.6237
+     "lngActual": -89.6200
    }
    RESPUESTA:
    {
@@ -131,16 +127,12 @@ Todos requieren header: Authorization: Bearer <token>
    Si hay ruta: misma estructura de respuesta que /generar.
 
 6. POST /api/rutas/recalcular
-   Recalcula ruta desde posición actual del GPS por desvío (GPS -> Destino -> Regreso).
+   Recalcula ruta desde posición actual del GPS por desvío (GPS -> Destinos -> Regreso).
    BODY:
    {
      "viaje_id": 123,
      "latActual": 21.0500,
-     "lngActual": -89.5800,
-     "latDestino": 21.2833,
-     "lngDestino": -89.6667,
-     "latRegreso": 20.9674,
-     "lngRegreso": -89.6237
+     "lngActual": -89.5800
    }
    RESPUESTA: misma estructura que /generar.
 
@@ -196,15 +188,11 @@ Al abrirse la pantalla del mapa (en initState), Flutter debe automáticamente:
 2. Llamar al endpoint GET /api/rutas/:viaje_id con el viaje_id del viaje actual.
 3. Si responde 200: dibujar la polilínea inmediatamente. La ruta ya existe en DB.
 4. Si responde 404 (no hay ruta guardada): llamar automáticamente POST /api/rutas/generar
-   usando la posición GPS actual como origen, el destino del Trip, y el origen del Trip como regreso:
+   usando ÚNICAMENTE la posición GPS actual. El backend se encarga de buscar los N destinos del viaje.
    {
-     viaje_id: trip.viajeId,
-     latActual: posicionGPS.latitude,
-     lngActual: posicionGPS.longitude,
-     latDestino: trip.latDestino,
-     lngDestino: trip.lngDestino,
-     latRegreso: trip.latOrigen,
-     lngRegreso: trip.lngOrigen
+     "viaje_id": trip.viajeId,
+     "latActual": posicionGPS.latitude,
+     "lngActual": posicionGPS.longitude
    }
    Generar la ruta y dibujarla. Sin mostrar ningún botón ni mensaje.
 
@@ -255,13 +243,9 @@ Paso 2 - Recalcular en silencio:
 - NO mostrar ningún SnackBar, banner ni indicador visual de "Recalculando".
 - Llamar al endpoint POST /api/rutas/recalcular con:
   {
-    viaje_id: trip.viajeId,
-    latActual: posicionGPSActual.latitude,
-    lngActual: posicionGPSActual.longitude,
-    latDestino: trip.latDestino,
-    lngDestino: trip.lngDestino,
-    latRegreso: trip.latOrigen,
-    lngRegreso: trip.lngOrigen
+    "viaje_id": trip.viajeId,
+    "latActual": posicionGPSActual.latitude,
+    "lngActual": posicionGPSActual.longitude
   }
 - Reemplazar la polilínea del mapa con la nueva ruta recibida.
 - Actualizar los datos del resumen (tiempo, distancia, hora llegada) con los nuevos valores.
@@ -285,8 +269,8 @@ ENTREGABLES ESPERADOS:
 
 3. Actualización de route_service.dart:
    - getRouteFromDB(viajeId, token) → GET /api/rutas/:viaje_id
-   - fetchTruckRoute(viajeId, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso, token) → POST /api/rutas/generar
-   - recalcularRuta(viajeId, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso, token) → POST /api/rutas/recalcular
+   - fetchTruckRoute(viajeId, latActual, lngActual, token) → POST /api/rutas/generar
+   - recalcularRuta(viajeId, latActual, lngActual, token) → POST /api/rutas/recalcular
    - ELIMINAR cualquier coordenada hardcodeada o simulada
 
 4. Actualización de map_screen.dart con las 4 mejoras integradas:

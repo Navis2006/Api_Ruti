@@ -25,7 +25,9 @@ try {
     $stmt = $pdo->prepare("
         SELECT 
             v.viaje_id, v.estado, v.fecha_inicio, v.ruta_id as legacy_ruta_id,
-            e_origen.nombre as ruta_nombre, /* Compatibilidad: usamos origen como nombre de la ruta */
+            CONCAT(e_origen.nombre, ' a ', COALESCE(e_dest.nombre, r_dest.nombre)) as ruta_nombre, /* Compatibilidad: titulo dinamico de ruta */
+            e_origen.nombre as origen_nombre,
+            COALESCE(e_dest.nombre, r_dest.nombre) as destino_nombre,
             '' as ruta_descripcion,
             e_origen.lat as lat_origen, e_origen.lng as lng_origen,
             COALESCE(e_dest.lat, r_dest.lat_origen) as lat_destino,

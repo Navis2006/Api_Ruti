@@ -21,7 +21,9 @@ try {
     // A. Viaje Actual
     $sql_viajes = "
         SELECT v.viaje_id, v.estado, v.fecha_inicio, ve.nombre as vehiculo_nombre,
-               e_origen.nombre as ruta_nombre, /* El nombre del origen actúa como título provisorio */
+               CONCAT(e_origen.nombre, ' a ', COALESCE(e_dest.nombre, r_dest.nombre)) as ruta_nombre, /* Título dinámico del viaje */
+               e_origen.nombre as origen_nombre,
+               COALESCE(e_dest.nombre, r_dest.nombre) as destino_nombre,
                e_origen.lat as lat_origen, e_origen.lng as lng_origen,
                /* Obtenemos el último destino de la ruta multi-parada */
                COALESCE(e_dest.lat, r_dest.lat_origen) as lat_destino,
