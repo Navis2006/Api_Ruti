@@ -19,88 +19,129 @@ try {
 
     // --- ACCIÓN: CREAR O ACTUALIZAR (Desde el formulario) ---
     if ($action === 'create' || $action === 'update') {
-        
-        // CORREGIDO: Leer 'estado' y 'fecha_hora_programada' (del form)
-        $ruta_id = filter_input(INPUT_POST, 'ruta_id', FILTER_VALIDATE_INT);
+
+        $origen_empresa_id = filter_input(INPUT_POST, 'origen_empresa_id', FILTER_VALIDATE_INT);
         $operador_usuario_id = filter_input(INPUT_POST, 'operador_usuario_id', FILTER_VALIDATE_INT);
         $vehiculo_id = filter_input(INPUT_POST, 'vehiculo_id', FILTER_VALIDATE_INT);
-        $estado = trim((string) filter_input(INPUT_POST, 'estado', FILTER_SANITIZE_SPECIAL_CHARS)); // Nombre del form
-        $fecha_hora_programada = trim((string) filter_input(INPUT_POST, 'fecha_hora_programada', FILTER_SANITIZE_SPECIAL_CHARS)); // Nombre del form
+        $estado = trim((string) filter_input(INPUT_POST, 'estado', FILTER_SANITIZE_SPECIAL_CHARS));
+        $fecha_hora_programada = trim((string) filter_input(INPUT_POST, 'fecha_hora_programada', FILTER_SANITIZE_SPECIAL_CHARS));
+
+        $destinos = $_POST['destinos'] ?? [];
 
         // Validación
-        if (!$ruta_id || !$operador_usuario_id || !$vehiculo_id || $estado === '' || $fecha_hora_programada === '') {
-            throw new Exception("Todos los campos son obligatorios.");
+        if (!$origen_empresa_id || !$operador_usuario_id || !$vehiculo_id || $estado === '' || $fecha_hora_programada === '') {
+            throw new Exception("Todos los campos base son obligatorios.");
+        }
+
+        // Filtramos destinos vacíos por si acaso
+        $destinos_validos = array_filter($destinos, function ($v) {
+            return !empty($v); });
+
+        if (empty($destinos_validos)) {
+            throw new Exception("Debes especificar al menos una parada de destino.");
         }
     }
-    
+
     // --- ACCIÓN: ACTUALIZAR ESTATUS (Desde el botón "Cancelar Viaje") ---
     else if ($action === 'update_status') {
-        if (!$viaje_id) throw new Exception("ID de viaje no válido para actualizar estatus.");
-        // CORREGIDO: Leer 'estado'
+        if (!$viaje_id)
+            throw new Exception("ID de viaje no válido para actualizar estatus.");
         $estado = trim((string) filter_input(INPUT_POST, 'estado', FILTER_SANITIZE_SPECIAL_CHARS));
-        if ($estado === '') throw new Exception("Estatus no válido.");
+        if ($estado === '')
+            throw new Exception("Estatus no válido.");
     }
-    
 
     switch ($action) {
         case 'create':
-            // CORREGIDO: Usar 'estado' y 'fecha_inicio' (nombres de tu BD)
+            $pdo->beginTransaction();
+
             $stmt = $pdo->prepare(
-                "INSERT INTO viajes (ruta_id, operador_usuario_id, vehiculo_id, asignado_por_usuario_id, estado, fecha_asignacion, fecha_inicio) 
+                "INSERT INTO viajes (origen_empresa_id, operador_usuario_id, vehiculo_id, asignado_por_usuario_id, estado, fecha_asignacion, fecha_inicio) 
                  VALUES (?, ?, ?, ?, ?, NOW(), ?)"
             );
             $stmt->execute([
-                $ruta_id, 
-                $operador_usuario_id, 
-                $vehiculo_id, 
-                $asignado_por_usuario_id, // ID del admin logueado
-                $estado, 
-                $fecha_hora_programada // El valor del form va a la columna 'fecha_inicio'
+                $origen_empresa_id,
+                $operador_usuario_id,
+                $vehiculo_id,
+                $asignado_por_usuario_id,
+                $estado,
+                $fecha_hora_programada
             ]);
+
+            $new_viaje_id = $pdo->lastInsertId();
+
+            // Insertamos cada destino ordenadamente
+            $orden = 1;
+            $stmtDest = $pdo->prepare("INSERT INTO viaje_destinos (viaje_id, empresa_id, ruta_id, orden) VALUES (?, ?, ?, ?)");
+            foreach ($destinos_validos as $dest) {
+                list($type, $id) = explode('_', $dest);
+                $empresa_id_val = ($type === 'empresa') ? $id : null;
+                $ruta_id_val = ($type === 'ruta') ? $id : null;
+
+                $stmtDest->execute([$new_viaje_id, $empresa_id_val, $ruta_id_val, $orden]);
+                $orden++;
+            }
+
+            $pdo->commit();
             break;
 
         case 'update':
-            if (!$viaje_id) throw new Exception("ID de viaje no válido.");
-            
-            // CORREGIDO: Usar 'estado' y 'fecha_inicio' (nombres de tu BD)
+            if (!$viaje_id)
+                throw new Exception("ID de viaje no válido.");
+            $pdo->beginTransaction();
+
             $stmt = $pdo->prepare(
                 "UPDATE viajes 
-                 SET ruta_id = ?, operador_usuario_id = ?, vehiculo_id = ?, estado = ?, fecha_inicio = ?
+                 SET origen_empresa_id = ?, operador_usuario_id = ?, vehiculo_id = ?, estado = ?, fecha_inicio = ?
                  WHERE viaje_id = ?"
             );
             $stmt->execute([
-                $ruta_id, 
-                $operador_usuario_id, 
-                $vehiculo_id, 
-                $estado, 
-                $fecha_hora_programada, // El valor del form va a la columna 'fecha_inicio'
+                $origen_empresa_id,
+                $operador_usuario_id,
+                $vehiculo_id,
+                $estado,
+                $fecha_hora_programada,
                 $viaje_id
             ]);
+
+            // Limpiamos sub-tabla y reinsertamos
+            $pdo->prepare("DELETE FROM viaje_destinos WHERE viaje_id = ?")->execute([$viaje_id]);
+
+            $orden = 1;
+            $stmtDest = $pdo->prepare("INSERT INTO viaje_destinos (viaje_id, empresa_id, ruta_id, orden) VALUES (?, ?, ?, ?)");
+            foreach ($destinos_validos as $dest) {
+                list($type, $id) = explode('_', $dest);
+                $empresa_id_val = ($type === 'empresa') ? $id : null;
+                $ruta_id_val = ($type === 'ruta') ? $id : null;
+
+                $stmtDest->execute([$viaje_id, $empresa_id_val, $ruta_id_val, $orden]);
+                $orden++;
+            }
+
+            $pdo->commit();
             break;
 
         case 'update_status':
-            // CORREGIDO: Usar 'estado'
             $stmt = $pdo->prepare("UPDATE viajes SET estado = ? WHERE viaje_id = ?");
             $stmt->execute([$estado, $viaje_id]);
-            
+
             echo json_encode(['status' => 'success', 'message' => 'Viaje actualizado.']);
-            exit; // Salimos para no redirigir
+            exit;
 
         default:
             throw new Exception("Acción no reconocida.");
     }
-    
-    // Si la acción fue 'create' o 'update', redirigimos
+
     header('Location: ' . $redirect_url . '?status=success');
 
 } catch (Exception $e) {
-    // Si la acción fue 'update_status' (AJAX), devolvemos JSON
-    if ($action === 'update_status') {
+    if (isset($pdo) && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    if (isset($action) && $action === 'update_status') {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     } else {
-        // Si fue 'create' o 'update', redirigimos con error
         header('Location: ' . $redirect_url . '?status=error&message=' . urlencode($e->getMessage()));
     }
 }
 exit();
-?>

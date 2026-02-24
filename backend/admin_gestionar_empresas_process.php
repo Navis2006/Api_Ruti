@@ -9,25 +9,34 @@ try {
 
     if ($action === 'create' || $action === 'update') {
         $nombre = trim((string) filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_SPECIAL_CHARS));
-        $estado_suscripcion = trim((string) filter_input(INPUT_POST, 'estado_suscripcion', FILTER_SANITIZE_SPECIAL_CHARS));
+        $estado = trim((string) filter_input(INPUT_POST, 'estado', FILTER_SANITIZE_SPECIAL_CHARS));
 
-        if ($nombre === '' || $estado_suscripcion === '') {
-            throw new Exception("Nombre y estado de suscripción son obligatorios.");
+        $lat = filter_input(INPUT_POST, 'lat', FILTER_VALIDATE_FLOAT);
+        $lng = filter_input(INPUT_POST, 'lng', FILTER_VALIDATE_FLOAT);
+
+        if ($nombre === '' || $estado === '') {
+            throw new Exception("Nombre y estado son obligatorios.");
         }
+
+        // Convert strict false to null for DB insertion if empty
+        $lat_val = ($lat !== false && $lat !== null) ? $lat : null;
+        $lng_val = ($lng !== false && $lng !== null) ? $lng : null;
     }
 
     switch ($action) {
         case 'create':
-            $stmt = $pdo->prepare("INSERT INTO empresas (nombre, estado_suscripcion) VALUES (?, ?)");
-            $stmt->execute([$nombre, $estado_suscripcion]);
+            $stmt = $pdo->prepare("INSERT INTO empresas (nombre, estado, lat, lng) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$nombre, $estado, $lat_val, $lng_val]);
             break;
         case 'update':
-            if (!$empresa_id) throw new Exception("ID de empresa no válido.");
-            $stmt = $pdo->prepare("UPDATE empresas SET nombre = ?, estado_suscripcion = ? WHERE empresa_id = ?");
-            $stmt->execute([$nombre, $estado_suscripcion, $empresa_id]);
+            if (!$empresa_id)
+                throw new Exception("ID de empresa no válido.");
+            $stmt = $pdo->prepare("UPDATE empresas SET nombre = ?, estado = ?, lat = ?, lng = ? WHERE empresa_id = ?");
+            $stmt->execute([$nombre, $estado, $lat_val, $lng_val, $empresa_id]);
             break;
         case 'delete':
-            if (!$empresa_id) throw new Exception("ID de empresa no válido.");
+            if (!$empresa_id)
+                throw new Exception("ID de empresa no válido.");
             $stmt = $pdo->prepare("DELETE FROM empresas WHERE empresa_id = ?");
             $stmt->execute([$empresa_id]);
             break;

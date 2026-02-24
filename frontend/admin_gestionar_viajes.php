@@ -8,6 +8,8 @@ require_once 'header_admin.php'; // Carga la cabecera
 try {
     // Consultas para los dropdowns del formulario
     $rutas = $pdo->query("SELECT ruta_id, nombre FROM rutas ORDER BY nombre")->fetchAll();
+    $empresas_activas = $pdo->query("SELECT empresa_id, nombre FROM empresas WHERE estado = 'Activa' ORDER BY nombre")->fetchAll();
+
     // ¡Ajusta 'rol_id = 2' si tu rol de operador es otro número!
     $operadores = $pdo->query("SELECT usuario_id, nombre, apellidos FROM usuarios WHERE rol_id = 2 ORDER BY nombre")->fetchAll();
     // ¡Ajusta 'en_servicio' si tu estatus de vehículo se llama diferente!
@@ -16,19 +18,29 @@ try {
     // Tu consulta principal para la tabla (ya incluye 'v.*', que trae 'estado')
     $viajes = $pdo->query("
         SELECT 
-            v.viaje_id, v.ruta_id, v.operador_usuario_id, v.vehiculo_id,
+            v.viaje_id, v.origen_empresa_id, v.operador_usuario_id, v.vehiculo_id,
             v.asignado_por_usuario_id, v.estado, v.fecha_inicio,
-            r.nombre as ruta_nombre,
+            e_origen.nombre as origen_nombre,
             CONCAT(op.nombre, ' ', op.apellidos) as operador_nombre,
             ve.nombre as vehiculo_nombre,
-            CONCAT(asig.nombre, ' ', asig.apellidos) as asignador_nombre
+            CONCAT(asig.nombre, ' ', asig.apellidos) as asignador_nombre,
+            (
+                SELECT JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'tipo', CASE WHEN vd.empresa_id IS NOT NULL THEN 'empresa' ELSE 'ruta' END,
+                        'id', COALESCE(vd.empresa_id, vd.ruta_id)
+                    )
+                ) 
+                FROM (SELECT * FROM viaje_destinos ORDER BY orden ASC) as vd 
+                WHERE vd.viaje_id = v.viaje_id
+            ) as destinos_json
         FROM viajes v
-        JOIN rutas r ON v.ruta_id = r.ruta_id
+        LEFT JOIN empresas e_origen ON v.origen_empresa_id = e_origen.empresa_id
         JOIN usuarios op ON v.operador_usuario_id = op.usuario_id
         JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
         JOIN usuarios asig ON v.asignado_por_usuario_id = asig.usuario_id
         ORDER BY v.viaje_id DESC
-    ")->fetchAll();
+    ")->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Error al obtener datos: " . $e->getMessage());
 }
@@ -71,13 +83,13 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label for="ruta_id" class="block text-sm font-medium text-gray-700">Ruta</label>
-                    <select id="ruta_id" name="ruta_id" required
+                    <label for="origen_empresa_id" class="block text-sm font-medium text-gray-700">Sede Origen</label>
+                    <select id="origen_empresa_id" name="origen_empresa_id" required
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Seleccione Ruta --</option>
-                        <?php foreach ($rutas as $ruta): ?>
-                            <option value="<?= htmlspecialchars($ruta['ruta_id']) ?>">
-                                <?= htmlspecialchars($ruta['nombre']) ?></option>
+                        <option value="">-- Seleccione Origen --</option>
+                        <?php foreach ($empresas_activas as $empresa): ?>
+                            <option value="<?= htmlspecialchars($empresa['empresa_id']) ?>">
+                                🏢 <?= htmlspecialchars($empresa['nombre']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -88,7 +100,8 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
                         <option value="">-- Seleccione Operador --</option>
                         <?php foreach ($operadores as $operador): ?>
                             <option value="<?= htmlspecialchars($operador['usuario_id']) ?>">
-                                <?= htmlspecialchars($operador['nombre'] . ' ' . $operador['apellidos']) ?></option>
+                                <?= htmlspecialchars($operador['nombre'] . ' ' . $operador['apellidos']) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -124,6 +137,23 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
                 </div>
             </div>
 
+            <!-- ═══════════ MULTI-DESTINOS ═══════════ -->
+            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50 mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-semibold text-gray-700">📍 Destinos del Viaje (Paradas)</h3>
+                    <button type="button" onclick="agregarDestino()"
+                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition">
+                        + Agregar Parada
+                    </button>
+                </div>
+
+                <div id="destinos-container" class="space-y-3">
+                    <!-- Los select de destinos se injectan aquí -->
+                </div>
+                <p id="destinos-empty-msg" class="text-xs text-gray-500 mt-2">Haz clic en "+ Agregar Parada" para
+                    programar el destino del viaje.</p>
+            </div>
+
             <div class="flex justify-end space-x-4">
                 <button type="button" @click="formVisible = false; setCreateMode();"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancelar</button>
@@ -142,7 +172,7 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
                     <tr>
                         <th class="p-4">ID</th>
                         <th class="p-4">Estado</th>
-                        <th class="p-4">Ruta</th>
+                        <th class="p-4">Sede Origen</th>
                         <th class="p-4">Operador</th>
                         <th class="p-4">Vehículo</th>
                         <th class="p-4">Programado</th>
@@ -172,7 +202,9 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
                                     <?= htmlspecialchars($estatus) ?>
                                 </span>
                             </td>
-                            <td class="p-4"><?= htmlspecialchars($viaje['ruta_nombre'] ?? '') ?></td>
+                            <td class="p-4 font-medium text-blue-700">🏢
+                                <?= htmlspecialchars($viaje['origen_nombre'] ?? '') ?>
+                            </td>
                             <td class="p-4"><?= htmlspecialchars($viaje['operador_nombre'] ?? '') ?></td>
                             <td class="p-4"><?= htmlspecialchars($viaje['vehiculo_nombre'] ?? 'N/A') ?></td>
                             <td class="p-4"><?= htmlspecialchars($viaje['fecha_inicio'] ?? '') ?></td>
@@ -242,13 +274,37 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
             formTitle.textContent = `Editando Viaje #${viaje.viaje_id}`;
             actionInput.value = 'update';
             document.getElementById('viaje_id').value = viaje.viaje_id;
-            document.getElementById('ruta_id').value = viaje.ruta_id;
+            document.getElementById('origen_empresa_id').value = viaje.origen_empresa_id;
             document.getElementById('operador_usuario_id').value = viaje.operador_usuario_id;
             document.getElementById('vehiculo_id').value = viaje.vehiculo_id;
 
+            // Vaciar destinos previos
+            document.getElementById('destinos-container').innerHTML = '';
+            document.getElementById('destinos-empty-msg').style.display = 'block';
+            destinoCount = 0; // Se define más abajo, pero lo reseteamos aquí a 0 global si es accesible
+            if (typeof window.resetDestinoCount === 'function') {
+                window.resetDestinoCount();
+            }
+
+            // Cargar destinos
+            if (viaje.destinos_json) {
+                try {
+                    const destinosArray = JSON.parse(viaje.destinos_json);
+                    if (Array.isArray(destinosArray)) {
+                        destinosArray.forEach(d => {
+                            if (d && d.tipo && d.id) {
+                                window.agregarDestino(`${d.tipo}_${d.id}`);
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error al parsear destinos JSON", e);
+                }
+            }
+
             let fechaProgramada = '';
-            if (viaje.fecha_hora_programada) {
-                fechaProgramada = viaje.fecha_hora_programada.replace(' ', 'T');
+            if (viaje.fecha_inicio) { // CORREGIDO: ahora es 'fecha_inicio'
+                fechaProgramada = viaje.fecha_inicio.replace(' ', 'T');
             }
             document.getElementById('fecha_hora_programada').value = fechaProgramada;
 
@@ -265,6 +321,11 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
         window.setCreateMode = () => {
             formTitle.textContent = 'Programar Nuevo Viaje';
             form.reset();
+
+            // Vaciar destinos
+            document.getElementById('destinos-container').innerHTML = '';
+            document.getElementById('destinos-empty-msg').style.display = 'block';
+
             // CORREGIDO: Poner 'Planeado' en el select 'estado'
             document.getElementById('estado').value = 'Planeado';
             actionInput.value = 'create';
@@ -310,6 +371,75 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
             }
         });
     });
+
+    // --- LÓGICA DE MULTI-DESTINOS ---
+    let destinoCount = 0;
+
+    // Convertir las opciones a strings para JS
+    const empresasOptions = `
+        <optgroup label="Empresas (Sedes Oficiales)">
+            <?php foreach ($empresas_activas as $empresa): ?>
+                <option value="empresa_<?= $empresa['empresa_id'] ?>">🏢 <?= htmlspecialchars(addslashes($empresa['nombre'])) ?></option>
+            <?php endforeach; ?>
+        </optgroup>
+    `;
+    const rutasOptions = `
+        <optgroup label="Destinos Personalizados (Rutas)">
+            <?php foreach ($rutas as $ruta): ?>
+                <option value="ruta_<?= $ruta['ruta_id'] ?>">📍 <?= htmlspecialchars(addslashes($ruta['nombre'])) ?></option>
+            <?php endforeach; ?>
+        </optgroup>
+    `;
+
+    window.resetDestinoCount = () => {
+        destinoCount = 0;
+    };
+
+    window.agregarDestino = (selectedValue = '') => {
+        destinoCount++;
+        document.getElementById('destinos-empty-msg').style.display = 'none';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex items-center space-x-2 destino-item';
+
+        // Creamos el select como nodo DOM para seleccionar fácilmente el valor predeterminado
+        const selectHTML = `
+            <select name="destinos[]" required class="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                <option value="">-- Seleccione parada --</option>
+                ${empresasOptions}
+                ${rutasOptions}
+            </select>
+        `;
+
+        wrapper.innerHTML = `
+            <span class="font-bold text-gray-500 w-6 text-center">${destinoCount}.</span>
+            ${selectHTML}
+            <button type="button" onclick="this.parentElement.remove(); actualizarNumeros();" class="p-2 text-red-600 hover:bg-red-50 rounded-md" title="Eliminar Parada">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        `;
+
+        // Si hay un valor seleccionado, lo aplicamos
+        if (selectedValue) {
+            const selectElement = wrapper.querySelector('select');
+            selectElement.value = selectedValue;
+        }
+
+        document.getElementById('destinos-container').appendChild(wrapper);
+    };
+
+    window.actualizarNumeros = () => {
+        const items = document.querySelectorAll('.destino-item');
+        destinoCount = 0;
+        items.forEach(item => {
+            destinoCount++;
+            item.querySelector('span').textContent = `${destinoCount}.`;
+        });
+
+        if (destinoCount === 0) {
+            document.getElementById('destinos-empty-msg').style.display = 'block';
+        }
+    };
 </script>
 
 <?php

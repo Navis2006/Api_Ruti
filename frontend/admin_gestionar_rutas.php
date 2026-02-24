@@ -138,7 +138,7 @@ try {
 <div x-data="{ formVisible: false }" @open-form.window="formVisible = true">
 
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 class="text-3xl font-bold mb-4 md:mb-0">Administración de Rutas</h1>
+        <h1 class="text-3xl font-bold mb-4 md:mb-0">Administración de Destinos Personalizados</h1>
 
         <button @click="formVisible = true; setCreateMode();"
             class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
@@ -147,7 +147,7 @@ try {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
                 </path>
             </svg>
-            Crear Nueva Ruta
+            Crear Destino Personalizado
         </button>
     </div>
 
@@ -157,13 +157,13 @@ try {
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100 transform translate-y-0"
         x-transition:leave-end="opacity-0 transform -translate-y-4" class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <h2 id="form-title" class="text-2xl font-bold mb-4">Crear Nueva Ruta</h2>
+        <h2 id="form-title" class="text-2xl font-bold mb-4">Crear Destino Personalizado</h2>
         <form id="rutaForm" method="POST" action="../backend/admin_gestionar_rutas_process.php" class="space-y-4">
             <input type="hidden" id="ruta_id" name="ruta_id">
             <input type="hidden" id="action" name="action" value="create">
 
             <div>
-                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre de la Ruta</label>
+                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre del Destino</label>
                 <input type="text" id="nombre" name="nombre" required
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
@@ -176,14 +176,19 @@ try {
                         <option value="">-- Seleccione --</option>
                         <?php foreach ($empresas as $empresa): ?>
                             <option value="<?= htmlspecialchars($empresa['empresa_id'] ?? '') ?>">
-                                <?= htmlspecialchars($empresa['nombre'] ?? '') ?></option>
+                                <?= htmlspecialchars($empresa['nombre'] ?? '') ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div>
-                    <label for="creado_por_display" class="block text-sm font-medium text-gray-700">Creado por (Automático)</label>
-                    <input type="hidden" id="creado_por_usuario_id" name="creado_por_usuario_id" value="<?= $_SESSION['usuario_id'] ?>">
-                    <input type="text" id="creado_por_display" value="Admin Logueado (ID: <?= $_SESSION['usuario_id'] ?>)" disabled class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-100">
+                    <label for="creado_por_display" class="block text-sm font-medium text-gray-700">Creado por
+                        (Automático)</label>
+                    <input type="hidden" id="creado_por_usuario_id" name="creado_por_usuario_id"
+                        value="<?= $_SESSION['usuario_id'] ?>">
+                    <input type="text" id="creado_por_display"
+                        value="Admin Logueado (ID: <?= $_SESSION['usuario_id'] ?>)" disabled
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-100">
                 </div>
             </div>
 
@@ -195,7 +200,7 @@ try {
 
             <!-- ═══════════ COORDENADAS CON SELECTOR DE MAPA ═══════════ -->
             <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                <h3 class="text-sm font-semibold text-gray-700 mb-3">📍 Coordenadas de la Ruta</h3>
+                <h3 class="text-sm font-semibold text-gray-700 mb-3">📍 Coordenadas de los Puntos</h3>
 
                 <!-- ORIGEN -->
                 <div class="mb-4">
@@ -262,14 +267,14 @@ try {
                 <button type="button" @click="formVisible = false; setCreateMode();"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancelar</button>
                 <button type="submit" id="submitButton"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Crear Ruta</button>
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Crear Destino</button>
             </div>
         </form>
     </div>
 
     <div class="overflow-x-auto">
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Listado de Rutas</h2>
+            <h2 class="text-2xl font-bold mb-4">Listado de Destinos Personalizados</h2>
 
             <table id="rutasTable" class="w-full text-left dt-responsive" style="width:100%">
                 <thead class="bg-gray-50 border-b">
@@ -299,7 +304,7 @@ try {
                                         value="<?= htmlspecialchars($ruta['ruta_id'] ?? '') ?>">
                                     <input type="hidden" name="action" value="delete">
                                     <button type="submit" class="text-red-600 hover:underline"
-                                        onclick="return confirm('¿Estás seguro de que quieres eliminar esta ruta? Esto podría afectar a los viajes que dependen de ella.');">Eliminar</button>
+                                        onclick="return confirm('¿Estás seguro de que quieres eliminar este destino personalizado? Esto podría afectar a los viajes que dependen de él.');">Eliminar</button>
                                 </form>
                             </td>
                         </tr>

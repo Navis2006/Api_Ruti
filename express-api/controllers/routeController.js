@@ -61,31 +61,79 @@ const callTomTom = async (waypointsString, vehicleDims = {}) => {
 };
 
 // ─────────────────────────────────────────────────────────
+// Función auxiliar: obtener los destinos (waypoints) de un viaje + Origen (para regreso)
+// ─────────────────────────────────────────────────────────
+const getTripWaypoints = async (viajeId) => {
+    // 1. Obtener puntos intermedios (Destinos)
+    const [destRows] = await pool.execute(
+        `SELECT 
+            vd.orden,
+            COALESCE(e.lat, r.lat_origen) as lat,
+            COALESCE(e.lng, r.lng_origen) as lng
+         FROM viaje_destinos vd
+         LEFT JOIN empresas e ON vd.empresa_id = e.empresa_id
+         LEFT JOIN rutas r ON vd.ruta_id = r.ruta_id
+         WHERE vd.viaje_id = ?
+         ORDER BY vd.orden ASC`,
+        [viajeId]
+    );
+
+    // 2. Obtener la Sede Origen (Regreso Final)
+    const [origenRows] = await pool.execute(
+        `SELECT e.lat, e.lng 
+         FROM viajes v
+         JOIN empresas e ON v.origen_empresa_id = e.empresa_id
+         WHERE v.viaje_id = ?`,
+        [viajeId]
+    );
+
+    return { paramsDestinos: destRows, paramsOrigen: origenRows[0] };
+};
+
+// ─────────────────────────────────────────────────────────
 // POST /api/rutas/generar
-// Body: { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso }
+// Body: { viaje_id, latActual, lngActual, [...] }
 //
 // Flujo: 
-// 1. Ruta de 3 puntos: GPS Actual -> Destino -> Regreso (Origen)
+// 1. Ruta N-puntos: GPS Actual -> Destinos[0..N] -> Regreso (Origen)
 // 2. Busca dimensiones del vehículo → Llama a TomTom → guarda en DB → retorna
 // ─────────────────────────────────────────────────────────
 const generarRuta = async (req, res) => {
     try {
-        const { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso } = req.body;
+        const { viaje_id, latActual, lngActual } = req.body;
 
-        if (!viaje_id || !latActual || !lngActual || !latDestino || !lngDestino) {
+        if (!viaje_id || !latActual || !lngActual) {
             return res.status(400).json({
                 success: false,
-                message: 'Datos incompletos. Se requiere: viaje_id, latActual, lngActual, latDestino, lngDestino.'
+                message: 'Datos incompletos. Se requiere: viaje_id, latActual, lngActual.'
             });
         }
 
         // Obtener dimensiones reales del vehículo asignado al viaje
         const vehicleDims = await getVehicleDimensions(viaje_id);
 
-        // Construir string de puntos: GPS -> Destino -> Regreso (Opcional)
-        let waypoints = `${latActual},${lngActual}:${latDestino},${lngDestino}`;
-        if (latRegreso && lngRegreso) {
-            waypoints += `:${latRegreso},${lngRegreso}`;
+        // Obtener la ruta dinámica de DB
+        const { paramsDestinos, paramsOrigen } = await getTripWaypoints(viaje_id);
+
+        if (paramsDestinos.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'El viaje no tiene destinos configurados.'
+            });
+        }
+
+        // Construir string de puntos: GPS -> Destinos... -> Regreso (Sede Origen)
+        let waypoints = `${latActual},${lngActual}`;
+
+        for (const dest of paramsDestinos) {
+            if (dest.lat && dest.lng) {
+                waypoints += `:${dest.lat},${dest.lng}`;
+            }
+        }
+
+        // Siempre regresamos a la sede origen al final del viaje
+        if (paramsOrigen && paramsOrigen.lat && paramsOrigen.lng) {
+            waypoints += `:${paramsOrigen.lat},${paramsOrigen.lng}`;
         }
 
         const { points, summary } = await callTomTom(waypoints, vehicleDims || {});
@@ -200,7 +248,7 @@ const obtenerRutaGuardada = async (req, res) => {
 
 // ─────────────────────────────────────────────────────────
 // POST /api/rutas/recalcular
-// Body: { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso }
+// Body: { viaje_id, latActual, lngActual, [...] }
 //
 // Se llama cuando Flutter detecta que el camión se desvió.
 // Usa la posición actual como nuevo origen -> Destino -> Regreso.
@@ -208,21 +256,35 @@ const obtenerRutaGuardada = async (req, res) => {
 // ─────────────────────────────────────────────────────────
 const recalcularRuta = async (req, res) => {
     try {
-        const { viaje_id, latActual, lngActual, latDestino, lngDestino, latRegreso, lngRegreso } = req.body;
+        const { viaje_id, latActual, lngActual } = req.body;
 
-        if (!viaje_id || !latActual || !lngActual || !latDestino || !lngDestino) {
+        if (!viaje_id || !latActual || !lngActual) {
             return res.status(400).json({
                 success: false,
-                message: 'Datos incompletos. Se requiere: viaje_id, latActual, lngActual, latDestino, lngDestino.'
+                message: 'Datos incompletos. Se requiere: viaje_id, latActual, lngActual.'
             });
         }
 
-        // Obtener dimensiones reales del vehículo
         const vehicleDims = await getVehicleDimensions(viaje_id);
+        const { paramsDestinos, paramsOrigen } = await getTripWaypoints(viaje_id);
 
-        let waypoints = `${latActual},${lngActual}:${latDestino},${lngDestino}`;
-        if (latRegreso && lngRegreso) {
-            waypoints += `:${latRegreso},${lngRegreso}`;
+        if (paramsDestinos.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'El viaje no tiene destinos configurados.'
+            });
+        }
+
+        let waypoints = `${latActual},${lngActual}`;
+
+        for (const dest of paramsDestinos) {
+            if (dest.lat && dest.lng) {
+                waypoints += `:${dest.lat},${dest.lng}`;
+            }
+        }
+
+        if (paramsOrigen && paramsOrigen.lat && paramsOrigen.lng) {
+            waypoints += `:${paramsOrigen.lat},${paramsOrigen.lng}`;
         }
 
         const { points, summary } = await callTomTom(waypoints, vehicleDims || {});
