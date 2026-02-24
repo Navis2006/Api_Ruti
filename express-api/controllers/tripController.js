@@ -13,7 +13,14 @@ const getMyTrips = async (req, res) => {
         const [currentRows] = await pool.execute(
             `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
               r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
-              eo.nombre as origen_nombre, r.nombre as destino_nombre
+              eo.nombre as origen_nombre, 
+              COALESCE(r.nombre, (
+                  SELECT ed.nombre 
+                  FROM viaje_destinos vd 
+                  JOIN empresas ed ON vd.empresa_id = ed.empresa_id 
+                  WHERE vd.viaje_id = v.viaje_id 
+                  ORDER BY vd.orden DESC LIMIT 1
+              )) as destino_nombre
        FROM viajes v
        LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
        LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
@@ -28,7 +35,14 @@ const getMyTrips = async (req, res) => {
         const [upcomingRows] = await pool.execute(
             `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
               r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
-              eo.nombre as origen_nombre, r.nombre as destino_nombre
+              eo.nombre as origen_nombre, 
+              COALESCE(r.nombre, (
+                  SELECT ed.nombre 
+                  FROM viaje_destinos vd 
+                  JOIN empresas ed ON vd.empresa_id = ed.empresa_id 
+                  WHERE vd.viaje_id = v.viaje_id 
+                  ORDER BY vd.orden DESC LIMIT 1
+              )) as destino_nombre
        FROM viajes v
        LEFT JOIN rutas r ON v.ruta_id = r.ruta_id
        LEFT JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
