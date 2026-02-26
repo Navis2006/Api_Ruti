@@ -28,10 +28,12 @@ app.use(express.json());
 const authRoutes = require('./routes/authRoutes');
 const tripRoutes = require('./routes/tripRoutes');
 const routeRoutes = require('./routes/routeRoutes');
+const alertsRoutes = require('./routes/alertsRoutes');
 
 app.use('/api/auth', authRoutes);       // Login
 app.use('/api/trips', tripRoutes);      // Viajes (my-trips, details, update-status)
 app.use('/api/rutas', routeRoutes);     // Ruteo TomTom (generar)
+app.use('/api/alerts', alertsRoutes);   // Alertas (report, my-alerts)
 
 // ============================================================
 // Ruta de salud (health check)
@@ -48,7 +50,9 @@ app.get('/', (req, res) => {
             updateStatus: 'POST /api/trips/update-status',
             generarRuta: 'POST /api/rutas/generar',
             obtenerRuta: 'GET /api/rutas/:viaje_id',
-            recalcularRuta: 'POST /api/rutas/recalcular'
+            recalcularRuta: 'POST /api/rutas/recalcular',
+            reportAlert: 'POST /api/alerts/report',
+            myAlerts: 'GET /api/alerts/my-alerts'
         }
     });
 });
