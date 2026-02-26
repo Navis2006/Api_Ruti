@@ -93,7 +93,7 @@ $nombre_sistema = $config['valor'] ?? 'Dunosusa Logística';
                     
                     <p class="text-sm text-gray-600">
                         <span class="font-medium">Días restantes:</span> 
-                        <span id="dias-restantes" class="text-red-600 font-semibold">30 días</span>
+                        <span id="dias-restantes" class="text-blue-600 font-semibold">30 días</span>
                     </p>
                 </div>
             </div>
@@ -102,7 +102,7 @@ $nombre_sistema = $config['valor'] ?? 'Dunosusa Logística';
             <div class="flex justify-center">
                 <a 
                     href="menu_admin.php" 
-                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg transition-colors shadow-lg hover:shadow-xl"
                 >
                     Ir al Panel de Control
                 </a>

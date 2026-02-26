@@ -113,7 +113,7 @@ try {
                 
                 <div class="text-right mt-4">
                     <button 
-                        class="btn-leida px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700"
+                        class="btn-leida px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
                         data-id="<?= htmlspecialchars($alerta['alerta_id']) ?>"
                     >
                         Marcar como Leída

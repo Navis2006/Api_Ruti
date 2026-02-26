@@ -179,7 +179,7 @@ $tipos_de_alerta = ['Tráfico', 'Accidente', 'Peligro en Vía', 'Mecánica', 'De
                                 <div class="mt-4 space-y-4">
                                     <div>
                                         <label for="tipo_alerta" class="block text-sm font-medium text-gray-700">Tipo de Alerta</label>
-                                        <select id="tipo_alerta" name="tipo_alerta" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                                        <select id="tipo_alerta" name="tipo_alerta" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                             <option value="">-- Seleccione un tipo --</option>
                                             <?php foreach ($tipos_de_alerta as $tipo): ?>
                                                 <option value="<?= $tipo ?>"><?= $tipo ?></option>
@@ -188,11 +188,11 @@ $tipos_de_alerta = ['Tráfico', 'Accidente', 'Peligro en Vía', 'Mecánica', 'De
                                     </div>
                                     <div>
                                         <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción (¿Qué pasó?)</label>
-                                        <textarea id="descripcion" name="descripcion" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500" placeholder="Ej: Accidente en el carril derecho..."></textarea>
+                                        <textarea id="descripcion" name="descripcion" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ej: Accidente en el carril derecho..."></textarea>
                                     </div>
                                     <div>
                                         <label for="nivel" class="block text-sm font-medium text-gray-700">Nivel de Prioridad</label>
-                                        <select id="nivel" name="nivel" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                                        <select id="nivel" name="nivel" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                             <option value="5">5 (Urgente)</option>
                                             <option value="4">4 (Alto)</option>
                                             <option value="3" selected>3 (Medio)</option>

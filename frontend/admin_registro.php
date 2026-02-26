@@ -32,7 +32,7 @@
         
         <button 
             @click="formVisible = true; setCreateMode();" 
-            class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
+            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
         >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             Crear Nuevo Usuario
@@ -58,37 +58,37 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                    <input type="text" id="nombre" name="nombre" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="apellidos" class="block text-sm font-medium text-gray-700">Apellidos</label>
-                    <input type="text" id="apellidos" name="apellidos" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                    <input type="text" id="apellidos" name="apellidos" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
             </div>
             
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" required autocomplete="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                <input type="email" id="email" name="email" required autocomplete="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                  <div>
                     <label for="empresa_id" class="block text-sm font-medium text-gray-700">Empresa</label>
-                    <select id="empresa_id" name="empresa_id" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                    <select id="empresa_id" name="empresa_id" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Seleccione --</option>
                         <?php foreach ($empresas as $empresa): ?><option value="<?= htmlspecialchars($empresa['empresa_id']) ?>"><?= htmlspecialchars($empresa['nombre']) ?></option><?php endforeach; ?>
                     </select>
                 </div>
                 <div>
                     <label for="rol_id" class="block text-sm font-medium text-gray-700">Rol</label>
-                    <select id="rol_id" name="rol_id" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                    <select id="rol_id" name="rol_id" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Seleccione --</option>
                         <?php foreach ($roles as $rol): ?><option value="<?= htmlspecialchars($rol['rol_id']) ?>"><?= htmlspecialchars($rol['nombre_rol']) ?></option><?php endforeach; ?>
                     </select>
                 </div>
                 <div>
                     <label for="estatus" class="block text-sm font-medium text-gray-700">Estatus</label>
-                    <select id="estatus" name="estatus" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                    <select id="estatus" name="estatus" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="activo">Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
@@ -97,7 +97,7 @@
             
             <div>
                 <label for="contrasena" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Dejar en blanco para no cambiar" autocomplete="new-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                <input type="password" id="contrasena" name="contrasena" placeholder="Dejar en blanco para no cambiar" autocomplete="new-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
             </div>
 
             <div class="flex justify-end space-x-4 pt-4">
@@ -108,7 +108,7 @@
                 >
                     Cancelar
                 </button>
-                <button type="submit" id="submitButton" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Crear Usuario</button>
+                <button type="submit" id="submitButton" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Crear Usuario</button>
             </div>
         </form>
     </div>
@@ -141,7 +141,7 @@
                             </span>
                         </td>
                         <td class="p-4 text-right space-x-2 whitespace-nowrap">
-                            <button class="edit-btn text-red-600 hover:underline" data-usuario='<?= htmlspecialchars(json_encode($usuario), ENT_QUOTES, 'UTF-8') ?>'>Editar</button>
+                            <button class="edit-btn text-blue-600 hover:underline" data-usuario='<?= htmlspecialchars(json_encode($usuario), ENT_QUOTES, 'UTF-8') ?>'>Editar</button>
                             <?php if ($usuario['estatus'] === 'activo'): ?>
                                 <button class="btn-status text-red-600 hover:underline" data-id="<?= $usuario['usuario_id'] ?>" data-estatus="inactivo">Dar de Baja</button>
                             <?php else: ?>

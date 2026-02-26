@@ -95,11 +95,11 @@ $nombre_sistema = $config['valor'] ?? 'Dunosusa Logística';
 
         <!-- Información del administrador -->
         <?php if ($admin): ?>
-        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <h3 class="font-semibold text-red-900 mb-2">Contacto del Administrador:</h3>
-            <p class="text-sm text-red-800">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <h3 class="font-semibold text-blue-900 mb-2">Contacto del Administrador:</h3>
+            <p class="text-sm text-blue-800">
                 <strong>Nombre:</strong> <?= htmlspecialchars($admin['nombre'] . ' ' . $admin['apellidos']) ?><br>
-                <strong>Email:</strong> <a href="mailto:<?= htmlspecialchars($admin['email']) ?>" class="underline hover:text-red-600"><?= htmlspecialchars($admin['email']) ?></a>
+                <strong>Email:</strong> <a href="mailto:<?= htmlspecialchars($admin['email']) ?>" class="underline hover:text-blue-600"><?= htmlspecialchars($admin['email']) ?></a>
             </p>
         </div>
         <?php endif; ?>

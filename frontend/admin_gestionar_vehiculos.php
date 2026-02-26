@@ -26,7 +26,7 @@ $vehiculos = $pdo->query("
         <h1 class="text-3xl font-bold mb-4 md:mb-0">Administración de Vehículos</h1>
 
         <button @click="formVisible = true; setCreateMode();"
-            class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition">
+            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
@@ -52,17 +52,17 @@ $vehiculos = $pdo->query("
                 <div>
                     <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre / Identificador</label>
                     <input type="text" id="nombre" name="nombre" required
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="placa" class="block text-sm font-medium text-gray-700">Placa</label>
                     <input type="text" id="placa" name="placa" required
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="empresa_id" class="block text-sm font-medium text-gray-700">Empresa</label>
                     <select id="empresa_id" name="empresa_id" required
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Seleccione --</option>
                         <?php foreach ($empresas as $empresa): ?>
                             <option value="<?= htmlspecialchars($empresa['empresa_id']) ?>">
@@ -75,12 +75,12 @@ $vehiculos = $pdo->query("
                 <div>
                     <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo</label>
                     <input type="text" id="tipo" name="tipo"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="estatus" class="block text-sm font-medium text-gray-700">Estatus</label>
                     <select id="estatus" name="estatus" required
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="en_servicio">En Servicio</option>
                         <option value="en_mantenimiento">En Mantenimiento</option>
                         <option value="de_baja">De Baja</option>
@@ -92,33 +92,33 @@ $vehiculos = $pdo->query("
                 <div>
                     <label for="altura_metros" class="block text-sm font-medium text-gray-700">Altura (m)</label>
                     <input type="number" step="0.01" id="altura_metros" name="altura_metros" placeholder="Ej: 4.15"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="ancho_metros" class="block text-sm font-medium text-gray-700">Ancho (m)</label>
                     <input type="number" step="0.01" id="ancho_metros" name="ancho_metros" placeholder="Ej: 2.55"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="largo_metros" class="block text-sm font-medium text-gray-700">Largo (m)</label>
                     <input type="number" step="0.01" id="largo_metros" name="largo_metros" placeholder="Ej: 16.5"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="peso_toneladas" class="block text-sm font-medium text-gray-700">Peso Total (t)</label>
                     <input type="number" step="0.01" id="peso_toneladas" name="peso_toneladas" placeholder="Ej: 30"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="peso_eje_kg" class="block text-sm font-medium text-gray-700">Peso por Eje (kg)</label>
                     <input type="number" id="peso_eje_kg" name="peso_eje_kg" placeholder="Ej: 11500"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="velocidad_max_kmh" class="block text-sm font-medium text-gray-700">Vel. Máxima
                         (km/h)</label>
                     <input type="number" id="velocidad_max_kmh" name="velocidad_max_kmh" placeholder="Ej: 90"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
             </div>
 
@@ -128,7 +128,7 @@ $vehiculos = $pdo->query("
                     Cancelar
                 </button>
                 <button type="submit" id="submitButton"
-                    class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Crear Vehículo</button>
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Crear Vehículo</button>
             </div>
         </form>
     </div>
@@ -165,7 +165,7 @@ $vehiculos = $pdo->query("
                                 </span>
                             </td>
                             <td class="p-4 text-right space-x-2 whitespace-nowrap">
-                                <button class="edit-btn text-red-600 hover:underline"
+                                <button class="edit-btn text-blue-600 hover:underline"
                                     data-vehiculo='<?= htmlspecialchars(json_encode($vehiculo), ENT_QUOTES, 'UTF-8') ?>'>Editar</button>
                                 <?php if ($vehiculo['estatus'] !== 'de_baja'): ?>
                                     <button class="btn-status text-red-600 hover:underline"

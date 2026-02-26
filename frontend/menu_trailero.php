@@ -51,7 +51,7 @@ try {
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
     }
     .card-current {
-        border-left: 4px solid #2563EB; /* border-l-4 border-red-600 */
+        border-left: 4px solid #2563EB; /* border-l-4 border-blue-600 */
     }
     
     /* Clases para los "badges" de estatus */
@@ -64,8 +64,8 @@ try {
         align-self: flex-start;
     }
     .badge-blue { /* 'En Curso' */
-        background-color: #DBEAFE; /* bg-red-100 */
-        color: #1E40AF; /* text-red-800 */
+        background-color: #DBEAFE; /* bg-blue-100 */
+        color: #1E40AF; /* text-blue-800 */
     }
     .badge-yellow { /* 'Asignado' */
         background-color: #FEF3C7; /* bg-yellow-100 */
@@ -84,7 +84,7 @@ try {
     .card-link span {
         font-size: 1.125rem; /* text-lg */
         font-weight: 700; /* font-bold */
-        color: #2563EB; /* text-red-600 */
+        color: #2563EB; /* text-blue-600 */
     }
     
     /* Clases para el texto de "No hay viajes" */
@@ -99,7 +99,7 @@ try {
 </header>
 
 <div class="mb-10">
-    <h2 class="text-2xl font-bold mb-4 text-red-600">Viaje Actual</h2>
+    <h2 class="text-2xl font-bold mb-4 text-blue-600">Viaje Actual</h2>
     
     <?php if ($viaje_actual): ?>
         <a href="operador_viaje_detalle.php?id=<?= htmlspecialchars($viaje_actual['viaje_id']) ?>" 

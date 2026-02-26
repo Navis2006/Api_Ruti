@@ -95,8 +95,8 @@ $stripe_config = getStripePublicConfig();
                 </p>
 
                 <?php if (isStripeTestMode()): ?>
-                <div class="mt-4 bg-red-100 border border-red-300 rounded p-3">
-                    <p class="text-xs text-red-800">
+                <div class="mt-4 bg-blue-100 border border-blue-300 rounded p-3">
+                    <p class="text-xs text-blue-800">
                         ⚠️ <strong>MODO DE PRUEBA</strong> - Use tarjeta de prueba: 4242 4242 4242 4242
                     </p>
                 </div>

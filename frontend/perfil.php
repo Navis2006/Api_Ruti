@@ -46,7 +46,7 @@ try {
     <?php elseif ($usuario): ?>
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
             <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-                <div class="w-24 h-24 rounded-full bg-red-600 text-white flex items-center justify-center text-4xl font-bold">
+                <div class="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl font-bold">
                     <?= htmlspecialchars(strtoupper(substr($usuario['nombre'], 0, 1) . substr($usuario['apellidos'], 0, 1))) ?>
                 </div>
                 
@@ -84,7 +84,7 @@ try {
                     class="py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-md hover:bg-gray-300">
                     Cambiar Contraseña
                 </button>
-                <button class="py-2 px-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 opacity-50 cursor-not-allowed" disabled>Editar Perfil</button>
+                <button class="py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 opacity-50 cursor-not-allowed" disabled>Editar Perfil</button>
             </div>
         </div>
     <?php endif; ?>
@@ -127,8 +127,8 @@ try {
 
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div class="sm:flex sm:items-start">
-                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
                             </div>
@@ -139,22 +139,22 @@ try {
                                 <div class="mt-4 space-y-4">
                                     <div>
                                         <label for="password_actual" class="block text-sm font-medium text-gray-700">Contraseña Actual</label>
-                                        <input type="password" id="password_actual" name="password_actual" required autocomplete="current-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                                        <input type="password" id="password_actual" name="password_actual" required autocomplete="current-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                     </div>
                                     <div>
                                         <label for="password_nueva" class="block text-sm font-medium text-gray-700">Contraseña Nueva</label>
-                                        <input type="password" id="password_nueva" name="password_nueva" required autocomplete="new-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                                        <input type="password" id="password_nueva" name="password_nueva" required autocomplete="new-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                     </div>
                                     <div>
                                         <label for="password_confirmar" class="block text-sm font-medium text-gray-700">Confirmar Contraseña Nueva</label>
-                                        <input type="password" id="password_confirmar" name="password_confirmar" required autocomplete="new-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                                        <input type="password" id="password_confirmar" name="password_confirmar" required autocomplete="new-password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
                             Actualizar Contraseña
                         </button>
                         <button 

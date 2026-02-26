@@ -103,7 +103,7 @@ $rutas_counts = json_encode(array_column($rutas_data, 'total'));
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     
     <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-        <div class="p-3 bg-red-100 text-red-600 rounded-full">
+        <div class="p-3 bg-blue-100 text-blue-600 rounded-full">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18"></path></svg>
         </div>
         <div class="ml-4">
