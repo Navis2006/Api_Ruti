@@ -104,7 +104,7 @@ $empresas = $pdo->query("SELECT * FROM empresas ORDER BY nombre")->fetchAll();
     }
 
     #confirmDialog .btn-yes {
-        background: #2563eb;
+        background: #dc2626;
         color: white;
     }
 
@@ -128,7 +128,7 @@ $empresas = $pdo->query("SELECT * FROM empresas ORDER BY nombre")->fetchAll();
         <h1 class="text-3xl font-bold mb-4 md:mb-0">Administración de Empresas</h1>
 
         <button @click="formVisible = true; setCreateMode();"
-            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
+            class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
@@ -153,13 +153,13 @@ $empresas = $pdo->query("SELECT * FROM empresas ORDER BY nombre")->fetchAll();
             <div>
                 <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre de la Empresa</label>
                 <input type="text" id="nombre" name="nombre" required
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
             </div>
 
             <div>
                 <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
                 <select id="estado" name="estado" required
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
                     <option value="Activa">Activa</option>
                     <option value="Inactiva">Inactiva</option>
                 </select>
@@ -170,7 +170,7 @@ $empresas = $pdo->query("SELECT * FROM empresas ORDER BY nombre")->fetchAll();
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-sm font-semibold text-gray-700">📍 Ubicación Geográfica</h3>
                     <button type="button" onclick="openMapSelector()"
-                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition">
+                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
@@ -186,12 +186,12 @@ $empresas = $pdo->query("SELECT * FROM empresas ORDER BY nombre")->fetchAll();
                     <div>
                         <label class="block text-xs text-gray-500">Latitud</label>
                         <input type="text" id="lat" name="lat" placeholder="Ej: 20.9674"
-                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs text-gray-500">Longitud</label>
                         <input type="text" id="lng" name="lng" placeholder="Ej: -89.6237"
-                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-sm">
                     </div>
                 </div>
             </div>
@@ -199,7 +199,7 @@ $empresas = $pdo->query("SELECT * FROM empresas ORDER BY nombre")->fetchAll();
                 <button type="button" @click="formVisible = false; setCreateMode();"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancelar</button>
                 <button type="submit" id="submitButton"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Crear Empresa</button>
+                    class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Crear Empresa</button>
             </div>
         </form>
     </div>
@@ -236,7 +236,7 @@ $empresas = $pdo->query("SELECT * FROM empresas ORDER BY nombre")->fetchAll();
                                 <?= $empresa['lat'] ? htmlspecialchars($empresa['lat'] . ', ' . $empresa['lng']) : '<i>Sin coordenadas</i>' ?>
                             </td>
                             <td class="p-4 text-right space-x-2 whitespace-nowrap">
-                                <button class="edit-btn text-blue-600 hover:underline"
+                                <button class="edit-btn text-red-600 hover:underline"
                                     data-empresa='<?= htmlspecialchars(json_encode($empresa), ENT_QUOTES, 'UTF-8') ?>'>Editar</button>
                                 <form method="POST" action="../backend/admin_gestionar_empresas_process.php"
                                     class="inline-block">

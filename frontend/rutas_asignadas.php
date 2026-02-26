@@ -43,7 +43,7 @@ if (function_exists('getTravelsForTrailero')) {
         <?php foreach ($viajes as $viaje): ?>
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-2">
-                    <h2 class="text-xl font-bold text-blue-600">Viaje ID: <?= htmlspecialchars($viaje['viaje_id']); ?></h2>
+                    <h2 class="text-xl font-bold text-red-600">Viaje ID: <?= htmlspecialchars($viaje['viaje_id']); ?></h2>
                     <span class="px-3 py-1 text-sm font-semibold rounded-full mt-2 sm:mt-0
                         <?php 
                             $estado = $viaje['estado_viaje'];
@@ -74,7 +74,7 @@ if (function_exists('getTravelsForTrailero')) {
                 </div>
                 
                 <div class="mt-4">
-                    <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">Ver Mapa de Ruta</button>
+                    <button class="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">Ver Mapa de Ruta</button>
                 </div>
             </div>
         <?php endforeach; ?>

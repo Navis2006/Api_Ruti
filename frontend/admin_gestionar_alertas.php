@@ -66,7 +66,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
         
         <button 
             @click="formVisible = true; setCreateMode(); $nextTick(() => { initMapPicker(); });" 
-            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+            class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
         >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             Crear Nueva Alerta
@@ -93,7 +93,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="ruta_id" class="block text-sm font-medium text-gray-700">Ruta Asociada</label>
-                    <select id="ruta_id" name="ruta_id" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <select id="ruta_id" name="ruta_id" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
                         <option value="">-- Seleccione --</option>
                         <?php foreach ($rutas as $ruta): ?>
                             <option value="<?= htmlspecialchars($ruta['ruta_id'] ?? '') ?>"><?= htmlspecialchars($ruta['nombre'] ?? '') ?></option>
@@ -102,7 +102,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
                 </div>
                 <div>
                     <label for="creado_por_usuario_id" class="block text-sm font-medium text-gray-700">Creado por (Automático)</label>
-                    <select id="creado_por_usuario_id" name="creado_por_usuario_id" disabled class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="creado_por_usuario_id" name="creado_por_usuario_id" disabled class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 focus:ring-red-500 focus:border-red-500">
                          <option value="">-- Asignado por Admin Logueado --</option>
                     </select>
                 </div>
@@ -111,7 +111,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                  <div>
                     <label for="tipo_alerta" class="block text-sm font-medium text-gray-700">Tipo de Alerta</label>
-                    <select id="tipo_alerta" name="tipo_alerta" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <select id="tipo_alerta" name="tipo_alerta" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
                         <option value="">-- Seleccione Tipo --</option>
                         <?php foreach ($tipos_de_alerta as $tipo): ?>
                             <option value="<?= $tipo ?>"><?= $tipo ?></option>
@@ -120,7 +120,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
                 </div>
                 <div>
                     <label for="nivel" class="block text-sm font-medium text-gray-700">Nivel (Prioridad)</label>
-                    <select id="nivel" name="nivel" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <select id="nivel" name="nivel" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
                         <?php foreach ($niveles_de_alerta as $key => $value): ?>
                             <option value="<?= $key ?>" <?= ($key == 3) ? 'selected' : '' ?>><?= $value ?></option>
                         <?php endforeach; ?>
@@ -128,7 +128,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
                 </div>
                 <div>
                     <label for="estatus_alerta" class="block text-sm font-medium text-gray-700">Estatus</label>
-                    <select id="estatus_alerta" name="estatus_alerta" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <select id="estatus_alerta" name="estatus_alerta" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
                         <?php foreach ($estatus_de_alerta as $estatus): ?>
                             <option value="<?= $estatus ?>"><?= $estatus ?></option>
                         <?php endforeach; ?>
@@ -138,7 +138,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
             
             <div>
                 <label for="ubicacion_geom" class="block text-sm font-medium text-gray-700">Ubicación (POINT)</label>
-                <input type="text" id="ubicacion_geom" name="ubicacion_geom" placeholder="Haz clic en el mapa para generar..." class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <input type="text" id="ubicacion_geom" name="ubicacion_geom" placeholder="Haz clic en el mapa para generar..." class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
             </div>
             
             <div>
@@ -148,12 +148,12 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
             
             <div>
                 <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-                <textarea id="descripcion" name="descripcion" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                <textarea id="descripcion" name="descripcion" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"></textarea>
             </div>
             
             <div class="flex justify-end space-x-4">
                 <button type="button" @click="formVisible = false" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancelar</button>
-                <button type="submit" id="submitButton" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Crear Alerta</button>
+                <button type="submit" id="submitButton" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Crear Alerta</button>
             </div>
         </form>
     </div>
@@ -192,7 +192,7 @@ $estatus_de_alerta = ['Abierta', 'Resuelta'];
                             <td class="p-4"><?= htmlspecialchars($alerta['creador_nombre'] ?? '') ?></td>
                             <td class="p-4 text-right space-x-2 whitespace-nowrap">
                                 <button 
-                                    class="edit-btn text-blue-600 hover:underline"
+                                    class="edit-btn text-red-600 hover:underline"
                                     data-alerta='<?= htmlspecialchars(json_encode($alerta), ENT_QUOTES, 'UTF-8') ?>'
                                     @click="formVisible = true; $nextTick(() => { initMapPicker(<?= htmlspecialchars(json_encode($alerta['ubicacion_geom'])) ?>); });"
                                 >

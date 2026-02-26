@@ -85,9 +85,9 @@
         }
         div.dt-paging .dt-paging-button.current,
         div.dt-paging .dt-paging-button.current:hover {
-            background-color: #2563eb !important; /* bg-blue-600 */
+            background-color: #dc2626 !important; /* bg-red-600 */
             color: white !important;
-            border-color: #2563eb !important;
+            border-color: #dc2626 !important;
             background-image: none !important; /* Quita gradiente */
         }
         div.dt-paging .dt-paging-button.disabled {
@@ -192,35 +192,35 @@
                 </div>
 
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                    <div class="flex-shrink-0 flex items-center px-4">
-                        <h2 class="text-2xl font-bold text-blue-600">Dunosusa</h2>
-                    </div>
+        <div class="flex-shrink-0 flex items-center px-4">
+            <img src="assets/Logocompleto.png" alt="Dunosusa" class="h-8 w-auto">
+        </div>
                     <nav class="mt-5 px-2 space-y-1">
-                        <a href="menu_admin.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'menu_admin.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                        <a href="menu_admin.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'menu_admin.php') ? 'text-red-700 bg-red-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                             Dashboard
                         </a>
-                        <a href="admin_gestionar_vehiculos.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_vehiculos.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                        <a href="admin_gestionar_vehiculos.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_vehiculos.php') ? 'text-red-700 bg-red-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2-2h8zM13 16h2m-2-7h2m0 0H9.692l-2-4H4.382l-2 4H13z"></path></svg>
                             Vehículos
                         </a>
-                        <a href="admin_gestionar_rutas.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_rutas.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                        <a href="admin_gestionar_rutas.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_rutas.php') ? 'text-red-700 bg-red-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             Rutas
                         </a>
-                        <a href="admin_registro.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_registro.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                        <a href="admin_registro.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_registro.php') ? 'text-red-700 bg-red-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             Usuarios
                         </a>
-                        <a href="admin_gestionar_viajes.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_viajes.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                        <a href="admin_gestionar_viajes.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_viajes.php') ? 'text-red-700 bg-red-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18"></path></svg>
                             Viajes
                         </a>
-                        <a href="admin_gestionar_alertas.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_alertas.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                        <a href="admin_gestionar_alertas.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_alertas.php') ? 'text-red-700 bg-red-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341A6.002 6.002 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                             Alertas
                         </a>
-                        <a href="admin_gestionar_empresas.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_empresas.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                        <a href="admin_gestionar_empresas.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'admin_gestionar_empresas.php') ? 'text-red-700 bg-red-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V9a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
                             Empresas
                         </a>
@@ -249,38 +249,38 @@
         >
             <div class="flex flex-col h-full">
                 <div class="h-16 flex items-center justify-center border-b">
-                    <h2 class="text-2xl font-bold text-blue-600" x-show="desktopSidebarOpen">Dunosusa</h2>
-                    <span class="text-2xl font-bold text-blue-600" x-show="!desktopSidebarOpen" x-cloak>D</span>
+                    <img src="assets/Logocompleto.png" alt="Dunosusa" class="h-8 w-auto" x-show="desktopSidebarOpen">
+                    <img src="assets/SoloD.png" alt="Dunosusa" class="h-8 w-auto" x-show="!desktopSidebarOpen" x-cloak>
                 </div>
 
                 <nav class="flex-1 overflow-y-auto pt-4">
-                    <a href="menu_admin.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'menu_admin.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="menu_admin.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'menu_admin.php') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Dashboard</span>
                     </a>
-                    <a href="admin_gestionar_vehiculos.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_vehiculos.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="admin_gestionar_vehiculos.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_vehiculos.php') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2-2h8zM13 16h2m-2-7h2m0 0H9.692l-2-4H4.382l-2 4H13z"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Vehículos</span>
                     </a>
-                    <a href="admin_gestionar_rutas.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_rutas.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="admin_gestionar_rutas.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_rutas.php') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Rutas</span>
                     </a>
-                    <a href="admin_registro.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_registro.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="admin_registro.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_registro.php') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Usuarios</span>
                     </a>
                     
-                    <a href="admin_gestionar_viajes.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_viajes.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="admin_gestionar_viajes.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_viajes.php') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Viajes</span>
                     </a>
                     
-                    <a href="admin_gestionar_alertas.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_alertas.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="admin_gestionar_alertas.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_alertas.php') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341A6.002 6.002 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Alertas</span>
                     </a>
-                    <a href="admin_gestionar_empresas.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_empresas.php') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
+                    <a href="admin_gestionar_empresas.php" class="flex items-center px-6 py-3 <?php echo ($currentPage == 'admin_gestionar_empresas.php') ? 'text-red-600 bg-red-50' : 'text-gray-600 hover:bg-gray-50'; ?>" :class="{ 'justify-center': !desktopSidebarOpen }">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V9a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
                         <span class="ml-4 font-medium" x-show="desktopSidebarOpen" x-cloak>Empresas</span>
                     </a>

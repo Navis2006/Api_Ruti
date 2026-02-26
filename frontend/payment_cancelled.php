@@ -29,8 +29,8 @@ if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['empresa_id'])) {
     <div class="max-w-2xl w-full bg-white rounded-lg shadow-xl p-8 m-4">
         <!-- Ícono de información -->
         <div class="flex justify-center mb-6">
-            <div class="bg-blue-100 rounded-full p-6">
-                <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-red-100 rounded-full p-6">
+                <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </div>
@@ -42,8 +42,8 @@ if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['empresa_id'])) {
         </h1>
 
         <!-- Mensaje principal -->
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-            <p class="text-sm text-blue-700 text-center">
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+            <p class="text-sm text-red-700 text-center">
                 El proceso de pago fue cancelado. No se realizó ningún cargo a su tarjeta.
             </p>
         </div>

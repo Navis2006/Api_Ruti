@@ -61,7 +61,7 @@ if ($vehiculo_id) {
         <?php foreach ($historial as $mantenimiento): ?>
             <div class="card">
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-xl font-bold text-blue-600">
+                    <h2 class="text-xl font-bold text-red-600">
                         Servicio ID: <?= htmlspecialchars($mantenimiento['mantenimiento_id']) ?>
                     </h2>
                     <span class="text-sm font-medium text-gray-600">
@@ -77,7 +77,7 @@ if ($vehiculo_id) {
     <?php endif; ?>
 
     <div class="text-center mt-8">
-        <a href="trailer_asignado.php" class="text-blue-600 hover:underline">&larr; Volver a Mi Vehículo</a>
+        <a href="trailer_asignado.php" class="text-red-600 hover:underline">&larr; Volver a Mi Vehículo</a>
     </div>
 </div>
 

@@ -71,7 +71,7 @@ $tipos_incidencia = ['Mecánica (Motor)', 'Neumáticos', 'Eléctrica (Luces)', '
             <div class="flex flex-col md:flex-row items-center md:items-start">
                 <!-- Icono de Camión (Padrote) -->
                 <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
-                    <svg class="w-24 h-24 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8zM13 16h2m-2-7h2m0 0H9.692l-2-4H4.382l-2 4H13zM19 16V6a1 1 0 00-1-1h-1l-2 4h3v7z"></path></svg>
+                    <svg class="w-24 h-24 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8zM13 16h2m-2-7h2m0 0H9.692l-2-4H4.382l-2 4H13zM19 16V6a1 1 0 00-1-1h-1l-2 4h3v7z"></path></svg>
                     
 
 [Image of un ícono de camión de carga]
@@ -80,7 +80,7 @@ $tipos_incidencia = ['Mecánica (Motor)', 'Neumáticos', 'Eléctrica (Luces)', '
 
                 <!-- Detalles Principales -->
                 <div class="flex-1 text-center md:text-left">
-                    <h2 class="text-2xl font-bold text-blue-600">
+                    <h2 class="text-2xl font-bold text-red-600">
                         <?= htmlspecialchars($vehiculo['nombre'] ?? 'N/A') ?>
                     </h2>
                     <p class="text-3xl font-bold font-mono text-gray-800 my-2"><?= htmlspecialchars($vehiculo['placa'] ?? 'N/A') ?></p>
@@ -127,7 +127,7 @@ $tipos_incidencia = ['Mecánica (Motor)', 'Neumáticos', 'Eléctrica (Luces)', '
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     Reportar Incidencia
                 </button>
-                <a href="historial_mantenimiento.php?vehiculo_id=<?= htmlspecialchars($vehiculo['vehiculo_id']) ?>" class="w-full text-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="historial_mantenimiento.php?vehiculo_id=<?= htmlspecialchars($vehiculo['vehiculo_id']) ?>" class="w-full text-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors">
                     Ver Historial de Mantenimiento
                 </a>
             </div>
@@ -199,7 +199,7 @@ $tipos_incidencia = ['Mecánica (Motor)', 'Neumáticos', 'Eléctrica (Luces)', '
                                 <div class="mt-4 space-y-4">
                                     <div>
                                         <label for="tipo_incidencia" class="block text-sm font-medium text-gray-700">Tipo de Incidencia</label>
-                                        <select id="tipo_incidencia" name="tipo_incidencia" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                        <select id="tipo_incidencia" name="tipo_incidencia" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
                                             <option value="">-- Seleccione un tipo --</option>
                                             <?php foreach ($tipos_incidencia as $tipo): ?>
                                                 <option value="<?= $tipo ?>"><?= $tipo ?></option>
@@ -208,7 +208,7 @@ $tipos_incidencia = ['Mecánica (Motor)', 'Neumáticos', 'Eléctrica (Luces)', '
                                     </div>
                                     <div>
                                         <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción (¿Qué pasó?)</label>
-                                        <textarea id="descripcion" name="descripcion" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ej: La luz trasera izquierda no enciende..."></textarea>
+                                        <textarea id="descripcion" name="descripcion" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500" placeholder="Ej: La luz trasera izquierda no enciende..."></textarea>
                                     </div>
                                 </div>
                             </div>

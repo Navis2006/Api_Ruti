@@ -102,24 +102,26 @@
                 <div class="flex justify-between items-center">
                     
                     <div>
-                        <a href="menu_trailero.php" class="text-2xl font-bold text-blue-600">Dunosusa</a>
+                        <a href="menu_trailero.php" class="flex items-center">
+                            <img src="assets/Logocompleto.png" alt="Dunosusa" class="h-8 w-auto">
+                        </a>
                     </div>
 
                     <div class="hidden md:flex items-center space-x-4">
                         <span class="text-sm font-medium text-gray-700">Bienvenido, <?= htmlspecialchars($nombre_operador) ?></span>
-                        <a href="menu_trailero.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'menu_trailero.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Inicio (Mis Viajes)</a>
+                        <a href="menu_trailero.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'menu_trailero.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Inicio (Mis Viajes)</a>
                         
-                        <a href="operador_historial.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'operador_historial.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Historial</a>
+                        <a href="operador_historial.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'operador_historial.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Historial</a>
                         
-                        <a href="trailer_asignado.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'trailer_asignado.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Vehículo</a>
-                        <a href="alertas.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'alertas.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Alertas</a>
-                        <a href="perfil.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'perfil.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Perfil</a>
-                        <a href="contacto_soporte.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'contacto_soporte.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Soporte</a>
+                        <a href="trailer_asignado.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'trailer_asignado.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Mi Vehículo</a>
+                        <a href="alertas.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'alertas.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Alertas</a>
+                        <a href="perfil.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'perfil.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Mi Perfil</a>
+                        <a href="contacto_soporte.php" class="px-2 py-1 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'contacto_soporte.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Soporte</a>
                         <a href="../backend/logout.php" class="block md:inline-block bg-red-500 text-white text-center px-4 py-2 rounded-md hover:bg-red-600">Cerrar Sesión</a>
                     </div>
                     
                     <div class="md:hidden">
-                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-600 hover:text-red-600 focus:outline-none">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
@@ -129,14 +131,14 @@
                 </div>
 
                 <div x-show="mobileMenuOpen" class="md:hidden mt-4 space-y-2" x-cloak>
-                    <a href="menu_trailero.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'menu_trailero.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Inicio (Mis Viajes)</a>
+                    <a href="menu_trailero.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'menu_trailero.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Inicio (Mis Viajes)</a>
                     
-                    <a href="operador_historial.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'operador_historial.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Historial</a>
+                    <a href="operador_historial.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'operador_historial.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Historial</a>
 
-                    <a href="trailer_asignado.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'trailer_asignado.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Vehículo</a>
-                    <a href="alertas.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'alertas.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Alertas</a>
-                    <a href="perfil.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'perfil.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Mi Perfil</a>
-                    <a href="contacto_soporte.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-blue-600 <?= ($currentPage == 'contacto_soporte.php') ? 'bg-blue-100 text-blue-700 font-semibold' : '' ?>">Soporte</a>
+                    <a href="trailer_asignado.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'trailer_asignado.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Mi Vehículo</a>
+                    <a href="alertas.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'alertas.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Alertas</a>
+                    <a href="perfil.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'perfil.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Mi Perfil</a>
+                    <a href="contacto_soporte.php" class="block px-3 py-2 rounded-md text-gray-600 hover:text-red-600 <?= ($currentPage == 'contacto_soporte.php') ? 'bg-red-100 text-red-700 font-semibold' : '' ?>">Soporte</a>
                     <a href="../backend/logout.php" class="block mt-2 md:mt-0 bg-red-500 text-white text-center px-4 py-2 rounded-md hover:bg-red-600">Cerrar Sesión</a>
                 </div>
             </nav>
