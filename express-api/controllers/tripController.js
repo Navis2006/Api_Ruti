@@ -12,6 +12,8 @@ const getMyTrips = async (req, res) => {
         // A. Viaje Actual (En Curso)
         const [currentRows] = await pool.execute(
             `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
+              ve.placa as vehiculo_placa, ve.tipo as vehiculo_tipo, ve.altura as vehiculo_altura,
+              ve.ancho as vehiculo_ancho, ve.largo as vehiculo_largo, ve.peso_total as vehiculo_peso,
               r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
               eo.nombre as origen_nombre, 
               COALESCE(r.nombre, (
