@@ -10,7 +10,7 @@ $video_path = 'frontend/videos/background.mp4'; // ¡IMPORTANTE! Ruta a tu video
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Dunosusa Logística</title>
+    <title>Iniciar Sesión - Rutitruck</title>
     
     <!-- Carga de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -84,13 +84,9 @@ $video_path = 'frontend/videos/background.mp4'; // ¡IMPORTANTE! Ruta a tu video
             -->
             <div class="w-full max-w-md p-8 space-y-6 bg-white/10 backdrop-blur-sm rounded-xl shadow-2xl animate-fadeInUp">
                 
-                <!-- Logo de la Empresa (usando tu lógica PHP) -->
-                <div class="flex justify-center">
-                    <?php if (file_exists($logo_path)): ?>
-                        <img src="<?= htmlspecialchars($logo_path) ?>" alt="Logo de la Empresa" class="w-48 h-auto mx-auto mb-4">
-                    <?php else: ?>
-                        <h1 class="text-3xl font-bold text-center text-white">Dunosusa Logística</h1>
-                    <?php endif; ?>
+                <!-- Nombre de la Empresa (solo texto) -->
+                <div class="flex justify-center mb-4">
+                    <h1 class="text-4xl font-black text-center text-white tracking-widest drop-shadow-md">RUTITRUCK</h1>
                 </div>
 
                 <p class="text-center text-gray-200">Ingresa tus credenciales para acceder al panel.</p>

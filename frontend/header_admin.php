@@ -17,7 +17,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración | Dunosusa</title>
+    <title>Panel de Administración | Rutitruck</title>
 
     <script>
       tailwind.config = {
@@ -192,8 +192,8 @@
                 </div>
 
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                    <div class="flex-shrink-0 flex items-center px-4">
-                        <h2 class="text-2xl font-bold text-blue-600">Dunosusa</h2>
+                    <div class="flex-shrink-0 flex items-center px-4 py-2">
+                        <img src="assets/Logotipo.png" alt="Rutitruck" class="h-10 w-auto">
                     </div>
                     <nav class="mt-5 px-2 space-y-1">
                         <a href="menu_admin.php" class="flex items-center px-3 py-2 text-base font-medium rounded-md <?php echo ($currentPage == 'menu_admin.php') ? 'text-blue-700 bg-blue-100' : 'text-gray-600 hover:bg-gray-50'; ?>">
@@ -249,8 +249,8 @@
         >
             <div class="flex flex-col h-full">
                 <div class="h-16 flex items-center justify-center border-b">
-                    <h2 class="text-2xl font-bold text-blue-600" x-show="desktopSidebarOpen">Dunosusa</h2>
-                    <span class="text-2xl font-bold text-blue-600" x-show="!desktopSidebarOpen" x-cloak>D</span>
+                    <img src="assets/Logotipo.png" alt="Rutitruck" class="h-10 w-auto" x-show="desktopSidebarOpen">
+                    <img src="assets/Logo.png" alt="Rutitruck" class="h-10 w-auto" x-show="!desktopSidebarOpen" x-cloak>
                 </div>
 
                 <nav class="flex-1 overflow-y-auto pt-4">

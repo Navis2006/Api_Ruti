@@ -22,7 +22,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Operador | Dunosusa</title>
+    <title>Panel de Operador | Rutitruck</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -102,7 +102,9 @@
                 <div class="flex justify-between items-center">
                     
                     <div>
-                        <a href="menu_trailero.php" class="text-2xl font-bold text-blue-600">Dunosusa</a>
+                        <a href="menu_trailero.php">
+                            <img src="assets/Logotipo.png" alt="Rutitruck" class="h-10 w-auto">
+                        </a>
                     </div>
 
                     <div class="hidden md:flex items-center space-x-4">
