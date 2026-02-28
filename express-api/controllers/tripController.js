@@ -12,8 +12,6 @@ const getMyTrips = async (req, res) => {
         // A. Viaje Actual (En Curso)
         const [currentRows] = await pool.execute(
             `SELECT v.viaje_id, v.estado, v.fecha_inicio, r.nombre as ruta_nombre, ve.nombre as vehiculo_nombre,
-              ve.placa as vehiculo_placa, ve.tipo as vehiculo_tipo, ve.altura as vehiculo_altura,
-              ve.ancho as vehiculo_ancho, ve.largo as vehiculo_largo, ve.peso_total as vehiculo_peso,
               r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
               eo.nombre as origen_nombre, 
               COALESCE(r.nombre, (
@@ -196,4 +194,60 @@ const updateTripStatus = async (req, res) => {
     }
 };
 
-module.exports = { getMyTrips, getTripDetails, updateTripStatus };
+/**
+ * GET /api/trips/vehicle-details/:id
+ * Requiere auth → req.userId
+ */
+const getTripVehicleDetails = async (req, res) => {
+    const operadorId = req.userId;
+    const viajeId = parseInt(req.params.id);
+
+    if (!viajeId || viajeId <= 0) {
+        return res.status(400).json({
+            success: false,
+            message: 'ID de viaje inválido.'
+        });
+    }
+
+    try {
+        const [rows] = await pool.execute(
+            `SELECT 
+                ve.vehiculo_id,
+                ve.nombre as vehiculo_nombre,
+                ve.placa as vehiculo_placa, 
+                ve.tipo as vehiculo_tipo, 
+                ve.altura as vehiculo_altura,
+                ve.ancho as vehiculo_ancho, 
+                ve.largo as vehiculo_largo, 
+                ve.peso_total as vehiculo_peso
+             FROM viajes v
+             JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
+             WHERE v.operador_usuario_id = ? AND v.viaje_id = ?
+             LIMIT 1`,
+            [operadorId, viajeId]
+        );
+
+        const vehiculo = rows[0];
+
+        if (!vehiculo) {
+            return res.status(404).json({
+                success: false,
+                message: 'Vehículo no encontrado para este viaje.'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: vehiculo
+        });
+
+    } catch (error) {
+        console.error('Error getTripVehicleDetails:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Error DB: ' + error.message
+        });
+    }
+};
+
+module.exports = { getMyTrips, getTripDetails, updateTripStatus, getTripVehicleDetails };
