@@ -124,25 +124,24 @@ const getMyAlerts = async (req, res) => {
             FROM alertas a
             INNER JOIN rutas r ON a.ruta_id = r.ruta_id
             LEFT JOIN usuarios u ON a.creado_por_usuario_id = u.usuario_id
+            INNER JOIN (
+                SELECT vd.ruta_id 
+                FROM viajes v
+                INNER JOIN viaje_destinos vd ON v.viaje_id = vd.viaje_id
+                WHERE v.operador_usuario_id = ? 
+                  AND v.estado IN ('En Curso', 'Asignado', 'Planeado')
+                  AND vd.ruta_id IS NOT NULL
+                ORDER BY 
+                  CASE v.estado 
+                    WHEN 'En Curso' THEN 1 
+                    WHEN 'Asignado' THEN 2 
+                    WHEN 'Planeado' THEN 3 
+                    ELSE 4 
+                  END, 
+                  v.fecha_inicio ASC
+                LIMIT 10
+            ) AS allowed_rutas ON a.ruta_id = allowed_rutas.ruta_id
             WHERE a.estatus_alerta = 'Abierta'
-              AND a.ruta_id IN (
-                  -- Subconsulta: Obtener todas las rutas del viaje más actual del operador
-                  SELECT vd.ruta_id 
-                  FROM viajes v
-                  INNER JOIN viaje_destinos vd ON v.viaje_id = vd.viaje_id
-                  WHERE v.operador_usuario_id = ? 
-                    AND v.estado IN ('En Curso', 'Asignado', 'Planeado')
-                    AND vd.ruta_id IS NOT NULL
-                  ORDER BY 
-                    CASE v.estado 
-                      WHEN 'En Curso' THEN 1 
-                      WHEN 'Asignado' THEN 2 
-                      WHEN 'Planeado' THEN 3 
-                      ELSE 4 
-                    END, 
-                    v.fecha_inicio ASC
-                  LIMIT 10 -- Límite razonable por si el viaje tiene muchas paradas
-              )
             ORDER BY a.nivel DESC, a.alerta_id DESC
         `;
 
