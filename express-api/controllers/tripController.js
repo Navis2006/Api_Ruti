@@ -89,12 +89,8 @@ const getTripDetails = async (req, res) => {
         const [rows] = await pool.execute(
             `SELECT 
           v.viaje_id, v.estado, v.fecha_inicio, 
-          r.ruta_id, r.nombre as ruta_nombre, r.descripcion as ruta_descripcion,
-          r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
-          ST_AsText(r.trazado_geom) as trazado_wkt, 
           ve.nombre as vehiculo_nombre, ve.placa as vehiculo_placa
        FROM viajes v
-       JOIN rutas r ON v.ruta_id = r.ruta_id
        JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
        WHERE v.operador_usuario_id = ? AND v.viaje_id = ?
        LIMIT 1`,
@@ -110,13 +106,33 @@ const getTripDetails = async (req, res) => {
             });
         }
 
-        // 2. Obtener alertas activas de la ruta
-        const [alertas] = await pool.execute(
-            `SELECT * FROM alertas 
-       WHERE ruta_id = ? AND estatus_alerta = 'Abierta'
-       ORDER BY nivel DESC`,
-            [viaje.ruta_id]
+        // 2. Obtener todas las rutas vinculadas a este viaje vía viaje_destinos
+        const [rutasViaje] = await pool.execute(
+            `SELECT r.ruta_id, r.nombre as ruta_nombre, r.descripcion as ruta_descripcion,
+                    r.lat_origen, r.lng_origen, r.lat_destino, r.lng_destino,
+                    ST_AsText(r.trazado_geom) as trazado_wkt
+             FROM viaje_destinos vd
+             JOIN rutas r ON vd.ruta_id = r.ruta_id
+             WHERE vd.viaje_id = ? AND vd.ruta_id IS NOT NULL
+             ORDER BY vd.orden ASC`,
+            [viajeId]
         );
+
+        viaje.rutas = rutasViaje;
+
+        // 3. Obtener alertas activas de todas las rutas del viaje
+        let alertas = [];
+        if (rutasViaje.length > 0) {
+            const rutaIds = rutasViaje.map(r => r.ruta_id);
+            const placeholders = rutaIds.map(() => '?').join(',');
+            const [alertasRows] = await pool.execute(
+                `SELECT * FROM alertas 
+                 WHERE ruta_id IN (${placeholders}) AND estatus_alerta = 'Abierta'
+                 ORDER BY nivel DESC`,
+                rutaIds
+            );
+            alertas = alertasRows;
+        }
 
         viaje.alertas_activas = alertas;
 

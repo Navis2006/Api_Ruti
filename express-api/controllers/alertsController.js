@@ -19,16 +19,32 @@ const reportAlert = async (req, res) => {
     }
 
     try {
-        // 1. Obtener ruta_id del viaje y verificar que pertenezca al operador
+        // 1. Obtener el viaje más actual del operador (En Curso, Asignado o Planeado)
+        // y buscar el primer ruta_id válido en sus destinos.
         const [viajeRows] = await pool.execute(
-            'SELECT ruta_id FROM viajes WHERE viaje_id = ? AND operador_usuario_id = ?',
-            [viaje_id, operadorId]
+            `SELECT vd.ruta_id 
+             FROM viajes v
+             INNER JOIN viaje_destinos vd ON v.viaje_id = vd.viaje_id
+             WHERE v.operador_usuario_id = ? 
+               AND v.estado IN ('En Curso', 'Asignado', 'Planeado')
+               AND vd.ruta_id IS NOT NULL
+             ORDER BY 
+               CASE v.estado 
+                 WHEN 'En Curso' THEN 1 
+                 WHEN 'Asignado' THEN 2 
+                 WHEN 'Planeado' THEN 3 
+                 ELSE 4 
+               END, 
+               v.fecha_inicio ASC,
+               vd.orden ASC
+             LIMIT 1`,
+            [operadorId]
         );
 
         if (viajeRows.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Viaje no encontrado o no autorizado."
+                message: "No se encontró un viaje activo con una ruta asignada para este operador."
             });
         }
 
@@ -107,11 +123,26 @@ const getMyAlerts = async (req, res) => {
                 CONCAT(u.nombre, ' ', u.apellidos) AS creador_nombre
             FROM alertas a
             INNER JOIN rutas r ON a.ruta_id = r.ruta_id
-            INNER JOIN viajes v ON r.ruta_id = v.ruta_id
             LEFT JOIN usuarios u ON a.creado_por_usuario_id = u.usuario_id
-            WHERE v.operador_usuario_id = ?
-              AND a.estatus_alerta = 'Abierta'
-            GROUP BY a.alerta_id
+            WHERE a.estatus_alerta = 'Abierta'
+              AND a.ruta_id IN (
+                  -- Subconsulta: Obtener todas las rutas del viaje más actual del operador
+                  SELECT vd.ruta_id 
+                  FROM viajes v
+                  INNER JOIN viaje_destinos vd ON v.viaje_id = vd.viaje_id
+                  WHERE v.operador_usuario_id = ? 
+                    AND v.estado IN ('En Curso', 'Asignado', 'Planeado')
+                    AND vd.ruta_id IS NOT NULL
+                  ORDER BY 
+                    CASE v.estado 
+                      WHEN 'En Curso' THEN 1 
+                      WHEN 'Asignado' THEN 2 
+                      WHEN 'Planeado' THEN 3 
+                      ELSE 4 
+                    END, 
+                    v.fecha_inicio ASC
+                  LIMIT 10 -- Límite razonable por si el viaje tiene muchas paradas
+              )
             ORDER BY a.nivel DESC, a.alerta_id DESC
         `;
 
