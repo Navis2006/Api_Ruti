@@ -199,7 +199,7 @@ const obtenerRutaGuardada = async (req, res) => {
             });
         }
 
-        const operadorId = req.user.id;
+        const operadorId = req.userId;
         const [rows] = await pool.execute(
             'SELECT coordenadas_tomtom FROM viajes WHERE viaje_id = ? AND operador_usuario_id = ?',
             [viajeId, operadorId]
