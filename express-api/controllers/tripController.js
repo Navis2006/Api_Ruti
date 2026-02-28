@@ -216,10 +216,10 @@ const getTripVehicleDetails = async (req, res) => {
                 ve.nombre as vehiculo_nombre,
                 ve.placa as vehiculo_placa, 
                 ve.tipo as vehiculo_tipo, 
-                ve.altura as vehiculo_altura,
-                ve.ancho as vehiculo_ancho, 
-                ve.largo as vehiculo_largo, 
-                ve.peso_total as vehiculo_peso
+                ve.altura_metros as vehiculo_altura,
+                ve.ancho_metros as vehiculo_ancho, 
+                ve.largo_metros as vehiculo_largo, 
+                ve.peso_toneladas as vehiculo_peso
              FROM viajes v
              JOIN vehiculos ve ON v.vehiculo_id = ve.vehiculo_id
              WHERE v.operador_usuario_id = ? AND v.viaje_id = ?
