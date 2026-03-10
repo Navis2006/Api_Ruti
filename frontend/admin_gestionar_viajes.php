@@ -128,7 +128,7 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
                 </div>
                 <div>
                     <label for="estado" class="block text-sm font-medium text-gray-700">Estatus</label>
-                    <select id="estado" name="estado" required
+                    <select id="estado" name="estado" required onchange="handleEstadoChange()"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <?php foreach ($estatus_de_viaje as $estatus): ?>
                             <option value="<?= $estatus ?>"><?= $estatus ?></option>
@@ -312,6 +312,11 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
             document.getElementById('estado').value = viaje.estado;
             submitButton.textContent = 'Actualizar Viaje';
 
+            // Restaurar opciones y fecha si estaban bloqueadas al editar
+            restaurarOpcionesEstadoParaEdicion();
+            document.getElementById('fecha_hora_programada').disabled = false;
+            document.getElementById('fecha_hora_programada').required = true;
+
             setTimeout(() => {
                 form.scrollIntoView({ behavior: 'smooth' });
             }, 100);
@@ -330,6 +335,46 @@ $estatus_de_viaje = ['Planeado', 'Asignado', 'En Curso', 'Finalizado', 'Cancelad
             document.getElementById('estado').value = 'Planeado';
             actionInput.value = 'create';
             submitButton.textContent = 'Programar Viaje';
+            
+            aplicarReglasCreacionEstado();
+            handleEstadoChange();
+        };
+
+        // --- MANEJO DE ESTADO Y FECHAS EN CREACIÓN ---
+        window.handleEstadoChange = () => {
+             const action = document.getElementById('action').value;
+             const estadoSelect = document.getElementById('estado').value;
+             const fechaInput = document.getElementById('fecha_hora_programada');
+             
+             if(action === 'create') {
+                 if(estadoSelect === 'Planeado') {
+                     fechaInput.value = '';
+                     fechaInput.disabled = true;
+                     fechaInput.required = false;
+                 } else if (estadoSelect === 'Asignado') {
+                     fechaInput.disabled = false;
+                     fechaInput.required = true;
+                 }
+             }
+        };
+
+        window.aplicarReglasCreacionEstado = () => {
+             const estadoSelect = document.getElementById('estado');
+             for (let i = 0; i < estadoSelect.options.length; i++) {
+                 const optionValue = estadoSelect.options[i].value;
+                 if (optionValue !== 'Planeado' && optionValue !== 'Asignado') {
+                     estadoSelect.options[i].style.display = 'none';
+                 } else {
+                     estadoSelect.options[i].style.display = '';
+                 }
+             }
+        };
+
+        window.restaurarOpcionesEstadoParaEdicion = () => {
+             const estadoSelect = document.getElementById('estado');
+             for (let i = 0; i < estadoSelect.options.length; i++) {
+                 estadoSelect.options[i].style.display = '';
+             }
         };
 
         // Delegación de eventos en la tabla

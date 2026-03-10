@@ -9,7 +9,7 @@ express-api/.env
 # Archivos de configuración locales
 backend/config/local_stripe_config.php
 config/db_connection.php
-
+bd_actual.sql
 # Logs
 *.log
 error.log

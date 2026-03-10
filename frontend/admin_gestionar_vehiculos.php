@@ -4,13 +4,11 @@ require_once '../backend/config/db_connection.php';
 // header_admin.php ya se encarga del ROL y auth_guard
 require_once 'header_admin.php'; // Carga la cabecera
 
-// --- Consultas PHP (Las tuyas, sin cambios) ---
-$empresas = $pdo->query("SELECT empresa_id, nombre FROM empresas ORDER BY nombre")->fetchAll();
+// --- Consultas PHP ---
 $vehiculos = $pdo->query("
-        SELECT v.vehiculo_id, v.empresa_id, v.nombre, v.placa, v.tipo, v.estatus, v.altura_metros, v.ancho_metros, v.largo_metros, v.peso_toneladas, v.peso_eje_kg, v.velocidad_max_kmh, e.nombre as empresa_nombre
-        FROM vehiculos v
-        JOIN empresas e ON v.empresa_id = e.empresa_id
-        ORDER BY v.nombre
+        SELECT vehiculo_id, nombre, placa, tipo, estatus, altura_metros, ancho_metros, largo_metros, peso_toneladas, peso_eje_kg, velocidad_max_kmh
+        FROM vehiculos
+        ORDER BY nombre
     ")->fetchAll();
 ?>
 
@@ -48,7 +46,7 @@ $vehiculos = $pdo->query("
             <input type="hidden" id="vehiculo_id" name="vehiculo_id">
             <input type="hidden" id="action" name="action" value="create">
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre / Identificador</label>
                     <input type="text" id="nombre" name="nombre" required
@@ -58,16 +56,6 @@ $vehiculos = $pdo->query("
                     <label for="placa" class="block text-sm font-medium text-gray-700">Placa</label>
                     <input type="text" id="placa" name="placa" required
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="empresa_id" class="block text-sm font-medium text-gray-700">Empresa</label>
-                    <select id="empresa_id" name="empresa_id" required
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Seleccione --</option>
-                        <?php foreach ($empresas as $empresa): ?>
-                            <option value="<?= htmlspecialchars($empresa['empresa_id']) ?>">
-                                <?= htmlspecialchars($empresa['nombre']) ?></option><?php endforeach; ?>
-                    </select>
                 </div>
             </div>
 
@@ -143,7 +131,6 @@ $vehiculos = $pdo->query("
                         <th class="p-4">ID</th>
                         <th class="p-4">Nombre</th>
                         <th class="p-4">Placa</th>
-                        <th class="p-4">Empresa</th>
                         <th class="p-4">Tipo</th>
                         <th class="p-4">Estatus</th>
                         <th class="p-4 text-right">Acciones</th>
@@ -155,7 +142,6 @@ $vehiculos = $pdo->query("
                             <td class="p-4"><?= htmlspecialchars($vehiculo['vehiculo_id'] ?? '') ?></td>
                             <td class="p-4 min-w-64"><?= htmlspecialchars($vehiculo['nombre'] ?? '') ?></td>
                             <td class="p-4 font-mono"><?= htmlspecialchars($vehiculo['placa'] ?? '') ?></td>
-                            <td class="p-4"><?= htmlspecialchars($vehiculo['empresa_nombre'] ?? '') ?></td>
                             <td class="p-4"><?= htmlspecialchars($vehiculo['tipo'] ?? '') ?></td>
                             <td class="p-4">
                                 <span
@@ -229,7 +215,6 @@ $vehiculos = $pdo->query("
             document.getElementById('vehiculo_id').value = vehiculo.vehiculo_id;
             document.getElementById('nombre').value = vehiculo.nombre;
             document.getElementById('placa').value = vehiculo.placa;
-            document.getElementById('empresa_id').value = vehiculo.empresa_id;
             document.getElementById('tipo').value = vehiculo.tipo;
             document.getElementById('estatus').value = vehiculo.estatus;
             document.getElementById('altura_metros').value = vehiculo.altura_metros;

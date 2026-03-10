@@ -120,19 +120,29 @@ const getTripDetails = async (req, res) => {
 
         viaje.rutas = rutasViaje;
 
-        // 3. Obtener alertas activas de todas las rutas del viaje
+        // 3. Obtener alertas activas de todas las rutas del viaje O directamente del viaje_id
+        // Si no hay rutas, aún podemos buscar alertas ligadas al viaje directamente.
         let alertas = [];
+        let queryParams = [viajeId]; // Parámetro para a.viaje_id = ?
+        let conditions = ["a.viaje_id = ?"];
+
         if (rutasViaje.length > 0) {
             const rutaIds = rutasViaje.map(r => r.ruta_id);
             const placeholders = rutaIds.map(() => '?').join(',');
-            const [alertasRows] = await pool.execute(
-                `SELECT * FROM alertas 
-                 WHERE ruta_id IN (${placeholders}) AND estatus_alerta = 'Abierta'
-                 ORDER BY nivel DESC`,
-                rutaIds
-            );
-            alertas = alertasRows;
+            conditions.push(`a.ruta_id IN (${placeholders})`);
+            queryParams.push(...rutaIds);
         }
+
+        const whereClause = `(${conditions.join(" OR ")}) AND a.estatus_alerta = 'Abierta'`;
+
+        const [alertasRows] = await pool.execute(
+            `SELECT a.*, ST_X(a.ubicacion_geom) AS longitud, ST_Y(a.ubicacion_geom) AS latitud 
+             FROM alertas a
+             WHERE ${whereClause}
+             ORDER BY a.nivel DESC`,
+            queryParams
+        );
+        alertas = alertasRows;
 
         viaje.alertas_activas = alertas;
 

@@ -22,12 +22,11 @@ const reportAlert = async (req, res) => {
         // 1. Obtener el viaje más actual del operador (En Curso, Asignado o Planeado)
         // y buscar el primer ruta_id válido en sus destinos.
         const [viajeRows] = await pool.execute(
-            `SELECT vd.ruta_id 
+            `SELECT v.viaje_id, vd.ruta_id 
              FROM viajes v
              INNER JOIN viaje_destinos vd ON v.viaje_id = vd.viaje_id
              WHERE v.operador_usuario_id = ? 
                AND v.estado IN ('En Curso', 'Asignado', 'Planeado')
-               AND vd.ruta_id IS NOT NULL
              ORDER BY 
                CASE v.estado 
                  WHEN 'En Curso' THEN 1 
@@ -44,11 +43,12 @@ const reportAlert = async (req, res) => {
         if (viajeRows.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "No se encontró un viaje activo con una ruta asignada para este operador."
+                message: "No se encontró ningún viaje activo para este operador."
             });
         }
 
-        const rutaId = viajeRows[0].ruta_id;
+        const viajeIdActivo = viajeRows[0].viaje_id;
+        const rutaId = viajeRows[0].ruta_id || null; // Será null si el viaje solo tiene destinos a empresas
 
         // 2. Determinar Nivel de Prioridad
         const niveles = {
@@ -79,9 +79,9 @@ const reportAlert = async (req, res) => {
 
         const [result] = await pool.execute(
             `INSERT INTO alertas 
-             (ruta_id, creado_por_usuario_id, descripcion, tipo_alerta, nivel, estatus_alerta, ubicacion_geom)
-             VALUES (?, ?, ?, ?, ?, 'Abierta', ST_GeomFromText(?))`,
-            [rutaId, operadorId, descripcionAlerta, tipo_alerta, nivel, pointWkt]
+             (ruta_id, viaje_id, creado_por_usuario_id, descripcion, tipo_alerta, nivel, estatus_alerta, ubicacion_geom)
+             VALUES (?, ?, ?, ?, ?, ?, 'Abierta', ST_GeomFromText(?))`,
+            [rutaId, viajeIdActivo, operadorId, descripcionAlerta, tipo_alerta, nivel, pointWkt]
         );
 
         return res.status(201).json({
@@ -113,6 +113,7 @@ const getMyAlerts = async (req, res) => {
             SELECT 
                 a.alerta_id,
                 a.ruta_id,
+                a.viaje_id,
                 a.descripcion,
                 a.tipo_alerta,
                 a.nivel,
@@ -122,15 +123,14 @@ const getMyAlerts = async (req, res) => {
                 r.nombre AS nombre_ruta,
                 CONCAT(u.nombre, ' ', u.apellidos) AS creador_nombre
             FROM alertas a
-            INNER JOIN rutas r ON a.ruta_id = r.ruta_id
+            LEFT JOIN rutas r ON a.ruta_id = r.ruta_id
             LEFT JOIN usuarios u ON a.creado_por_usuario_id = u.usuario_id
             INNER JOIN (
-                SELECT vd.ruta_id 
+                SELECT v.viaje_id, vd.ruta_id 
                 FROM viajes v
                 INNER JOIN viaje_destinos vd ON v.viaje_id = vd.viaje_id
                 WHERE v.operador_usuario_id = ? 
                   AND v.estado IN ('En Curso', 'Asignado', 'Planeado')
-                  AND vd.ruta_id IS NOT NULL
                 ORDER BY 
                   CASE v.estado 
                     WHEN 'En Curso' THEN 1 
@@ -140,7 +140,7 @@ const getMyAlerts = async (req, res) => {
                   END, 
                   v.fecha_inicio ASC
                 LIMIT 10
-            ) AS allowed_rutas ON a.ruta_id = allowed_rutas.ruta_id
+            ) AS allowed ON (a.ruta_id = allowed.ruta_id OR a.viaje_id = allowed.viaje_id)
             WHERE a.estatus_alerta = 'Abierta'
             ORDER BY a.nivel DESC, a.alerta_id DESC
         `;
