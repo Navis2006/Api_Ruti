@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.png" alt="RutiTruck Logo" width="150"/>
+ 
   <h1>🚛 RutiTruck: Ecosistema Logístico y Navegación Inteligente</h1>
   <p><em>Ruteo especializado para transporte de carga pesada, previniendo siniestros e integrando el conocimiento empírico en tiempo real.</em></p>
 </div>
@@ -58,4 +58,4 @@ El ecosistema usa un modelo de **Arquitectura Desacoplada (Cliente-Servidor)**:
 
 ---
 
-Consumido por: 
+Consumido por: https://github.com/Navis2006/rutitruck_movil.git
