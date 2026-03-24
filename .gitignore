@@ -10,6 +10,7 @@ express-api/.env
 backend/config/local_stripe_config.php
 config/db_connection.php
 bd_actual.sql
+
 # Logs
 *.log
 error.log
@@ -28,3 +29,18 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+/documentacion
+/b3ehoylez0wwlhvuad4s (1).sql
+
+/indicaciones.md
+fluttler
+/claves.md
+/MIGRACION_KOYEB.md
+
+/indicaciones.md
+
+/context.md
+fluttler/
+docs/
+
+
