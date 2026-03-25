@@ -41,7 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['rol_id'] = $user['rol_id'];
                 $_SESSION['empresa_id'] = $user['empresa_id'];
                 
-                // ============ VERIFICACIÓN DE SUSCRIPCIÓN ============
+                // ============ VERIFICACIÓN DE SUSCRIPCIÓN (TEMPORALMENTE DESACTIVADA) ============
+                // TODO: Reactivar verificación de suscripción de Stripe cuando se solucione el bug
+                /*
                 require_once __DIR__ . '/check_subscription.php';
                 $estado_suscripcion = checkSubscription($user['empresa_id']);
                 
@@ -61,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         exit();
                     }
                 }
+                */
                 // ============ FIN VERIFICACIÓN DE SUSCRIPCIÓN ============
                 
                 // Suscripción activa - redirigir según el rol
